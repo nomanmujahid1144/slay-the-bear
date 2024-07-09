@@ -64,7 +64,7 @@ export const Footer = () => {
                                 <div className="footer-link-wrap">
                                     <ul className="list-wrap">
                                         {markets.map((market, index) => (
-                                            <li>
+                                            <li key={index}>
                                                 <Link href={market.link}>{market.name}</Link>
                                             </li>
                                         ))}
