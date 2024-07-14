@@ -7,3 +7,14 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
 } */
+
+/* Password Eye */
+.visible-icon{
+  height: inherit;
+  top: 12px;
+  right: 25px;
+  bottom: 0;
+  color: #6F6F6F;
+  font-size: 17px;
+  position: absolute;
+}

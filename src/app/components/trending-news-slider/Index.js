@@ -18,9 +18,9 @@ export const TrendingNews = () => {
 
     return (
         <>
-            <div className="header-top-wrap-four">
+            <div className="header-top-wrap-four"> 
                 <div className="container">
-                <div className="row align-items-center">
+                    <div className="row align-items-center">
                         <div className="col-lg-8">
                             <div className="header-top-left-four">
                                 <div className="trending-box">

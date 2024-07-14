@@ -1,6 +1,6 @@
 'use client'
 import Link from "next/link";
-import { TrendingNews } from "../trending-news/Index";
+import { TrendingNews } from "../trending-news-slider/Index";
 import Image from "next/image";
 import logoImage from '../../../../public/assets/img/logo/logo.png';
 import { MobileVersion } from "./MobileVersion";
@@ -105,7 +105,7 @@ export const Navbar = () => {
                         <div className="col-lg-3">
                             <div className="hl-right-side-four">
                                 <div className="subscribe-btn">
-                                    <Link href="/" className="btn btn-two">
+                                    <Link href="/login" className="btn btn-two">
                                         Sign In
                                     </Link>
                                 </div>

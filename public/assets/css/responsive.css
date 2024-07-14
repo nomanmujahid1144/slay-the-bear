@@ -1,72 +1,70 @@
 /* Extra large devices (large desktops, 1800px and up) */
 @media (max-width: 1800px) {
-.navbar-wrap ul {
-    margin: 0 0 0 35px;
-}
-
+    .navbar-wrap ul {
+        margin: 0 0 0 35px;
+    }
 }
 
 
 /* Extra large devices (large desktops, 1800px and up) */
 @media (max-width: 1500px) {
-.container {
-    max-width: 1320px;
-}
-.navbar-wrap ul {
-    margin: 0 0 0 15px;
-}
-.navbar-wrap ul li a {
-    padding: 40px 8px;
-}
-.header-right-side {
-    padding-right: 20px;
-}
-.header-top-wrap {
-    padding: 6px 20px;
-}
-.offcanvas-toggle {
-    width: 80px;
-}
-.offcanvas-toggle a {
-    padding: 30px 20px 30px 20px;
-}
-.header-search-wrap form {
-    width: 250px;
-}
-.banner-post-thumb img {
-    height: 560px;
-}
-.banner-post-content {
-    left: 60px;
-    right: 60px;
-    bottom: 40px;
-}
-.overlay-post-content-three .post-title {
-    font-size: 24px;
-}
-.overlay-post-content-three {
-    left: 20px;
-    right: 20px;
-    bottom: 30px;
-}
-.newsletter-social {
-    margin-left: 50px;
-}
-.banner-post-content-four .post-title {
-    font-size: 24px;
-}
-.banner-post-content-four {
-    left: 20px;
-    right: 20px;
-    bottom: 35px;
-}
-.banner-post-thumb-four img {
-    height: 390px;
-}
-.contact-map {
-    height: 450px;
-}
-
+    .container {
+        max-width: 1320px;
+    }
+    .navbar-wrap ul {
+        margin: 0 0 0 15px;
+    }
+    .navbar-wrap ul li a {
+        padding: 40px 8px;
+    }
+    .header-right-side {
+        padding-right: 20px;
+    }
+    .header-top-wrap {
+        padding: 6px 20px;
+    }
+    .offcanvas-toggle {
+        width: 80px;
+    }
+    .offcanvas-toggle a {
+        padding: 30px 20px 30px 20px;
+    }
+    .header-search-wrap form {
+        width: 250px;
+    }
+    .banner-post-thumb img {
+        height: 560px;
+    }
+    .banner-post-content {
+        left: 60px;
+        right: 60px;
+        bottom: 40px;
+    }
+    .overlay-post-content-three .post-title {
+        font-size: 24px;
+    }
+    .overlay-post-content-three {
+        left: 20px;
+        right: 20px;
+        bottom: 30px;
+    }
+    .newsletter-social {
+        margin-left: 50px;
+    }
+    .banner-post-content-four .post-title {
+        font-size: 24px;
+    }
+    .banner-post-content-four {
+        left: 20px;
+        right: 20px;
+        bottom: 35px;
+    }
+    .banner-post-thumb-four img {
+        height: 390px;
+    }
+    .contact-map {
+        height: 450px;
+    }
 }
 
 
@@ -797,8 +795,6 @@
 
 }
 
-
-
 /* Medium devices (tablets, 768px and up) */
 @media (max-width: 767.98px) {
 .custom-container {
@@ -1145,7 +1141,6 @@
 
 }
 
-
 /* Small devices (landscape phones, 576px and up) */
 @media only screen and (min-width: 576px) and (max-width: 767px) {
 .container,
@@ -1183,5 +1178,4 @@
 
 
 }
-
 
