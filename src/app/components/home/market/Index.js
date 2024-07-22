@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from "react";
-import { Heading } from "../heading/Heading";
-import { Banner } from '../../components/ads/Banner'
+import { Heading } from "../../heading/Heading";
+import { Banner } from '../../ads/Banner'
 
 export const Markets = () => {
 
@@ -24,11 +24,11 @@ export const Markets = () => {
     };
 
     return (
-        <section className="recent-post-area-two pt-60 pb-60">
+        <section className="recent-post-area-two">
             <div className="container">
                 <div className="recent-post-inner-wrap">
                     <div className="row justify-content-center">
-                        <div className="col-lg-9"> 
+                        <div className="col-lg-12"> 
                             <Heading
                                 textHeading={'Markets'}
                             />
@@ -80,10 +80,10 @@ export const Markets = () => {
                                         >
                                             {/* <div className="sidebar-widget sidebar-widget-two"> */}
                                             <div className="container">
-                                                <div className="row">
+                                                <div className="row !overflow-auto">
                                                     <table
                                                         id="example"
-                                                        className="table table-striped table-bordered"
+                                                        className="table table-striped table-bordered !table-auto !text-xs"
                                                         cellSpacing={0}
                                                         width="100%"
                                                     >
@@ -147,7 +147,7 @@ export const Markets = () => {
                             </div>
                             <Banner />
                         </div>
-                        <div className="col-lg-3"></div>
+                        {/* <div className="col-lg-3"></div> */}
                     </div>
                 </div>
             </div>

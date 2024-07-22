@@ -52,10 +52,10 @@ const menuItems = [
     {
         navbarName: 'News Page',
         subMenu: [],
-        navLink: '/news-page'
+        navLink: '/news'
     },
     {
-        navbarName: 'Paid Tools',
+        navbarName: 'Subscriptions',
         subMenu: [],
         navLink: '/paid-tools'
     },
@@ -142,7 +142,7 @@ export const Navbar = () => {
                                         ))}
                                     </ul>
                                 </div>
-                                <div class="logo d-none white-logo">
+                                <div className="logo d-none white-logo">
                                     <Link href={'/'}>
                                         <Image
                                             src={logoImage}

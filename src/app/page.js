@@ -1,13 +1,9 @@
-import { HotPicks } from "./components/hot-news/Index";
-import { Markets } from "./components/market/Index";
-
-
+import { HomePage } from "./components/home/Index";
 
 export default function Home() {
   return (
     <>
-      <HotPicks />
-      <Markets />
+      <HomePage />
     </>
   );
 }

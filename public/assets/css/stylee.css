@@ -4543,10 +4543,11 @@ label {
     margin-bottom: 20px;
 }
 .weekly-post-thumb {
-    width: 440px;
+    width: 23rem;
+    height: fit-content;
     flex: 0 0 auto;
     overflow: hidden;
-    border-radius: 6px;
+    border-radius: 6px ;
 }
 .weekly-post-thumb img {
     width: 100%;
@@ -6114,7 +6115,7 @@ label {
   border-radius: 4px;
   height: 3rem;
   line-height: 2;
-  font-size: 1.8rem;
+  font-size: 1rem;
   color: #333;
 }
 .dataTables_length .dataTables_length,

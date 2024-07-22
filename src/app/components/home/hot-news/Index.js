@@ -1,6 +1,9 @@
 import Link from "next/link";
-import { SlickSlider } from "../slick-slider/SlickSlider";
-import { Heading } from "../heading/Heading";
+import { SlickSlider } from "../../slick-slider/SlickSlider";
+import { Heading } from "../../heading/Heading";
+import { PostTag } from "../../post-creation/post-tag/Index";
+import { SmallPostTitle } from "../../post-creation/post-title/SmallPostTitle";
+import { DateTime } from "../../post-creation/post-date-time/Index";
 
 const hotPicks = [
     {
@@ -37,12 +40,12 @@ const hotPicks = [
 
 export const HotPicks = () => {
     return (
-        <section className="editor-post-area-three">
+        <section className="editor-post-area-three !bg-transparent">
             <div className="container">
                 <Heading
                     textHeading={'Hot Picks'}
                 />
-                <div className="row gutter-40 editor-post-active-two">
+                <div className="row editor-post-active-two">
                     <SlickSlider>
                         {hotPicks.map((hotPick, index) => (
                             <div key={index} className="col-lg-3">
@@ -56,16 +59,16 @@ export const HotPicks = () => {
                                         </Link>
                                     </div>
                                     <div className="editor-post-content-three">
-                                        <Link href="/" className="post-tag-four">{hotPick.topic}</Link>
-                                        <h2 className="post-title">
-                                            <Link href="/">{hotPick.headline}</Link>
-                                        </h2>
-                                        <div className="blog-post-meta">
-                                            <ul className="list-wrap">
-                                                <li><i className="flaticon-calendar" />{hotPick.date}</li>
-                                                <li><i className="flaticon-history" />{hotPick.time}</li>
-                                            </ul>
-                                        </div>
+                                        <PostTag 
+                                            tagName={hotPick.topic}
+                                        />
+                                        <SmallPostTitle 
+                                            title={hotPick.headline}
+                                        />
+                                        <DateTime 
+                                            date={hotPick.date}
+                                            time={hotPick.time}
+                                        />
                                     </div>
                                 </div>
                             </div>

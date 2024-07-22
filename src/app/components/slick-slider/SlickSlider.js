@@ -13,7 +13,7 @@ const NextArrow = (props) => {
 
         <div
             className={className}
-            style={{ ...style, display: "block", right: '-5px' ,opacity: "0.9" ,borderRadius: '10%'   }}
+            style={{ ...style, display: "block",opacity: "0.9" ,borderRadius: '10%'   }}
             onClick={onClick}
         />
 
@@ -25,7 +25,7 @@ const PrevArrow = (props) => {
     return (
         <div
             className={className}
-            style={{ ...style, display: "block", left: '-5px' , zIndex : "1" ,opacity: "0.9" ,borderRadius: '10%' }}
+            style={{ ...style, display: "block", zIndex : "1" ,opacity: "0.9" ,borderRadius: '10%' }}
             onClick={onClick}
         />
     );
@@ -35,7 +35,7 @@ var settings = {
     dots: false,
     infinite: false,
     speed: 1000,
-    slidesToShow: 4,
+    slidesToShow: 3,
     slidesToScroll: 1,
     initialSlide: 0,
     variableWidth: false,
@@ -46,7 +46,7 @@ var settings = {
             breakpoint: 1300,
             settings: {
                 speed: 1000,
-                slidesToShow: 4,
+                slidesToShow: 3,
                 slidesToScroll: 1,
                 initialSlide: 0,
                 variableWidth: false,
