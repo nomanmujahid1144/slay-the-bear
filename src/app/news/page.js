@@ -44,7 +44,7 @@ export default function NewsPage () {
                                 <div className="col-lg-4">
                                     <div className="sidebar-wrap sidebar-wrap-four">
                                         {Array.from({ length: 3 }).map((_, index) => (
-                                            <div className="horizontal-post-four horizontal-post-five">
+                                            <div key={index} className="horizontal-post-four horizontal-post-five">
                                                 <div className="horizontal-post-thumb-four">
                                                     <Link href="#">
                                                         <Image 
