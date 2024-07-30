@@ -5,6 +5,7 @@ import Image from "next/image";
 import logoImage from '../../../../public/assets/img/logo/logo.png';
 import { MobileVersion } from "./MobileVersion";
 import { useState } from "react";
+import { FinentialNewsMarquee } from "../finential-news-marquee/Index";
 
 
 const menuItems = [
@@ -42,12 +43,12 @@ const menuItems = [
                 navLink: '/market/mutual-funds'
             },
         ],
-        navLink: '/home'
+        navLink: '/markets'
     },
     {
         navbarName: 'Tool Section',
         subMenu: [],
-        navLink: '/tool-section'
+        navLink: '/tools'
     },
     {
         navbarName: 'News Page',
@@ -58,12 +59,7 @@ const menuItems = [
         navbarName: 'Subscriptions',
         subMenu: [],
         navLink: '/paid-tools'
-    },
-    {
-        navbarName: 'Ads Free Version',
-        subMenu: [],
-        navLink: '/ads-free'
-    },
+    }
 ];
 
 export const Navbar = () => {
@@ -79,6 +75,7 @@ export const Navbar = () => {
             <header className="header-style-six">
                 <div id="header-fixed-height" />
                 <TrendingNews />
+                <FinentialNewsMarquee />
                 <div className="header-logo-area-four">
                     <div className="container">
                         <div className="row align-items-center">

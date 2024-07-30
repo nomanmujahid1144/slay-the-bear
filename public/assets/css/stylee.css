@@ -287,6 +287,15 @@ label {
     --bs-gutter-x: 40px;
 }
 
+
+/*=============================
+	1. Button style
+===============================*/
+
+.border-deault {
+    border: 1px solid #E0E0E0;
+}
+
 /*=============================
 	1. Button style
 ===============================*/
@@ -5592,7 +5601,7 @@ label {
     background: var(--tg-gray-three);
     border-radius: 6px;
     border: 1px solid #E0E0E0;
-    padding: 30px 30px 30px;
+    padding: 15px;
     gap: 50px;
     margin-bottom: 35px;
 }

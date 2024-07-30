@@ -5,7 +5,7 @@ import { PostDescription } from "../../post-creation/post-description/Index"
 import { PostTag } from "../../post-creation/post-tag/Index"
 import { PostTitle } from "../../post-creation/post-title/Index"
 import { HotPicks } from "../hot-news/Index"
-import { Markets } from "../market/Index";
+import { Market } from "../market/Index";
 import horizentalImage from '../../../../../public/assets/img/blog/cr_recent_post03.jpg';
 import { SmallPostTitle } from "../../post-creation/post-title/SmallPostTitle"
 import Link from "next/link"
@@ -119,7 +119,10 @@ export const TopNews = () => {
                         </div>
                         <Banner />
                         <HotPicks />
-                        <Markets />
+                        <Market 
+                            market="Markets"
+                        />
+                        <Banner />
                     </div>
                     <div className="col-xl-3 col-lg-8">
                         <div className="sidebar-wrap-three">

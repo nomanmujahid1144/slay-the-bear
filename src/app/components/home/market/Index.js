@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Heading } from "../../heading/Heading";
 import { Banner } from '../../ads/Banner'
 
-export const Markets = () => {
+export const Market = ({market, showBtn}) => {
 
     const [activeTab, setActiveTab] = useState('indices');
 
@@ -24,13 +24,14 @@ export const Markets = () => {
     };
 
     return (
-        <section className="recent-post-area-two">
+        <section className="recent-post-area-two mb-10">
             <div className="container">
                 <div className="recent-post-inner-wrap">
                     <div className="row justify-content-center">
                         <div className="col-lg-12"> 
                             <Heading
-                                textHeading={'Markets'}
+                                textHeading={market}
+                                showBtn={showBtn}
                             />
                             <div className="sidebar-wrap no-sticky">
                                 <div className="sidebar-tab">
@@ -145,7 +146,6 @@ export const Markets = () => {
                                     </div>
                                 </div>
                             </div>
-                            <Banner />
                         </div>
                         {/* <div className="col-lg-3"></div> */}
                     </div>
