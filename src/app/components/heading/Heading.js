@@ -12,6 +12,7 @@ export const Heading = ({ textHeading, showBtn }) => {
                     {showBtn && (
                         <Goto 
                             buttonText={'Visit Market'}
+                            goTo={'#'}
                         />
                     )}
                     <div className="section-title-line" />

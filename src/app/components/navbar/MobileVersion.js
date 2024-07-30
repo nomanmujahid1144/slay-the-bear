@@ -85,14 +85,14 @@ export const MobileVersion = ({isMobileVersion, handleMobileVersion}) => {
                         <i className="fas fa-times" />
                     </div>
                     <div className="nav-logo">
-                        <a href="index.html">
+                        <Link href="/">
                         <img src="assets/img/logo/logo.png" alt="Logo" />
-                        </a>
+                        </Link>
                     </div>
                     <div className="nav-logo d-none">
-                        <a href="index.html">
+                        <Link href="/">
                         <img src="assets/img/logo/w_logo.png" alt="Logo" />
-                        </a>
+                        </Link>
                     </div>
                     <div className="mobile-search">
                         <form action="#">

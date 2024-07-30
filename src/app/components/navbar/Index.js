@@ -139,7 +139,7 @@ export const Navbar = () => {
                                         ))}
                                     </ul>
                                 </div>
-                                <div className="logo d-none white-logo">
+                                <div className="logo d-lg-none white-logo">
                                     <Link href={'/'}>
                                         <Image
                                             src={logoImage}

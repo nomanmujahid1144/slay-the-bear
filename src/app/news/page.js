@@ -22,7 +22,7 @@ export default function NewsPage () {
                                 <div className="col-lg-8">
                                     <div className="sports-post">
                                         <div className="sports-post-thumb">
-                                            <a href="blog-details.html">
+                                            <a href="/">
                                                 <img src="assets/img/blog/sports_post01.jpg" alt="" />
                                             </a>
                                         </div>
@@ -85,16 +85,16 @@ export default function NewsPage () {
                             <div className="hot-post-wrap">
                                 <div className="hot-post-item hot-post-item-two">
                                 <div className="hot-post-thumb">
-                                    <a href="blog-details.html">
+                                    <a href="/">
                                     <img src="assets/img/blog/nw_banner_post01.jpg" alt="" />
                                     </a>
                                 </div>
                                 <div className="hot-post-content">
-                                    <a href="blog.html" className="post-tag-four">
+                                    <a href="/" className="post-tag-four">
                                     Audit
                                     </a>
                                     <h4 className="post-title">
-                                    <a href="blog-details.html">
+                                    <a href="/">
                                         Take a Look Back at the Moseret Gala Red Carpet Ever
                                     </a>
                                     </h4>
@@ -110,11 +110,11 @@ export default function NewsPage () {
                                 </div>
                                 <div className="hot-post-item hot-post-item-two">
                                 <div className="hot-post-content">
-                                    <a href="blog.html" className="post-tag-four">
+                                    <a href="/" className="post-tag-four">
                                     Marketing
                                     </a>
                                     <h4 className="post-title">
-                                    <a href="blog-details.html">
+                                    <a href="/">
                                         Take a Look Back at the Moseret Gala Red Carpet Ever
                                     </a>
                                     </h4>
@@ -130,11 +130,11 @@ export default function NewsPage () {
                                 </div>
                                 <div className="hot-post-item hot-post-item-two">
                                 <div className="hot-post-content">
-                                    <a href="blog.html" className="post-tag-four">
+                                    <a href="/" className="post-tag-four">
                                     Marketing
                                     </a>
                                     <h4 className="post-title">
-                                    <a href="blog-details.html">
+                                    <a href="/">
                                         Take a Look Back at the Moseret Gala Red Carpet Ever
                                     </a>
                                     </h4>

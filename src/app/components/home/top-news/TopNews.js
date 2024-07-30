@@ -10,6 +10,7 @@ import horizentalImage from '../../../../../public/assets/img/blog/cr_recent_pos
 import { SmallPostTitle } from "../../post-creation/post-title/SmallPostTitle"
 import Link from "next/link"
 import Image from "next/image"
+import { Goto } from "../../Buttons/Goto"
 
 const horizentalPosts = [
     {postTitle: 'Using Instagram Tawo Promote Your', postTag: 'CRYPTOCURRENCY', postDate: '27 AUGUST, 2024', postTime: '', postImage: horizentalImage},
@@ -34,9 +35,9 @@ export const TopNews = () => {
                             <div className="col-12">
                             <div className="top-news-post">
                                 <div className="top-news-post-thumb">
-                                <a href="blog-details.html">
+                                <Link href="/">
                                     <img src="assets/img/blog/top_news_post01.jpg" alt="" />
-                                </a>
+                                </Link>
                                 <a
                                     href="https://www.youtube.com/watch?v=G_AEL-Xo5l8"
                                     className="paly-btn popup-video"
@@ -64,25 +65,10 @@ export const TopNews = () => {
                                     `}
                                 />
                                 <div className="view-all-btn">
-                                    <a href="blog.html" className="link-btn">
-                                    Read More
-                                    <span className="svg-icon">
-                                        <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 10 10"
-                                        fill="none"
-                                        >
-                                        <path
-                                            d="M1.07692 10L0 8.92308L7.38462 1.53846H0.769231V0H10V9.23077H8.46154V2.61538L1.07692 10Z"
-                                            fill="currentColor"
-                                        />
-                                        <path
-                                            d="M1.07692 10L0 8.92308L7.38462 1.53846H0.769231V0H10V9.23077H8.46154V2.61538L1.07692 10Z"
-                                            fill="currentColor"
-                                        />
-                                        </svg>
-                                    </span>
-                                    </a>
+                                    <Goto 
+                                        buttonText={'Read More'}
+                                        goTo={'/'}
+                                    />
                                 </div>
                                 </div>
                             </div>
@@ -133,16 +119,16 @@ export const TopNews = () => {
                             <div className="hot-post-wrap">
                                 <div className="hot-post-item hot-post-item-two">
                                 <div className="hot-post-thumb">
-                                    <a href="blog-details.html">
+                                    <a href="/">
                                     <img src="assets/img/blog/nw_banner_post01.jpg" alt="" />
                                     </a>
                                 </div>
                                 <div className="hot-post-content">
-                                    <a href="blog.html" className="post-tag-four">
+                                    <a href="/" className="post-tag-four">
                                     Audit
                                     </a>
                                     <h4 className="post-title">
-                                    <a href="blog-details.html">
+                                    <a href="/">
                                         Take a Look Back at the Moseret Gala Red Carpet Ever
                                     </a>
                                     </h4>
@@ -158,11 +144,11 @@ export const TopNews = () => {
                                 </div>
                                 <div className="hot-post-item hot-post-item-two">
                                 <div className="hot-post-content">
-                                    <a href="blog.html" className="post-tag-four">
+                                    <a href="/" className="post-tag-four">
                                     Marketing
                                     </a>
                                     <h4 className="post-title">
-                                    <a href="blog-details.html">
+                                    <a href="/">
                                         Take a Look Back at the Moseret Gala Red Carpet Ever
                                     </a>
                                     </h4>
@@ -178,11 +164,11 @@ export const TopNews = () => {
                                 </div>
                                 <div className="hot-post-item hot-post-item-two">
                                 <div className="hot-post-content">
-                                    <a href="blog.html" className="post-tag-four">
+                                    <a href="/" className="post-tag-four">
                                     Marketing
                                     </a>
                                     <h4 className="post-title">
-                                    <a href="blog-details.html">
+                                    <a href="/">
                                         Take a Look Back at the Moseret Gala Red Carpet Ever
                                     </a>
                                     </h4>
