@@ -42,7 +42,7 @@ export default function PrivacyPolicy(){
                             </p>
                             <h3 className="font-medium">Cookies</h3>
                             <p className="text-sm my-3 ml-md-10 ml-0">
-                                We may log information using "cookies." Cookies are small data files stored on
+                                We may log information using “Cookies”. Cookies are small data files stored on
                                 your hard drive by a website. We may use both session Cookies (which expire once you
                                 close your web browser) and persistent Cookies (which stay on your computer until you
                                 delete them) to provide you with a more personal and interactive experience on our Site.
