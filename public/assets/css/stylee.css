@@ -6659,3 +6659,35 @@ label {
 [tg-theme=dark] .table-striped>tbody>tr:nth-of-type(odd)>* {
     color: var(--tg-border-color);
 }
+
+
+
+/* TERMS AND CONDITIONS */
+
+#accounts {
+    margin: 2rem 0;
+  }
+  
+  #accounts h2 {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  #accounts .section-content {
+    padding: 1rem;
+    border-radius: 5px;
+  }
+  
+  #accounts h3 {
+    font-size: 1rem;
+  }
+  
+  #accounts ul {
+    list-style-type: disc;
+    margin-left: 1.5rem;
+  }
+  
+  #accounts ul li {
+    margin: 0.5rem 0;
+  }
+  

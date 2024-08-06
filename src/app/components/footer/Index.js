@@ -121,8 +121,16 @@ export const Footer = () => {
                             <div class="col-md-6">
                                 <div class="footer-bottom-menu">
                                     <ul class="list-wrap">
-                                        <li><a href="contact.html">Privacy Policy & Terms</a></li>
-                                        <li><a href="contact.html">Site Credits</a></li>
+                                        <li>
+                                            <Link href="/terms-and-conditions">
+                                                Terms and conditions
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link href="/privacy-policy">
+                                                Privacy Policy
+                                            </Link>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
