@@ -138,7 +138,7 @@ export default function Support() {
                                     <h3 className="font-extrabold">Frequently Asked Questions (FAQ)</h3>
                                     <section id="accounts">
                                         <p className="text-sm my-1">
-                                            Have a question? Check out our <Link href={&apos;/&apos;}>FAQ</Link> section for quick answers to the most common queries.
+                                            Have a question? Check out our <Link href={'/'}>FAQ</Link> section for quick answers to the most common queries.
                                         </p>
                                     </section>
                                 </li>
