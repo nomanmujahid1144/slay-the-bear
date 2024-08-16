@@ -9,6 +9,7 @@ const companyPages = [
     { name: 'News Page', link: '#' },
     { name: 'Paid Tool', link: '#' },
     { name: 'Ads Free Version', link: '#' },
+    { name: 'Support', link: '/support' },
 ];
 
 const markets = [

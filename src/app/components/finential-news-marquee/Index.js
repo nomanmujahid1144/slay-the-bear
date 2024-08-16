@@ -1,28 +1,72 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
-import Marquee from 'react-fast-marquee';
+'use client'
+
+import React, { useEffect } from 'react';
 
 
 export const FinentialNewsMarquee = () => {
 
-    const news = [
-        { newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#' },
-        { newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#' },
-        { newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#' },
-        { newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#' },
-        { newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#' },
-        { newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#' }
-    ]
+    useEffect(() => {
+
+        // Dynamically inject custom styles
+        const style = document.createElement('style');
+        style.innerHTML = `
+        .label-dzbd7lyV.snap-dzbd7lyV.end-dzbd7lyV {
+            display: none !important;
+        }
+        `;
+        document.head.appendChild(style);
+
+        const script = document.createElement('script');
+        script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
+        script.async = true;
+        script.innerHTML = JSON.stringify({
+            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "symbols": [
+                {
+                    "proName": "FOREXCOM:SPXUSD",
+                    "title": "S&P 500 Index"
+                },
+                {
+                    "proName": "FOREXCOM:NSXUSD",
+                    "title": "US 100 Cash CFD"
+                },
+                {
+                    "proName": "FX_IDC:EURUSD",
+                    "title": "EUR to USD"
+                },
+                {
+                    "proName": "BITSTAMP:BTCUSD",
+                    "title": "Bitcoin"
+                },
+                {
+                    "proName": "BITSTAMP:ETHUSD",
+                    "title": "Ethereum"
+                }
+            ],
+            "showSymbolLogo": true,
+            "isTransparent": false,
+            "displayMode": "adaptive",
+            "colorTheme": "light",
+            "locale": "en"
+        });
+        document.getElementById('tradingview-widget-container').appendChild(script);
+    }, []);
 
     return (
         <>
+            <div className="tradingview-widget-container" id="tradingview-widget-container">
+                <div className="tradingview-widget-container__widget"></div>
+                <div className="tradingview-widget-copyright">
+                </div>
+            </div>
             <div className="header-top-wrap-four ">
                 <div className="container">
                     <div className="row align-items-center">
                         <div className="col-lg-12">
                             <div class="coin-item-wrap">
                                 <div class="row coin-active">
-                                    <Marquee>
+
+                                    {/* <Marquee>
                                         <div className="col">
                                             <div className="coin-item">
                                                 <div className="content !flex !items-center !gap-3">
@@ -279,7 +323,7 @@ export const FinentialNewsMarquee = () => {
                                                 </div>
                                             </div>  
                                         </div>
-                                    </Marquee>
+                                    </Marquee> */}
                                 </div>
                             </div>
                         </div>

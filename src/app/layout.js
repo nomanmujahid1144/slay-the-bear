@@ -18,7 +18,7 @@ import "./globals.css";
 import { Footer } from "./components/footer/Index";
 import { Navbar } from "./components/navbar/Index";
 import { DarkMode } from "./components/dark-mode/Index";
-import { useState } from "react";
+import React, { useState } from "react";
 import { ScrollToTop } from "./components/scroll-to-top";
 
 // Import FontAwsomeIcons
@@ -36,7 +36,6 @@ export default function RootLayout({ children }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const changeSiteMode = () => {
-    console.log("changeSiteMode called");
     setIsDarkMode(prevState => !prevState);
   };
   
@@ -50,7 +49,7 @@ export default function RootLayout({ children }) {
           <Navbar />
         </header>
         <main>
-          {children}
+          {React.cloneElement(children, { isDarkMode })}
         </main>
         <footer>
           <Footer />

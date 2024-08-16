@@ -1027,7 +1027,7 @@ label {
 /* header-six */
 .header-top-wrap-four {
     background: #183354;
-    padding: 5px 0;
+    /* padding: 5px 0; */
 }
 .header-top-left-four {
     display: flex;
@@ -6690,4 +6690,3 @@ label {
   #accounts ul li {
     margin: 0.5rem 0;
   }
-  
