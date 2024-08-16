@@ -10,14 +10,14 @@ export default function Support() {
                     </div>
                     <div>
                         <p className="text-sm my-4">
-                            We're here to help you make the most of
+                            We&apos;re here to help you make the most of
                             <span className="font-bold">
                                 <a href=""> Slay The Bear</a>
                             </span>
                             , our web-based and mobile platform
                             designed to empower you with tools, news, and research to navigate the world of finance.
-                            Whether you're having trouble with the platform, need assistance with your account, or just have
-                            a question, you'll find everything you need right here.
+                            Whether you&apos;re having trouble with the platform, need assistance with your account, or just have
+                            a question, you&apos;ll find everything you need right here.
                         </p>
                         <ol className="list-decimal" type="1">
                             <section id="accounts">
@@ -30,13 +30,13 @@ export default function Support() {
                                                 <h3 className="font-medium">Account Setup</h3>
                                                 <p className="text-sm my-1">
                                                     Learn how to create and set up your account on Slay The Bear, whether
-                                                    you're on the web or mobile.
+                                                    you&apos;re on the web or mobile.
                                                 </p>
                                             </li>
                                             <li>
                                                 <h3 className="font-medium">Navigating the Platform</h3>
                                                 <p className="text-sm my-1">
-                                                    A quick guide to help you understand the platform's features
+                                                    A quick guide to help you understand the platform&apos;s features
                                                     and tools on both web and mobile.
                                                 </p>
                                             </li>
@@ -138,7 +138,7 @@ export default function Support() {
                                     <h3 className="font-extrabold">Frequently Asked Questions (FAQ)</h3>
                                     <section id="accounts">
                                         <p className="text-sm my-1">
-                                            Have a question? Check out our <Link href={'/'}>FAQ</Link> section for quick answers to the most common queries.
+                                            Have a question? Check out our <Link href={&apos;/&apos;}>FAQ</Link> section for quick answers to the most common queries.
                                         </p>
                                     </section>
                                 </li>
@@ -157,7 +157,7 @@ export default function Support() {
                                             <li>
                                                 <h3 className="font-medium">Tool Errors</h3>
                                                 <p className="text-sm my-1">
-                                                    What to do if a tool isn't working correctly.
+                                                    What to do if a tool isn&apos;t working correctly.
                                                 </p>
                                             </li>
                                             <li>
@@ -213,8 +213,8 @@ export default function Support() {
                         </ol>
                         <hr />
                         <p className="text-sm my-5">
-                            Thank you for using Slay The Bear! We're committed to helping you succeed on your financial
-                            journey. If you have any suggestions on how we can improve our service, please don't hesitate to
+                            Thank you for using Slay The Bear! We&apos;re committed to helping you succeed on your financial
+                            journey. If you have any suggestions on how we can improve our service, please don&apos;t hesitate to
                             contact us.
                         </p>
                     </div>
