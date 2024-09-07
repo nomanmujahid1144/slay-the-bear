@@ -24,6 +24,10 @@
 }
 
 
-.label-dzbd7lyV.snap-dzbd7lyV.end-dzbd7lyV {
+.js-copyright-label {
+  display: none !important;
+}
+
+iframe html body .js-copyright-label .label__link-dzbd7lyV{
   display: none !important;
 }

@@ -9,24 +9,24 @@ export default function Markets() {
             <div className="container">
                 <div className="row justify-content-center">
                     <div className="col-xl-9">
-                        <Market 
-                            market="Stock Market"
+                        <Heading 
+                            textHeading="Stock Market"
                             showBtn={true}
                         />
-                        <Market 
-                            market="Cryptocurrency Market"
+                        <Heading 
+                            textHeading="Cryptocurrency Market"
                             showBtn={true}
                         />
-                        <Market 
-                            market="Forex Market"
+                        <Heading 
+                            textHeading="Forex Market"
                             showBtn={true}
                         />
-                        <Market 
-                            market="ETFs"
+                        <Heading 
+                            textHeading="ETFs"
                             showBtn={true}
                         />
-                        <Market 
-                            market="Mutual Funds"
+                        <Heading 
+                            textHeading="Mutual Funds"
                             showBtn={true}
                         />
                     </div>

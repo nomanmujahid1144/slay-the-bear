@@ -13,7 +13,8 @@ import { SmallPostTitle } from "../../post-creation/post-title/SmallPostTitle"
 import Link from "next/link"
 import Image from "next/image"
 import { Goto } from "../../Buttons/Goto"
-import { useEffect } from "react"
+import { useEffect, useState } from "react";
+import axios from 'axios';
 
 const horizentalPosts = [
     { postTitle: 'Using Instagram Tawo Promote Your', postTag: 'CRYPTOCURRENCY', postDate: '27 AUGUST, 2024', postTime: '', postImage: horizentalImage },
@@ -21,15 +22,16 @@ const horizentalPosts = [
     { postTitle: 'Using Instagram Tawo Promote Your', postTag: 'CRYPTOCURRENCY', postDate: '27 AUGUST, 2024', postTime: '', postImage: horizentalImage }
 ]
 
-export const TopNews = ({isDarkMode}) => {
+export const TopNews = ({ isDarkMode }) => {
+
+    const [newsData, setNewsData] = useState([]);
 
     useEffect(() => {
-            console.log(isDarkMode, 'isDarkMode')
-          // Dynamically add the TradingView script
-          const script = document.createElement('script');
-          script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-timeline.js';
-          script.async = true;
-          script.innerHTML = JSON.stringify({
+        // Dynamically add the TradingView script
+        const script = document.createElement('script');
+        script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-timeline.js';
+        script.async = true;
+        script.innerHTML = JSON.stringify({
             "feedMode": "all_symbols",
             "isTransparent": true,
             "displayMode": "compact",
@@ -37,13 +39,52 @@ export const TopNews = ({isDarkMode}) => {
             "height": "100%",
             "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "locale": "en"
-          });
-          document.getElementById('topnews-widget-container').appendChild(script);
-      
-          // Cleanup on unmount
-          return () => {
-            document.getElementById('topnews-widget-container').removeChild(script);
-          };
+        });
+        document.getElementById('topnews-widget-container').appendChild(script);
+
+        // Cleanup on unmount
+        return () => {
+            const widgetElement = document.getElementById('topnews-widget-container');
+            if (widgetElement) {  // Check if the element exists
+                widgetElement.removeChild(script);
+            }
+        };
+
+    }, []);
+
+
+    // Function to format date
+    const formatDate = (dateStr) => {
+        const year = dateStr.substring(0, 4);
+        const month = parseInt(dateStr.substring(4, 6), 10) - 1; // Month is zero-based
+        const day = dateStr.substring(6, 8);
+
+        const date = new Date(year, month, day);
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    };
+
+    // Function to format time in minutes
+    const formatTimeInMinutes = (timeStr) => {
+        const hour = parseInt(timeStr.substring(9, 11), 10);
+        const minute = parseInt(timeStr.substring(11, 13), 10);
+        const minutesSinceMidnight = hour * 60 + minute; // Calculate total minutes
+        return `${minutesSinceMidnight} Mins`;
+    };
+
+    useEffect(() => {
+
+        const url = `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&sort=LATEST&apikey=${process.env.alphaVantageStockApi}`;
+
+        // Fetch data using axios
+        axios
+            .get(url)
+            .then((response) => {
+                setNewsData(response.data);
+            })
+            .catch((err) => {
+                console.error('Error:', err);
+            });
     }, []);
 
     return (
@@ -59,47 +100,45 @@ export const TopNews = ({isDarkMode}) => {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-12">
-                                <div className="top-news-post">
-                                    <div className="top-news-post-thumb">
-                                        <Link href="/">
-                                            <img src="assets/img/blog/top_news_post01.jpg" alt="" />
-                                        </Link>
-                                        <a
-                                            href="https://www.youtube.com/watch?v=G_AEL-Xo5l8"
-                                            className="paly-btn popup-video"
-                                        >
-                                            <i className="fas fa-play" />
-                                        </a>
-                                    </div>
-                                    <div className="top-news-post-content">
-                                        <PostTag
-                                            tagName={'Sports'}
-                                        />
-                                        <PostTitle
-                                            extras={'bold-underline'}
-                                            heading={'How To Protect Your App With Threat Model Based On JSONDiff'}
-                                        />
-                                        <DateTime
-                                            date={'27 August, 2024'}
-                                            time={'20 Mins'}
-                                        />
-                                        <PostDescription
-                                            description={`
-                                        Browned butter and brown sugar caramelly oodness crispyedgesthick and 
-                                        soft centers and melty little puddles of chocolate y first favorite.
-                                        Browned butter brown sugar caramelly oodness.
-                                    `}
-                                        />
-                                        <div className="view-all-btn">
-                                            <Goto
-                                                buttonText={'Read More'}
-                                                goTo={'/'}
+                            {newsData.feed?.length > 0 && (
+                                <div className="col-12">
+                                    <div className="top-news-post">
+                                        <div className="top-news-post-thumb">
+                                            <Link href={newsData.feed[0].url}>
+                                                <img src={newsData.feed[0].banner_image} alt={newsData.feed[0].source + ' image'} />
+                                            </Link>
+                                            <a
+                                                href="https://www.youtube.com/watch?v=G_AEL-Xo5l8"
+                                                className="paly-btn popup-video"
+                                            >
+                                                <i className="fas fa-play" />
+                                            </a>
+                                        </div>
+                                        <div className="top-news-post-content">
+                                            <PostTag
+                                                tagName={'Sports'}
                                             />
+                                            <PostTitle
+                                                extras={'bold-underline'}
+                                                heading={newsData.feed[0].title}
+                                            />
+                                            <DateTime
+                                                date={formatDate(newsData.feed[0].time_published)}
+                                                time={formatTimeInMinutes(newsData.feed[0].time_published)}
+                                            />
+                                            <PostDescription
+                                                description={newsData.feed[0].summary}
+                                            />
+                                            <div className="view-all-btn">
+                                                <Goto
+                                                    buttonText={'Read More'}
+                                                    goTo={newsData.feed[0].url}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            )}
                             {horizentalPosts.map((horizentalPost, index) => (
                                 <div className="col-lg-4" key={index}>
                                     <div className="horizontal-post-four">

@@ -20,27 +20,27 @@ const menuItems = [
             {
                 navbarName: 'Stocks',
                 subMenu: [],
-                navLink: '/market/stocks'
+                navLink: '/markets/stocks'
             },
             {
                 navbarName: 'Cryptocurrency',
                 subMenu: [],
-                navLink: '/market/cryptocurrency'
+                navLink: '/markets/cryptocurrency'
             },
             {
                 navbarName: 'Forex',
                 subMenu: [],
-                navLink: '/market/forex'
+                navLink: '/markets/forex'
             },
             {
                 navbarName: 'ETFs',
                 subMenu: [],
-                navLink: '/market/etf'
+                navLink: '/markets/etf'
             },
             {
                 navbarName: 'Mutual Funds',
                 subMenu: [],
-                navLink: '/market/mutual-funds'
+                navLink: '/markets/mutual-funds'
             },
         ],
         navLink: '/markets'

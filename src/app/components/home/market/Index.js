@@ -1,10 +1,9 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Heading } from "../../heading/Heading";
-import { Banner } from '../../ads/Banner'
 
-export const Market = ({market, showBtn}) => {
+export const Market = ({ market, showBtn }) => {
 
     // const [activeTab, setActiveTab] = useState('indices');
 
@@ -23,203 +22,333 @@ export const Market = ({market, showBtn}) => {
     //     setActiveTab(tabId);
     // };
 
-
-
-    useEffect(() => {
-        // Dynamically add the TradingView script
+    // Reusable function to add TradingView widget
+    const addTradingViewWidget = (widgetId, config) => {
         const script = document.createElement('script');
         script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js';
         script.async = true;
-        script.innerHTML = JSON.stringify({
-          "width": "100%",
-          "height": "100%",
-          "largeChartUrl": `${process.env.baseURL}/symbols`,
-          "symbolsGroups": [
-            {
-              "name": "Indices",
-              "originalName": "Indices",
-              "symbols": [
-                { "name": "FOREXCOM:SPXUSD", "displayName": "S&P 500 Index" },
-                { "name": "FOREXCOM:NSXUSD", "displayName": "US 100 Cash CFD" },
-                { "name": "FOREXCOM:DJI", "displayName": "Dow Jones Industrial Average Index" },
-                { "name": "INDEX:NKY", "displayName": "Nikkei 225" },
-                { "name": "INDEX:DEU40", "displayName": "DAX Index" },
-                { "name": "FOREXCOM:UKXGBP", "displayName": "FTSE 100 Index" }
-              ]
-            },
-            {
-              "name": "Futures",
-              "originalName": "Futures",
-              "symbols": [
-                { "name": "CME_MINI:ES1!", "displayName": "S&P 500" },
-                { "name": "CME:6E1!", "displayName": "Euro" },
-                { "name": "COMEX:GC1!", "displayName": "Gold" },
-                { "name": "NYMEX:CL1!", "displayName": "WTI Crude Oil" },
-                { "name": "NYMEX:NG1!", "displayName": "Gas" },
-                { "name": "CBOT:ZC1!", "displayName": "Corn" }
-              ]
-            },
-            {
-              "name": "Bonds",
-              "originalName": "Bonds",
-              "symbols": [
-                { "name": "CBOT:ZB1!", "displayName": "T-Bond" },
-                { "name": "CBOT:UB1!", "displayName": "Ultra T-Bond" },
-                { "name": "EUREX:FGBL1!", "displayName": "Euro Bund" },
-                { "name": "EUREX:FBTP1!", "displayName": "Euro BTP" },
-                { "name": "EUREX:FGBM1!", "displayName": "Euro BOBL" }
-              ]
-            },
-            {
-              "name": "Forex",
-              "originalName": "Forex",
-              "symbols": [
-                { "name": "FX:EURUSD", "displayName": "EUR to USD" },
-                { "name": "FX:GBPUSD", "displayName": "GBP to USD" },
-                { "name": "FX:USDJPY", "displayName": "USD to JPY" },
-                { "name": "FX:USDCHF", "displayName": "USD to CHF" },
-                { "name": "FX:AUDUSD", "displayName": "AUD to USD" },
-                { "name": "FX:USDCAD", "displayName": "USD to CAD" }
-              ]
-            }
-          ],
-          "showSymbolLogo": true,
-          "isTransparent": true,
-          "locale": "en"
-        });
-        document.getElementById('tradingview-widget-containerr').appendChild(script);
-    
-        // Cleanup on unmount
+        script.innerHTML = JSON.stringify(config);
+        document.getElementById(widgetId).appendChild(script);
+
+        // Cleanup function to remove the script
         return () => {
-          document.getElementById('tradingview-widget-containerr').removeChild(script);
+            const widgetElement = document.getElementById(widgetId);
+            if (widgetElement) {  // Check if the element exists
+                widgetElement.removeChild(script);
+            }
         };
-      }, []);
+    };
+
+
+
+    useEffect(() => {
+        const cleanupStocks = addTradingViewWidget('tradingview-widget-stocks', {
+            "width": "100%",
+            "height": "100%",
+            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "symbolsGroups": [
+                {
+                    "name": "Stocks",
+                    "originalName": "Forex",
+                    "symbols": [
+                        {
+                            "name": "NASDAQ:NVDA"
+                        },
+                        {
+                            "name": "NASDAQ:TSLA"
+                        },
+                        {
+                            "name": "NASDAQ:AVGO"
+                        },
+                        {
+                            "name": "NYSE:NIO"
+                        },
+                        {
+                            "name": "NASDAQ:SMCI"
+                        },
+                        {
+                            "name": "NASDAQ:AAPL"
+                        },
+                        {
+                            "name": "NASDAQ:AMZN"
+                        },
+                        {
+                            "name": "NASDAQ:INTC"
+                        },
+                        {
+                            "name": "NASDAQ:AMD"
+                        },
+                        {
+                            "name": "NASDAQ:MSFT"
+                        }
+                    ]
+                }
+            ],
+            "showSymbolLogo": true,
+            "isTransparent": true,
+            "locale": "en"
+        });
+
+        const cleanupCrypto = addTradingViewWidget('tradingview-widget-cryptocurrency', {
+            "width": "100%",
+            "height": "100%",
+            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "symbolsGroups": [
+                {
+                    "name": "Cryptocurrency",
+                    "originalName": "Forex",
+                    "symbols": [
+                        {
+                            "name": "CRYPTOCAP:BTC"
+                        },
+                        {
+                            "name": "CRYPTOCAP:ETH"
+                        },
+                        {
+                            "name": "CRYPTOCAP:USDT.D"
+                        },
+                        {
+                            "name": "CRYPTOCAP:BNB"
+                        },
+                        {
+                            "name": "CRYPTO:SOLUSD"
+                        },
+                        {
+                            "name": "CRYPTOCAP:USDC"
+                        },
+                        {
+                            "name": "CRYPTOCAP:XRP"
+                        },
+                        {
+                            "name": "CRYPTOCAP:STETH"
+                        },
+                        {
+                            "name": "CRYPTOCAP:DOGE"
+                        }
+                    ]
+                }
+            ],
+            "showSymbolLogo": true,
+            "isTransparent": true,
+            "locale": "en"
+        });
+
+        const cleanupForex = addTradingViewWidget('tradingview-widget-forex', {
+            "width": "100%",
+            "height": "100%",
+            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "symbolsGroups": [
+                {
+                    "name": "Forex",
+                    "originalName": "Forex",
+                    "symbols": [
+                        {
+                            "name": "FOREXCOM:EURUSD"
+                        },
+                        {
+                            "name": "FOREXCOM:GBPUSD"
+                        },
+                        {
+                            "name": "FOREXCOM:USDJPY"
+                        },
+                        {
+                            "name": "FOREXCOM:AUDUSD"
+                        },
+                        {
+                            "name": "FOREXCOM:GBPJPY"
+                        },
+                        {
+                            "name": "FOREXCOM:USDCAD"
+                        },
+                        {
+                            "name": "FOREXCOM:USDCHF"
+                        },
+                        {
+                            "name": "FOREXCOM:NZDUSD"
+                        },
+                        {
+                            "name": "FOREXCOM:EURJPY"
+                        },
+                        {
+                            "name": "FOREXCOM:EURGBP"
+                        }
+                    ]
+                }
+            ],
+            "showSymbolLogo": true,
+            "isTransparent": true,
+            "locale": "en"
+        });
+
+        const cleanupEtfs = addTradingViewWidget('tradingview-widget-etfs', {
+            "width": "100%",
+            "height": "100%",
+            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "symbolsGroups": [
+                {
+                    "name": "ETFs",
+                    "originalName": "Forex",
+                    "symbols": [
+                        {
+                            "name": "AMEX:SPY"
+                        },
+                        {
+                            "name": "NASDAQ:QQQ"
+                        },
+                        {
+                            "name": "AMEX:IWM"
+                        },
+                        {
+                            "name": "NASDAQ:TQQQ"
+                        },
+                        {
+                            "name": "AMEX:SOXL"
+                        },
+                        {
+                            "name": "AMEX:DIA"
+                        },
+                        {
+                            "name": "NASDAQ:SMH"
+                        },
+                        {
+                            "name": "NASDAQ:SQQQ"
+                        },
+                        {
+                            "name": "AMEX:GLD"
+                        },
+                        {
+                            "name": "AMEX:XLF"
+                        }
+                    ]
+                }
+            ],
+            "showSymbolLogo": true,
+            "isTransparent": true,
+            "locale": "en"
+        });
+
+        const cleanupMutualFunds = addTradingViewWidget('tradingview-widget-mutual-funds', {
+            "width": "100%",
+            "height": "100%",
+            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "symbolsGroups": [
+                {
+                  "name": "Mutual Funds",
+                  "originalName": "Forex",
+                  "symbols": [
+                    {
+                      "name": "AMEX:PHYS"
+                    },
+                    {
+                      "name": "AMEX:PSLV"
+                    },
+                    {
+                      "name": "OTC:LTCN"
+                    },
+                    {
+                      "name": "OTC:SRUUF"
+                    },
+                    {
+                      "name": "NYSE:PTY"
+                    },
+                    {
+                      "name": "NYSE:DXYZ"
+                    },
+                    {
+                      "name": "OTC:BCHG"
+                    },
+                    {
+                      "name": "NYSE:PCN"
+                    },
+                    {
+                      "name": "NYSE:PDI"
+                    },
+                    {
+                      "name": "NASDAQ:OXLC"
+                    }
+                  ]
+                }
+              ],
+            "showSymbolLogo": true,
+            "isTransparent": true,
+            "locale": "en"
+        });
+
+        return () => {
+            cleanupStocks();
+            cleanupCrypto();
+            cleanupForex();
+            cleanupEtfs();
+            cleanupMutualFunds();
+            // Call other cleanup functions if more widgets are added
+        };
+    }, []);
 
     return (
         <section className="recent-post-area-two mb-10">
             <div className="container">
                 <div className="recent-post-inner-wrap">
                     <div className="row justify-content-center">
-                        <div className="col-lg-12"> 
+                        <div className="col-lg-12 my-3">
                             <Heading
-                                textHeading={market}
-                                showBtn={showBtn}
+                                textHeading={'Stocks'}
+                                showBtn={true}
+                                goTo={'/markets/stocks'}
                             />
                             <div className="sidebar-wrap">
-                                {/* <div className="sidebar-tab">
-                                    <ul className="nav nav-tabs" id="myTab" role="tablist">
-                                        {tabs.map((tab) => (
-                                            <li className="nav-item" role="presentation" key={tab.id}>
-                                                <button
-                                                    className={`nav-link ${activeTab === tab.id ? 'active' : ''}`}
-                                                    id={`${tab.id}-tab`}
-                                                    data-bs-toggle="tab"
-                                                    data-bs-target={tab.target}
-                                                    type="button"
-                                                    role="tab"
-                                                    aria-controls={`${tab.id}-tab-pane`}
-                                                    aria-selected={activeTab === tab.id}
-                                                    onClick={() => handleTabClick(tab.id)}
-                                                >
-                                                    {tab.label}
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <div className="blog-details-bottom border-0 pt-0 mt-0">
-                                        <div className="row align-items-center">
-                                            <div className="col-lg-6">
-                                                <div className="post-tags">
-                                                    <ul className="list-wrap">
-                                                        <li>
-                                                            <a className="">Art &amp; Design</a>
-                                                        </li>
-                                                        <li>
-                                                            <a className="">Video</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="tab-content" id="myTabContent">
-                                        <div
-                                            className="tab-pane fade show active"
-                                            id="latest-tab-pane"
-                                            role="tabpanel"
-                                            aria-labelledby="latest-tab"
-                                            tabIndex={0}
-                                        >
-                                            <div className="container">
-                                                <div className="row !overflow-auto">
-                                                    <table
-                                                        id="example"
-                                                        className="table table-striped table-bordered !table-auto !text-xs"
-                                                        cellSpacing={0}
-                                                        width="100%"
-                                                    >
-                                                    <thead>
-                                                        <tr>
-                                                        <th>Name</th>
-                                                        <th>Last</th>
-                                                        <th>High</th>
-                                                        <th>Low</th>
-                                                        <th>Chg.</th>
-                                                        <th>Chg%</th>
-                                                        <th>Time</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Dow Jones</td>
-                                                            <td>40,000.90</td>
-                                                            <td>40,257.24</td>
-                                                            <td>39,783.28</td>
-                                                            <td>+247.15</td>
-                                                            <td>+0.62%</td>
-                                                            <td>12/07</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Dow Jones</td>
-                                                            <td>40,000.90</td>
-                                                            <td>40,257.24</td>
-                                                            <td>39,783.28</td>
-                                                            <td>+247.15</td>
-                                                            <td>+0.62%</td>
-                                                            <td>12/07</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Dow Jones</td>
-                                                            <td>40,000.90</td>
-                                                            <td>40,257.24</td>
-                                                            <td>39,783.28</td>
-                                                            <td>+247.15</td>
-                                                            <td>+0.62%</td>
-                                                            <td>12/07</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Dow Jones</td>
-                                                            <td>40,000.90</td>
-                                                            <td>40,257.24</td>
-                                                            <td>39,783.28</td>
-                                                            <td>+247.15</td>
-                                                            <td>+0.62%</td>
-                                                            <td>12/07</td>
-                                                        </tr>
-                                                    </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> */}
-                                <div className="!h-[64rem]" id="tradingview-widget-containerr">
-                                    <div className="tradingview-widget-container__widget"></div>
+                                <div className="!h-[26rem]" id="tradingview-widget-stocks">
+                                    <div className="tradingview-widget-stocks"></div>
                                 </div>
                             </div>
                         </div>
-                        {/* <div className="col-lg-3"></div> */}
+                        <div className="col-lg-12 my-3">
+                            <Heading
+                                textHeading={'Cryptocurrency'}
+                                showBtn={true}
+                                goTo={'/markets/cryptocurrency'}
+                            />
+                            <div className="sidebar-wrap">
+                                <div className="!h-[26rem]" id="tradingview-widget-cryptocurrency">
+                                    <div className="tradingview-widget-cryptocurrency"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-12 my-3">
+                            <Heading
+                                textHeading={'Forex'}
+                                showBtn={true}
+                                goTo={'/markets/forex'}
+                            />
+                            <div className="sidebar-wrap">
+                                <div className="!h-[26rem]" id="tradingview-widget-forex">
+                                    <div className="tradingview-widget-forex"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-12 my-3">
+                            <Heading
+                                textHeading={'ETFs'}
+                                showBtn={true}
+                                goTo={'/markets/etf'}
+                            />
+                            <div className="sidebar-wrap">
+                                <div className="!h-[26rem]" id="tradingview-widget-etfs">
+                                    <div className="tradingview-widget-etfs"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-12 my-3">
+                            <Heading
+                                textHeading={'Mutual Funds'}
+                                showBtn={true}
+                                goTo={'/markets/mutual-funds'}
+                            />
+                            <div className="sidebar-wrap">
+                                <div className="!h-[26rem]" id="tradingview-widget-mutual-funds">
+                                    <div className="tradingview-widget-mutual-funds"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 import { Goto } from "../Buttons/Goto"
 
-export const Heading = ({ textHeading, showBtn }) => {
+export const Heading = ({ textHeading, showBtn, goTo }) => {
     return (
         <div className="row">
             <div className="col-lg-12">
@@ -12,7 +12,7 @@ export const Heading = ({ textHeading, showBtn }) => {
                     {showBtn && (
                         <Goto 
                             buttonText={'Visit Market'}
-                            goTo={'#'}
+                            goTo={goTo}
                         />
                     )}
                     <div className="section-title-line" />
