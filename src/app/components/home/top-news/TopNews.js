@@ -96,17 +96,19 @@ export const TopNews = ({ isDarkMode }) => {
                             {newsData.feed?.length > 0 && (
                                 <div className="col-12">
                                     <div className="top-news-post">
-                                        <div className="top-news-post-thumb">
-                                            <Link href={newsData.feed[0].url}>
-                                                <img src={newsData.feed[0].banner_image} alt={newsData.feed[0].source + ' image'} />
-                                            </Link>
-                                            {/* <a
+                                        {newsData.feed[0].banner_image !== '' && (
+                                            <div className="top-news-post-thumb">
+                                                <Link href={newsData.feed[0].url}>
+                                                    <img src={newsData.feed[0].banner_image} alt={newsData.feed[0].source + ' image'} />
+                                                </Link>
+                                                {/* <a
                                                 href="https://www.youtube.com/watch?v=G_AEL-Xo5l8"
                                                 className="paly-btn popup-video"
                                             >
                                                 <i className="fas fa-play" />
                                             </a> */}
-                                        </div>
+                                            </div>
+                                        )}
                                         <div className="top-news-post-content">
                                             <PostTag
                                                 tagName={'Sports'}
