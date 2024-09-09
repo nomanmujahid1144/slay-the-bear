@@ -1,58 +1,11 @@
 'use client'
 
 import { Heading } from "@/app/components/heading/Heading";
+import { srcFile } from "@/app/utils/tradingViewSrcFiles";
+import { addTradingViewWidget } from "@/app/utils/utils";
 import { useEffect } from "react";
 
-export default function Stocks() {
-
-
-    const addTradingViewWidget = (widgetId, config) => {
-        const script = document.createElement('script');
-        script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js';
-        script.async = true;
-        script.innerHTML = JSON.stringify(config);
-        document.getElementById(widgetId).appendChild(script);
-
-        // Cleanup function to remove the script
-        return () => {
-            const widgetElement = document.getElementById(widgetId);
-            if (widgetElement) {  // Check if the element exists
-                widgetElement.removeChild(script);
-            }
-        };
-    };
-
-    const addTradingViewNewsWidget = (widgetId, config) => {
-        const script = document.createElement('script');
-        script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-hotlists.js';
-        script.async = true;
-        script.innerHTML = JSON.stringify(config);
-        document.getElementById(widgetId).appendChild(script);
-
-        // Cleanup function to remove the script
-        return () => {
-            const widgetElement = document.getElementById(widgetId);
-            if (widgetElement) {  // Check if the element exists
-                widgetElement.removeChild(script);
-            }
-        };
-    };
-
-    const addTradingViewOverviewWidget = (widgetId, config) => {
-        const script = document.createElement('script');
-        script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js';
-        script.async = true;
-        script.innerHTML = JSON.stringify(config);
-        document.getElementById(widgetId).appendChild(script);
-
-        // Cleanup function to remove the script
-        return () => {
-            const widgetElement = document.getElementById(widgetId);
-            if (widgetElement) {  // Check if the element exists
-                widgetElement.removeChild(script);
-            }
-        };
-    };
+export default function Stocks({ isDarkMode }) {
 
     useEffect(() => {
         const cleanupAllStocks = addTradingViewWidget('tradingview-widget-markets-stocks', {
@@ -160,8 +113,18 @@ export default function Stocks() {
             "showSymbolLogo": true,
             "isTransparent": true,
             "locale": "en"
-        });
-        const cleanupMarketStocksNews = addTradingViewNewsWidget('tradingview-widget-market-stocks-news', {
+        }, srcFile.getStocks);
+        const cleanupAllStocksNews = addTradingViewWidget('tradingview-widget-markets-stocks-news', {
+            "feedMode": "market",
+            "market": "stock",
+            "isTransparent": true,
+            "displayMode": "regular",
+            "width": "100%",
+            "height": "100%",
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
+            "locale": "en"
+        }, srcFile.getTimeline);
+        const cleanupMarketStocksNews = addTradingViewWidget('tradingview-widget-market-stocks-news', {
             "colorTheme": "light",
             "dateRange": "ALL",
             "exchange": "US",
@@ -182,8 +145,8 @@ export default function Stocks() {
             "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
             "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
             "largeChartUrl": `${process.env.baseURL}/symbols`,
-        });
-        const cleanupMarketStocksOverview = addTradingViewOverviewWidget('tradingview-widget-market-stocks-overview', {
+        }, srcFile.getNews);
+        const cleanupMarketStocksOverview = addTradingViewWidget('tradingview-widget-market-stocks-overview', {
             "colorTheme": "light",
             "dateRange": "ALL",
             "showChart": true,
@@ -282,10 +245,11 @@ export default function Stocks() {
                 }
             ],
             "largeChartUrl": `${process.env.baseURL}/symbols`,
-        });
+        }, srcFile.getMarketOverview);
 
         return () => {
             cleanupAllStocks();
+            cleanupAllStocksNews();
             cleanupMarketStocksNews();
             cleanupMarketStocksOverview();
             // Call other cleanup functions if more widgets are added
@@ -297,13 +261,20 @@ export default function Stocks() {
             <div className="container">
                 <div className="row justify-content-center">
                     <div className="col-xl-9">
-                        <Heading
-                            textHeading="Stock Market"
-                            showBtn={false}
-                        />
                         <div className="sidebar-wrap">
+                            <Heading
+                                textHeading="Stock Market"
+                                showBtn={false}
+                            />
                             <div className="!h-[71rem]" id="tradingview-widget-markets-stocks">
                                 <div className="tradingview-widget-markets-stocks"></div>
+                            </div>
+                            <Heading
+                                textHeading="News"
+                                showBtn={false}
+                            />
+                            <div className="!h-[71rem]" id="tradingview-widget-markets-stocks-news">
+                                <div className="tradingview-widget-markets-stocks-news"></div>
                             </div>
                         </div>
                     </div>

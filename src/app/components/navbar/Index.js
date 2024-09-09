@@ -35,7 +35,7 @@ const menuItems = [
             {
                 navbarName: 'ETFs',
                 subMenu: [],
-                navLink: '/markets/etf'
+                navLink: '/markets/etfs'
             },
             {
                 navbarName: 'Mutual Funds',

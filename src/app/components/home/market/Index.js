@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 import { Heading } from "../../heading/Heading";
+import { addTradingViewWidget } from "@/app/utils/utils";
+import { srcFile } from "@/app/utils/tradingViewSrcFiles";
 
 export const Market = ({ market, showBtn }) => {
 
@@ -21,24 +23,6 @@ export const Market = ({ market, showBtn }) => {
     // const handleTabClick = (tabId) => {
     //     setActiveTab(tabId);
     // };
-
-    // Reusable function to add TradingView widget
-    const addTradingViewWidget = (widgetId, config) => {
-        const script = document.createElement('script');
-        script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js';
-        script.async = true;
-        script.innerHTML = JSON.stringify(config);
-        document.getElementById(widgetId).appendChild(script);
-
-        // Cleanup function to remove the script
-        return () => {
-            const widgetElement = document.getElementById(widgetId);
-            if (widgetElement) {  // Check if the element exists
-                widgetElement.removeChild(script);
-            }
-        };
-    };
-
 
 
     useEffect(() => {
@@ -87,7 +71,7 @@ export const Market = ({ market, showBtn }) => {
             "showSymbolLogo": true,
             "isTransparent": true,
             "locale": "en"
-        });
+        }, srcFile.getStocks);
 
         const cleanupCrypto = addTradingViewWidget('tradingview-widget-cryptocurrency', {
             "width": "100%",
@@ -131,7 +115,7 @@ export const Market = ({ market, showBtn }) => {
             "showSymbolLogo": true,
             "isTransparent": true,
             "locale": "en"
-        });
+        }, srcFile.getStocks);
 
         const cleanupForex = addTradingViewWidget('tradingview-widget-forex', {
             "width": "100%",
@@ -178,7 +162,7 @@ export const Market = ({ market, showBtn }) => {
             "showSymbolLogo": true,
             "isTransparent": true,
             "locale": "en"
-        });
+        }, srcFile.getStocks);
 
         const cleanupEtfs = addTradingViewWidget('tradingview-widget-etfs', {
             "width": "100%",
@@ -225,7 +209,7 @@ export const Market = ({ market, showBtn }) => {
             "showSymbolLogo": true,
             "isTransparent": true,
             "locale": "en"
-        });
+        }, srcFile.getStocks);
 
         const cleanupMutualFunds = addTradingViewWidget('tradingview-widget-mutual-funds', {
             "width": "100%",
@@ -272,7 +256,7 @@ export const Market = ({ market, showBtn }) => {
             "showSymbolLogo": true,
             "isTransparent": true,
             "locale": "en"
-        });
+        }, srcFile.getStocks);
 
         return () => {
             cleanupStocks();

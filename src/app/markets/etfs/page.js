@@ -5,167 +5,28 @@ import { srcFile } from "@/app/utils/tradingViewSrcFiles";
 import { addTradingViewWidget } from "@/app/utils/utils";
 import { useEffect } from "react";
 
-export default function Cryptocurrency({ isDarkMode }) {
+export default function ETFs({ isDarkMode }) {
 
     useEffect(() => {
-        const cleanupCryptocurrency = addTradingViewWidget('tradingview-widget-cryptocurrency', {
+        const cleanupEtfsHeatMaps = addTradingViewWidget('tradingview-widget-etfs-heatmaps', {
             "width": "100%",
             "height": "100%",
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
-            "symbolsGroups": [
-                {
-                    "name": "Cryptocurrency",
-                    "originalName": "Indices",
-                    "symbols": [
-                        {
-                            "name": "CRYPTOCAP:BTC"
-                        },
-                        {
-                            "name": "CRYPTOCAP:ETH"
-                        },
-                        {
-                            "name": "CRYPTO:USDTUSD"
-                        },
-                        {
-                            "name": "CRYPTOCAP:BNB"
-                        },
-                        {
-                            "name": "CRYPTO:SOLUSD"
-                        },
-                        {
-                            "name": "CRYPTOCAP:USDC"
-                        },
-                        {
-                            "name": "CRYPTOCAP:XRP"
-                        },
-                        {
-                            "name": "CRYPTO:DOGEUSD"
-                        },
-                        {
-                            "name": "CRYPTO:TONUSD"
-                        },
-                        {
-                            "name": "CRYPTO:TRXUSD"
-                        },
-                        {
-                            "name": "CRYPTO:ADAUSD"
-                        },
-                        {
-                            "name": "CRYPTO:AVAXUSD"
-                        },
-                        {
-                            "name": "CRYPTO:SHIBUSD"
-                        },
-                        {
-                            "name": "CRYPTO:DOTUSD"
-                        },
-                        {
-                            "name": "CRYPTO:LINKUSD"
-                        },
-                        {
-                            "name": "OANDA:BCHUSD"
-                        },
-                        {
-                            "name": "CRYPTOCAP:DAI"
-                        },
-                        {
-                            "name": "CRYPTO:LEOUSD"
-                        },
-                        {
-                            "name": "CRYPTOCAP:LTC"
-                        },
-                        {
-                            "name": "CRYPTOCAP:NEAR"
-                        }
-                    ]
-                }
-            ],
-            "showSymbolLogo": true,
-            "isTransparent": true,
-            "locale": "en"
-        }, srcFile.getStocks);
-        const cleanupCryptocurrencyPairs = addTradingViewWidget('tradingview-widget-cryptocurrency-pairs', {
-            "width": "100%",
-            "height": "100%",
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
-            "symbolsGroups": [
-                {
-                    "name": "Cryptocurrency",
-                    "originalName": "Indices",
-                    "symbols": [
-                        {
-                            "name": "BINANCE:BTCUSD"
-                        },
-                        {
-                            "name": "CRYPTOCAP:BTC"
-                        },
-                        {
-                            "name": "BINANCE:ETHUSD"
-                        },
-                        {
-                            "name": "CRYPTO:SOLUSD"
-                        },
-                        {
-                            "name": "PYTH:TONUSD"
-                        },
-                        {
-                            "name": "CRYPTOCAP:XRP"
-                        },
-                        {
-                            "name": "CRYPTOCAP:ETH"
-                        },
-                        {
-                            "name": "BITMEX:BPEPE"
-                        },
-                        {
-                            "name": "CRYPTOCAP:BNB"
-                        },
-                        {
-                            "name": "BINANCE:DOGEUSD"
-                        },
-                        {
-                            "name": "PYTH:USDMXN"
-                        },
-                        {
-                            "name": "WHITEBIT:FETTRY"
-                        },
-                        {
-                            "name": "BINANCE:LINKUSD"
-                        },
-                        {
-                            "name": "BITAZZA:USDTTHB"
-                        },
-                        {
-                            "name": "BINANCE:NFPUSD"
-                        },
-                        {
-                            "name": "BITKUB:XRPTHB"
-                        },
-                        {
-                            "name": "CRYPTO:ADAUSD"
-                        },
-                        {
-                            "name": "CRYPTO:VELOUSD"
-                        },
-                        {
-                            "name": "COINBASE:BCHUSD"
-                        },
-                        {
-                            "name": "CRYPTO:RDNTUSD"
-                        },
-                        {
-                            "name": "CRYPTO:JASMYUSD"
-                        }
-                    ]
-                }
-            ],
-            "showSymbolLogo": true,
-            "isTransparent": true,
-            "locale": "en"
-        }, srcFile.getStocks);
-        const cleanupAllCryptoNews = addTradingViewWidget('tradingview-widget-crypto-news', {
+            "dataSource": "AllUSEtf",
+            "blockSize": "aum",
+            "blockColor": "change",
+            "grouping": "asset_class",
+            "locale": "en",
+            "symbolUrl": `${process.env.baseURL}/symbols`,
+            "colorTheme": "light",
+            "hasTopBar": true,
+            "isDataSetEnabled": true,
+            "isZoomEnabled": true,
+            "hasSymbolTooltip": true,
+            "isMonoSize": false,
+        }, srcFile.getETFsHeatMap);
+        const cleanupAllMutualFundsNews = addTradingViewWidget('tradingview-widget-etfs-news', {
             "feedMode": "market",
-            "market": "crypto",
+            "market": "stock",
             "isTransparent": true,
             "displayMode": "regular",
             "width": "100%",
@@ -294,12 +155,11 @@ export default function Cryptocurrency({ isDarkMode }) {
                 }
             ],
             "largeChartUrl": `${process.env.baseURL}/symbols`,
-        },srcFile.getMarketOverview);
+        }, srcFile.getMarketOverview);
 
         return () => {
-            cleanupCryptocurrency();
-            cleanupCryptocurrencyPairs();
-            cleanupAllCryptoNews();
+            cleanupEtfsHeatMaps();
+            cleanupAllMutualFundsNews();
             cleanupMarketStocksNews();
             cleanupMarketStocksOverview();
             // Call other cleanup functions if more widgets are added
@@ -313,27 +173,19 @@ export default function Cryptocurrency({ isDarkMode }) {
                     <div className="col-xl-9">
                         <div className="sidebar-wrap">
                             <Heading
-                                textHeading="Cryptocurrency Market"
+                                textHeading="ETFs Heatmap"
                                 showBtn={false}
                             />
-                            <div className="!h-[49rem]" id="tradingview-widget-cryptocurrency">
-                                <div className="tradingview-widget-cryptocurrency"></div>
+                            <div className="!h-[49rem]" id="tradingview-widget-etfs-heatmaps">
+                                <div className="tradingview-widget-etfs-heatmaps"></div>
                             </div>
                             <hr className="my-3" />
                             <Heading
-                                textHeading="More Active Cryptocurrency Pairs"
+                                textHeading="ETFs News"
                                 showBtn={false}
                             />
-                            <div className="!h-[51rem]" id="tradingview-widget-cryptocurrency-pairs">
-                                <div className="tradingview-widget-cryptocurrency-pairs"></div>
-                            </div>
-                            <hr className="my-3" />
-                            <Heading
-                                textHeading="Cryptocurrency News"
-                                showBtn={false}
-                            />
-                            <div className="!h-[51rem]" id="tradingview-widget-crypto-news">
-                                <div className="tradingview-widget-crypto-news"></div>
+                            <div className="!h-[49rem]" id="tradingview-widget-etfs-news">
+                                <div className="tradingview-widget-etfs-news"></div>
                             </div>
                         </div>
                         {/*                         

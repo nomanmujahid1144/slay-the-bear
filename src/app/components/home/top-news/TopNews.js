@@ -15,6 +15,8 @@ import Image from "next/image"
 import { Goto } from "../../Buttons/Goto"
 import { useEffect, useState } from "react";
 import axios from 'axios';
+import { srcFile } from "@/app/utils/tradingViewSrcFiles"
+import { addTradingViewWidget } from "@/app/utils/utils"
 
 const horizentalPosts = [
     { postTitle: 'Using Instagram Tawo Promote Your', postTag: 'CRYPTOCURRENCY', postDate: '27 AUGUST, 2024', postTime: '', postImage: horizentalImage },
@@ -27,11 +29,7 @@ export const TopNews = ({ isDarkMode }) => {
     const [newsData, setNewsData] = useState([]);
 
     useEffect(() => {
-        // Dynamically add the TradingView script
-        const script = document.createElement('script');
-        script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-timeline.js';
-        script.async = true;
-        script.innerHTML = JSON.stringify({
+        const cleanupTimeline = addTradingViewWidget('topnews-widget-container', {
             "feedMode": "all_symbols",
             "isTransparent": true,
             "displayMode": "compact",
@@ -39,17 +37,12 @@ export const TopNews = ({ isDarkMode }) => {
             "height": "100%",
             "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "locale": "en"
-        });
-        document.getElementById('topnews-widget-container').appendChild(script);
+        }, srcFile.getTimeline);
 
-        // Cleanup on unmount
         return () => {
-            const widgetElement = document.getElementById('topnews-widget-container');
-            if (widgetElement) {  // Check if the element exists
-                widgetElement.removeChild(script);
-            }
+            cleanupTimeline();
+            // Call other cleanup functions if more widgets are added
         };
-
     }, []);
 
 
@@ -107,12 +100,12 @@ export const TopNews = ({ isDarkMode }) => {
                                             <Link href={newsData.feed[0].url}>
                                                 <img src={newsData.feed[0].banner_image} alt={newsData.feed[0].source + ' image'} />
                                             </Link>
-                                            <a
+                                            {/* <a
                                                 href="https://www.youtube.com/watch?v=G_AEL-Xo5l8"
                                                 className="paly-btn popup-video"
                                             >
                                                 <i className="fas fa-play" />
-                                            </a>
+                                            </a> */}
                                         </div>
                                         <div className="top-news-post-content">
                                             <PostTag
