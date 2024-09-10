@@ -73,6 +73,7 @@ export const TopNews = ({ isDarkMode }) => {
         axios
             .get(url)
             .then((response) => {
+                console.log(response.data, 'response.data')
                 setNewsData(response.data);
             })
             .catch((err) => {
