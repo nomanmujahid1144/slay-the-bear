@@ -142,7 +142,7 @@ export const Navbar = () => {
                                         {suggestions.length > 0 && (
                                             <ul className="absolute bg-white z-10 rounded-lg p-3">
                                                 {suggestions.map((suggestion, index) => (
-                                                    <Link onClick={handleCleanSuggestions} href={`/symbols?tvwidgetsymbol=${suggestion.symbol}`}>
+                                                    <Link key={index} onClick={handleCleanSuggestions} href={`/symbols?tvwidgetsymbol=${suggestion.symbol}`}>
                                                         <li key={index} style={{ padding: '5px 0' }}>
                                                             <strong>{suggestion.symbol}</strong>: {suggestion.name}
                                                         </li>
