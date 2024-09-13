@@ -6,30 +6,26 @@ import { srcFile } from '../utils/tradingViewSrcFiles';
 import { useDarkMode } from '../components/dark-mode/DarkModeContext';
 import { addTradingViewWidget } from '../utils/utils';
 
-function SymbolComponent() { // Renamed to SymbolComponent for clarity
-    const searchParams = useSearchParams(); // Use useSearchParams hook
+function SymbolComponent() { 
+    const searchParams = useSearchParams(); 
     const { isDarkMode } = useDarkMode();
-    const [symbol, setSymbol] = useState(''); // Initialize symbol state
+    const [symbol, setSymbol] = useState(''); 
 
     useEffect(() => {
-        const symbolParam = searchParams.get('tvwidgetsymbol'); // Extract the value of tvwidgetsymbol
+        const symbolParam = searchParams.get('tvwidgetsymbol');
         if (symbolParam) {
-            setSymbol(symbolParam); // Store it in state if found
-            console.log(symbolParam, 'symbol'); // Debugging: log the symbol
+            setSymbol(symbolParam); 
         }
-    }, [searchParams]); // Re-run if searchParams changes
+    }, [searchParams]); 
 
     useEffect(() => {
-        if (!symbol) return; // Ensure symbol is available before initializing the widget
+        if (!symbol) return;
 
-        console.log(symbol, 'symbol');
-
-        // Function to initialize a TradingView widget
         const initializeWidget = (containerId, config, callback) => {
             const widgetContainer = document.getElementById(containerId);
 
             if (widgetContainer) {
-                widgetContainer.innerHTML = ''; // Clear the container to remove any duplicate widgets
+                widgetContainer.innerHTML = ''; 
             }
 
             return addTradingViewWidget(containerId, config, callback);
@@ -61,7 +57,7 @@ function SymbolComponent() { // Renamed to SymbolComponent for clarity
             symbolDetails();
             timelineWidget();
         };
-    }, [symbol, isDarkMode]); // Added symbol to the dependency array
+    }, [symbol, isDarkMode]);
 
     return (
         <section className="top-news-post-area pt-70 pb-70">

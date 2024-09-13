@@ -82,8 +82,8 @@ export default function NewsPage() {
                                 </div>
                             </div>
                         </div>
-                        {/* <Banner />
-                        <NewsTabs /> */}
+                        <Banner />
+                        <NewsTabs />
                     </div>
                     <div className="col-xl-3 col-lg-8">
                         <div className="sidebar-wrap-three">

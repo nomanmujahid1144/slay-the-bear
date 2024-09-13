@@ -198,12 +198,6 @@ export const TopNews = () => {
                     <div className="col-xl-3 col-lg-12">
                         <div className="sidebar-wrap-three">
                             <div className="sidebar-widget-three">
-                                {/* <Heading
-                                    textHeading={'Business'}
-                                />
-                                <div className="hot-post-wrap">
-                                    
-                                </div> */}
                                 <div className="!h-[64rem]" id="topnews-widget-container">
                                     <div className="tradingview-widget-container__widget"></div>
                                 </div>
