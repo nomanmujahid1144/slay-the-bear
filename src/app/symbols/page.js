@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react'; // Added useState
 import { useSearchParams } from 'next/navigation'; // Import the useSearchParams hook
 import { srcFile } from '../utils/tradingViewSrcFiles';
 import { useDarkMode } from '../components/dark-mode/DarkModeContext';
@@ -10,10 +10,19 @@ export default function Symbol() {
     const searchParams = useSearchParams(); // Use useSearchParams hook
     const { isDarkMode } = useDarkMode();
 
-    useEffect(() => {
-        const symbol = searchParams.get('tvwidgetsymbol'); // Use get() to access query parameter
+    const [symbol, setSymbol] = useState(''); // Initialize symbol state
 
-        console.log(searchParams, 'searchParams');
+    useEffect(() => {
+        const symbolParam = searchParams.get('tvwidgetsymbol'); // Extract the value of tvwidgetsymbol
+        if (symbolParam) {
+            setSymbol(symbolParam); // Store it in state if found
+            console.log(symbolParam, 'symbol'); // Debugging: log the symbol
+        }
+    }, [searchParams]); // Re-run if searchParams changes
+
+    useEffect(() => {
+        if (!symbol) return; // Ensure symbol is available before initializing the widget
+
         console.log(symbol, 'symbol');
 
         // Function to initialize a TradingView widget
@@ -37,7 +46,6 @@ export default function Symbol() {
             "isTransparent": false,
         }, srcFile.getWidgetSymbolInfo);
 
-        // Initialize widgets
         const timelineWidget = initializeWidget('topnews-widget-container', {
             "feedMode": "symbol",
             "symbol": symbol,
@@ -54,7 +62,7 @@ export default function Symbol() {
             symbolDetails();
             timelineWidget();
         };
-    }, [searchParams, isDarkMode]);
+    }, [symbol, isDarkMode]); // Added symbol to the dependency array
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
