@@ -10,6 +10,7 @@ export default function Symbol({ searchParams}) {
     const { isDarkMode } = useDarkMode();
 
     useEffect(() => {
+        console.log(searchParams, 'searchParams')
         const symbol = searchParams.tvwidgetsymbol;
 
         console.log(symbol, 'symbol')
