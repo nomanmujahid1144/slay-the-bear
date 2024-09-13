@@ -1,26 +1,32 @@
 'use client'
 
+import { srcFile } from '@/app/utils/tradingViewSrcFiles';
+import { addTradingViewWidget } from '@/app/utils/utils';
 import React, { useEffect } from 'react';
+import { useDarkMode } from '../dark-mode/DarkModeContext';
 
 
 export const FinentialNewsMarquee = () => {
 
+    const { isDarkMode } = useDarkMode();
+
     useEffect(() => {
 
-        // Dynamically inject custom styles
-        const style = document.createElement('style');
-        style.innerHTML = `
-        .label-dzbd7lyV.snap-dzbd7lyV.end-dzbd7lyV {
-            display: none !important;
-        }
-        `;
-        document.head.appendChild(style);
+        // Function to initialize a TradingView widget
+        const initializeWidget = (containerId, config, callback) => {
+            const widgetContainer = document.getElementById(containerId);
 
-        const script = document.createElement('script');
-        script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
-        script.async = true;
-        script.innerHTML = JSON.stringify({
+            if (widgetContainer) {
+                widgetContainer.innerHTML = ''; // Clear the container to remove any duplicate widgets
+            }
+
+            return addTradingViewWidget(containerId, config, callback);
+        };
+
+        // Initialize widgets
+        const tickerTape = initializeWidget('tradingview-widget-container', {
             "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "symbols": [
                 {
                     "proName": "FOREXCOM:SPXUSD",
@@ -46,11 +52,16 @@ export const FinentialNewsMarquee = () => {
             "showSymbolLogo": true,
             "isTransparent": false,
             "displayMode": "adaptive",
-            "colorTheme": "light",
             "locale": "en"
-        });
-        document.getElementById('tradingview-widget-container').appendChild(script);
-    }, []);
+        }, srcFile.getTickerTape);
+
+        // Cleanup function to remove all widgets before re-rendering
+        return () => {
+            tickerTape();
+            // Call other cleanup functions if more widgets are added
+        };
+
+    }, [isDarkMode]);
 
     return (
         <>

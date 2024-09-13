@@ -1,71 +1,67 @@
 'use client'
 
+import { useDarkMode } from "@/app/components/dark-mode/DarkModeContext";
 import { Heading } from "@/app/components/heading/Heading";
 import { srcFile } from "@/app/utils/tradingViewSrcFiles";
 import { addTradingViewWidget } from "@/app/utils/utils";
 import { useEffect } from "react";
 
-export default function Forex({ isDarkMode }) {
-    
+export default function Forex() {
+
+    const { isDarkMode } = useDarkMode();
+
     useEffect(() => {
-        const cleanupForexCrossRates = addTradingViewWidget('tradingview-widget-forex-cross-rates', {
+        // Function to initialize a TradingView widget
+        const initializeWidget = (containerId, config, callback) => {
+            const widgetContainer = document.getElementById(containerId);
+
+            if (widgetContainer) {
+                widgetContainer.innerHTML = ''; // Clear the container to remove any duplicate widgets
+            }
+
+            return addTradingViewWidget(containerId, config, callback);
+        };
+
+        // Initialize widgets
+        const cleanupForexCrossRates = initializeWidget('tradingview-widget-forex-cross-rates', {
             "width": "100%",
             "height": "100%",
             "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "currencies": [
-                "EUR",
-                "USD",
-                "JPY",
-                "GBP",
-                "CHF",
-                "AUD",
-                "CAD",
-                "NZD",
-                "CNY",
-                "TRY",
-                "COP",
-                "PEN",
-                "UYU"
-              ],
+                "EUR", "USD", "JPY", "GBP", "CHF", "AUD", "CAD", "NZD", "CNY", "TRY", "COP", "PEN", "UYU"
+            ],
             "showSymbolLogo": true,
             "isTransparent": true,
             "locale": "en"
         }, srcFile.getForexCrossRates);
-        const cleanupForexHeatMaps = addTradingViewWidget('tradingview-widget-forex-heatmaps', {
+
+        const cleanupForexHeatMaps = initializeWidget('tradingview-widget-forex-heatmaps', {
             "width": "100%",
             "height": "100%",
             "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "currencies": [
-                "EUR",
-                "USD",
-                "JPY",
-                "GBP",
-                "CHF",
-                "AUD",
-                "CAD",
-                "NZD",
-                "CNY",
-                "TRY",
-                "COP",
-                "PEN",
-                "UYU"
-              ],
+                "EUR", "USD", "JPY", "GBP", "CHF", "AUD", "CAD", "NZD", "CNY", "TRY", "COP", "PEN", "UYU"
+            ],
             "showSymbolLogo": true,
             "isTransparent": true,
             "locale": "en"
         }, srcFile.getForexHeatMap);
-        const cleanupForexScreener = addTradingViewWidget('tradingview-widget-forex-Screener', {
+
+        const cleanupForexScreener = initializeWidget('tradingview-widget-forex-Screener', {
             "width": "100%",
             "height": "100%",
             "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "defaultColumn": "overview",
             "defaultScreen": "top_gainers",
             "showToolbar": true,
             "locale": "en",
-            "market": "forex",
-            "colorTheme": "light"
+            "market": "forex"
         }, srcFile.getWidgetScanner);
-        const cleanupAllMutualFundsNews = addTradingViewWidget('tradingview-widget-forex-news', {
+
+        const cleanupAllMutualFundsNews = initializeWidget('tradingview-widget-forex-news', {
             "feedMode": "market",
             "market": "forex",
             "isTransparent": true,
@@ -75,8 +71,9 @@ export default function Forex({ isDarkMode }) {
             "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "locale": "en"
         }, srcFile.getTimeline);
-        const cleanupMarketStocksNews = addTradingViewWidget('tradingview-widget-market-stocks-news', {
-            "colorTheme": "light",
+
+        const cleanupMarketStocksNews = initializeWidget('tradingview-widget-market-stocks-news', {
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "dateRange": "ALL",
             "exchange": "US",
             "showChart": true,
@@ -95,10 +92,11 @@ export default function Forex({ isDarkMode }) {
             "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
             "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
             "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "largeChartUrl": `${process.env.baseURL}/symbols`
         }, srcFile.getNews);
-        const cleanupMarketStocksOverview = addTradingViewWidget('tradingview-widget-market-stocks-overview', {
-            "colorTheme": "light",
+
+        const cleanupMarketStocksOverview = initializeWidget('tradingview-widget-market-stocks-overview', {
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "dateRange": "ALL",
             "showChart": true,
             "locale": "en",
@@ -121,83 +119,42 @@ export default function Forex({ isDarkMode }) {
                 {
                     "title": "Forex",
                     "symbols": [
-                        {
-                            "s": "FX:EURUSD",
-                            "d": "EUR to USD"
-                        },
-                        {
-                            "s": "FX:GBPUSD",
-                            "d": "GBP to USD"
-                        },
-                        {
-                            "s": "FX:USDJPY",
-                            "d": "USD to JPY"
-                        },
-                        {
-                            "s": "FX:USDCHF",
-                            "d": "USD to CHF"
-                        },
-                        {
-                            "s": "FX:AUDUSD",
-                            "d": "AUD to USD"
-                        },
-                        {
-                            "s": "FX:USDCAD",
-                            "d": "USD to CAD"
-                        }
+                        { "s": "FX:EURUSD", "d": "EUR to USD" },
+                        { "s": "FX:GBPUSD", "d": "GBP to USD" },
+                        { "s": "FX:USDJPY", "d": "USD to JPY" },
+                        { "s": "FX:USDCHF", "d": "USD to CHF" },
+                        { "s": "FX:AUDUSD", "d": "AUD to USD" },
+                        { "s": "FX:USDCAD", "d": "USD to CAD" }
                     ],
                     "originalTitle": "Forex"
                 },
                 {
                     "title": "ETFs",
                     "symbols": [
-                        {
-                            "s": "AMEX:SPY"
-                        },
-                        {
-                            "s": "NASDAQ:QQQ"
-                        },
-                        {
-                            "s": "AMEX:IWM"
-                        },
-                        {
-                            "s": "NASDAQ:TLT"
-                        },
-                        {
-                            "s": "AMEX:SOXL"
-                        },
-                        {
-                            "s": "NASDAQ:TQQQ"
-                        }
+                        { "s": "AMEX:SPY" },
+                        { "s": "NASDAQ:QQQ" },
+                        { "s": "AMEX:IWM" },
+                        { "s": "NASDAQ:TLT" },
+                        { "s": "AMEX:SOXL" },
+                        { "s": "NASDAQ:TQQQ" }
                     ]
                 },
                 {
                     "title": "Mutual Funds",
                     "symbols": [
-                        {
-                            "s": "AMEX:PHYS"
-                        },
-                        {
-                            "s": "AMEX:PSLV"
-                        },
-                        {
-                            "s": "OTC:LTCN"
-                        },
-                        {
-                            "s": "NYSE:PTY"
-                        },
-                        {
-                            "s": "OTC:SRUUF"
-                        },
-                        {
-                            "s": "NYSE:DXYZ"
-                        }
+                        { "s": "AMEX:PHYS" },
+                        { "s": "AMEX:PSLV" },
+                        { "s": "OTC:LTCN" },
+                        { "s": "NYSE:PTY" },
+                        { "s": "OTC:SRUUF" },
+                        { "s": "NYSE:DXYZ" }
                     ]
                 }
             ],
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "largeChartUrl": `${process.env.baseURL}/symbols`
         }, srcFile.getMarketOverview);
 
+        // Cleanup function to remove all widgets before re-rendering
         return () => {
             cleanupForexCrossRates();
             cleanupForexHeatMaps();
@@ -207,7 +164,7 @@ export default function Forex({ isDarkMode }) {
             cleanupMarketStocksOverview();
             // Call other cleanup functions if more widgets are added
         };
-    }, []);
+    }, [isDarkMode]);
 
     return (
         <section className="top-news-post-area pt-70 pb-70">

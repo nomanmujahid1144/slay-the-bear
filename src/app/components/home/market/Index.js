@@ -4,269 +4,176 @@ import { useEffect } from "react";
 import { Heading } from "../../heading/Heading";
 import { addTradingViewWidget } from "@/app/utils/utils";
 import { srcFile } from "@/app/utils/tradingViewSrcFiles";
+import { useDarkMode } from "../../dark-mode/DarkModeContext";
 
-export const Market = ({ market, showBtn }) => {
+export const Market = () => {
 
-    // const [activeTab, setActiveTab] = useState('indices');
-
-    // const tabs = [
-    //     { id: 'indices', label: 'Indices', target: '#indices-tab-pane' },
-    //     { id: 'stocks', label: 'Stocks', target: '#stocks-tab-pane' },
-    //     { id: 'commodities', label: 'Commodities', target: '#commodities-tab-pane' },
-    //     { id: 'currencies', label: 'Currencies', target: '#currencies-tab-pane' },
-    //     { id: 'etfs', label: 'ETFs', target: '#etfs-tab-pane' },
-    //     { id: 'bonds', label: 'Bonds', target: '#bonds-tab-pane' },
-    //     { id: 'funds', label: 'Funds', target: '#funds-tab-pane' },
-    //     { id: 'cryptocurrency', label: 'Cryptocurrency', target: '#cryptocurrency-tab-pane' },
-    // ];
-
-    // const handleTabClick = (tabId) => {
-    //     setActiveTab(tabId);
-    // };
-
+    const { isDarkMode } = useDarkMode();
 
     useEffect(() => {
-        const cleanupStocks = addTradingViewWidget('tradingview-widget-stocks', {
-            "width": "100%",
-            "height": "100%",
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
-            "symbolsGroups": [
-                {
-                    "name": "Stocks",
-                    "originalName": "Forex",
-                    "symbols": [
-                        {
-                            "name": "NASDAQ:NVDA"
-                        },
-                        {
-                            "name": "NASDAQ:TSLA"
-                        },
-                        {
-                            "name": "NASDAQ:AVGO"
-                        },
-                        {
-                            "name": "NYSE:NIO"
-                        },
-                        {
-                            "name": "NASDAQ:SMCI"
-                        },
-                        {
-                            "name": "NASDAQ:AAPL"
-                        },
-                        {
-                            "name": "NASDAQ:AMZN"
-                        },
-                        {
-                            "name": "NASDAQ:INTC"
-                        },
-                        {
-                            "name": "NASDAQ:AMD"
-                        },
-                        {
-                            "name": "NASDAQ:MSFT"
-                        }
-                    ]
-                }
-            ],
-            "showSymbolLogo": true,
-            "isTransparent": true,
-            "locale": "en"
-        }, srcFile.getStocks);
+        // Function to initialize a TradingView widget
+        const initializeWidget = (containerId, config, callback) => {
+            const widgetContainer = document.getElementById(containerId);
 
-        const cleanupCrypto = addTradingViewWidget('tradingview-widget-cryptocurrency', {
-            "width": "100%",
-            "height": "100%",
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
-            "symbolsGroups": [
-                {
-                    "name": "Cryptocurrency",
-                    "originalName": "Forex",
-                    "symbols": [
-                        {
-                            "name": "CRYPTOCAP:BTC"
-                        },
-                        {
-                            "name": "CRYPTOCAP:ETH"
-                        },
-                        {
-                            "name": "CRYPTOCAP:USDT.D"
-                        },
-                        {
-                            "name": "CRYPTOCAP:BNB"
-                        },
-                        {
-                            "name": "CRYPTO:SOLUSD"
-                        },
-                        {
-                            "name": "CRYPTOCAP:USDC"
-                        },
-                        {
-                            "name": "CRYPTOCAP:XRP"
-                        },
-                        {
-                            "name": "CRYPTOCAP:STETH"
-                        },
-                        {
-                            "name": "CRYPTOCAP:DOGE"
-                        }
-                    ]
-                }
-            ],
-            "showSymbolLogo": true,
-            "isTransparent": true,
-            "locale": "en"
-        }, srcFile.getStocks);
+            if (widgetContainer) {
+                // Clear the existing widget content
+                widgetContainer.innerHTML = ''; // Clear the container to remove any duplicate widgets
+            }
 
-        const cleanupForex = addTradingViewWidget('tradingview-widget-forex', {
-            "width": "100%",
-            "height": "100%",
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
-            "symbolsGroups": [
-                {
-                    "name": "Forex",
-                    "originalName": "Forex",
-                    "symbols": [
-                        {
-                            "name": "FOREXCOM:EURUSD"
-                        },
-                        {
-                            "name": "FOREXCOM:GBPUSD"
-                        },
-                        {
-                            "name": "FOREXCOM:USDJPY"
-                        },
-                        {
-                            "name": "FOREXCOM:AUDUSD"
-                        },
-                        {
-                            "name": "FOREXCOM:GBPJPY"
-                        },
-                        {
-                            "name": "FOREXCOM:USDCAD"
-                        },
-                        {
-                            "name": "FOREXCOM:USDCHF"
-                        },
-                        {
-                            "name": "FOREXCOM:NZDUSD"
-                        },
-                        {
-                            "name": "FOREXCOM:EURJPY"
-                        },
-                        {
-                            "name": "FOREXCOM:EURGBP"
-                        }
-                    ]
-                }
-            ],
-            "showSymbolLogo": true,
-            "isTransparent": true,
-            "locale": "en"
-        }, srcFile.getStocks);
-
-        const cleanupEtfs = addTradingViewWidget('tradingview-widget-etfs', {
-            "width": "100%",
-            "height": "100%",
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
-            "symbolsGroups": [
-                {
-                    "name": "ETFs",
-                    "originalName": "Forex",
-                    "symbols": [
-                        {
-                            "name": "AMEX:SPY"
-                        },
-                        {
-                            "name": "NASDAQ:QQQ"
-                        },
-                        {
-                            "name": "AMEX:IWM"
-                        },
-                        {
-                            "name": "NASDAQ:TQQQ"
-                        },
-                        {
-                            "name": "AMEX:SOXL"
-                        },
-                        {
-                            "name": "AMEX:DIA"
-                        },
-                        {
-                            "name": "NASDAQ:SMH"
-                        },
-                        {
-                            "name": "NASDAQ:SQQQ"
-                        },
-                        {
-                            "name": "AMEX:GLD"
-                        },
-                        {
-                            "name": "AMEX:XLF"
-                        }
-                    ]
-                }
-            ],
-            "showSymbolLogo": true,
-            "isTransparent": true,
-            "locale": "en"
-        }, srcFile.getStocks);
-
-        const cleanupMutualFunds = addTradingViewWidget('tradingview-widget-mutual-funds', {
-            "width": "100%",
-            "height": "100%",
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
-            "symbolsGroups": [
-                {
-                  "name": "Mutual Funds",
-                  "originalName": "Forex",
-                  "symbols": [
-                    {
-                      "name": "AMEX:PHYS"
-                    },
-                    {
-                      "name": "AMEX:PSLV"
-                    },
-                    {
-                      "name": "OTC:LTCN"
-                    },
-                    {
-                      "name": "OTC:SRUUF"
-                    },
-                    {
-                      "name": "NYSE:PTY"
-                    },
-                    {
-                      "name": "NYSE:DXYZ"
-                    },
-                    {
-                      "name": "OTC:BCHG"
-                    },
-                    {
-                      "name": "NYSE:PCN"
-                    },
-                    {
-                      "name": "NYSE:PDI"
-                    },
-                    {
-                      "name": "NASDAQ:OXLC"
-                    }
-                  ]
-                }
-              ],
-            "showSymbolLogo": true,
-            "isTransparent": true,
-            "locale": "en"
-        }, srcFile.getStocks);
-
-        return () => {
-            cleanupStocks();
-            cleanupCrypto();
-            cleanupForex();
-            cleanupEtfs();
-            cleanupMutualFunds();
-            // Call other cleanup functions if more widgets are added
+            // Initialize the TradingView widget
+            return addTradingViewWidget(containerId, config, callback);
         };
-    }, []);
+
+        // Cleanup functions for each widget
+        const cleanupStocks = initializeWidget('tradingview-widget-stocks', {
+            width: '100%',
+            height: '100%',
+            largeChartUrl: `${process.env.baseURL}/symbols`,
+            colorTheme: isDarkMode ? 'dark' : 'light',
+            symbolsGroups: [
+                {
+                    name: 'Stocks',
+                    originalName: 'Forex',
+                    symbols: [
+                        { name: 'NASDAQ:NVDA' },
+                        { name: 'NASDAQ:TSLA' },
+                        { name: 'NASDAQ:AVGO' },
+                        { name: 'NYSE:NIO' },
+                        { name: 'NASDAQ:SMCI' },
+                        { name: 'NASDAQ:AAPL' },
+                        { name: 'NASDAQ:AMZN' },
+                        { name: 'NASDAQ:INTC' },
+                        { name: 'NASDAQ:AMD' },
+                        { name: 'NASDAQ:MSFT' },
+                    ],
+                },
+            ],
+            showSymbolLogo: true,
+            isTransparent: true,
+            locale: 'en',
+        }, srcFile.getStocks);
+
+        const cleanupCrypto = initializeWidget('tradingview-widget-cryptocurrency', {
+            width: '100%',
+            height: '100%',
+            largeChartUrl: `${process.env.baseURL}/symbols`,
+            colorTheme: isDarkMode ? 'dark' : 'light',
+            symbolsGroups: [
+                {
+                    name: 'Cryptocurrency',
+                    originalName: 'Forex',
+                    symbols: [
+                        { name: 'CRYPTOCAP:BTC' },
+                        { name: 'CRYPTOCAP:ETH' },
+                        { name: 'CRYPTOCAP:USDT.D' },
+                        { name: 'CRYPTOCAP:BNB' },
+                        { name: 'CRYPTO:SOLUSD' },
+                        { name: 'CRYPTOCAP:USDC' },
+                        { name: 'CRYPTOCAP:XRP' },
+                        { name: 'CRYPTOCAP:STETH' },
+                        { name: 'CRYPTOCAP:DOGE' },
+                    ],
+                },
+            ],
+            showSymbolLogo: true,
+            isTransparent: true,
+            locale: 'en',
+        }, srcFile.getStocks);
+
+        const cleanupForex = initializeWidget('tradingview-widget-forex', {
+            width: '100%',
+            height: '100%',
+            largeChartUrl: `${process.env.baseURL}/symbols`,
+            colorTheme: isDarkMode ? 'dark' : 'light',
+            symbolsGroups: [
+                {
+                    name: 'Forex',
+                    originalName: 'Forex',
+                    symbols: [
+                        { name: 'FOREXCOM:EURUSD' },
+                        { name: 'FOREXCOM:GBPUSD' },
+                        { name: 'FOREXCOM:USDJPY' },
+                        { name: 'FOREXCOM:AUDUSD' },
+                        { name: 'FOREXCOM:GBPJPY' },
+                        { name: 'FOREXCOM:USDCAD' },
+                        { name: 'FOREXCOM:USDCHF' },
+                        { name: 'FOREXCOM:NZDUSD' },
+                        { name: 'FOREXCOM:EURJPY' },
+                        { name: 'FOREXCOM:EURGBP' },
+                    ],
+                },
+            ],
+            showSymbolLogo: true,
+            isTransparent: true,
+            locale: 'en',
+        }, srcFile.getStocks);
+
+        const cleanupEtfs = initializeWidget('tradingview-widget-etfs', {
+            width: '100%',
+            height: '100%',
+            largeChartUrl: `${process.env.baseURL}/symbols`,
+            colorTheme: isDarkMode ? 'dark' : 'light',
+            symbolsGroups: [
+                {
+                    name: 'ETFs',
+                    originalName: 'Forex',
+                    symbols: [
+                        { name: 'AMEX:SPY' },
+                        { name: 'NASDAQ:QQQ' },
+                        { name: 'AMEX:IWM' },
+                        { name: 'NASDAQ:TQQQ' },
+                        { name: 'AMEX:SOXL' },
+                        { name: 'AMEX:DIA' },
+                        { name: 'NASDAQ:SMH' },
+                        { name: 'NASDAQ:SQQQ' },
+                        { name: 'AMEX:GLD' },
+                        { name: 'AMEX:XLF' },
+                    ],
+                },
+            ],
+            showSymbolLogo: true,
+            isTransparent: true,
+            locale: 'en',
+        }, srcFile.getStocks);
+
+        const cleanupMutualFunds = initializeWidget('tradingview-widget-mutual-funds', {
+            width: '100%',
+            height: '100%',
+            largeChartUrl: `${process.env.baseURL}/symbols`,
+            colorTheme: isDarkMode ? 'dark' : 'light',
+            symbolsGroups: [
+                {
+                    name: 'Mutual Funds',
+                    originalName: 'Forex',
+                    symbols: [
+                        { name: 'AMEX:PHYS' },
+                        { name: 'AMEX:PSLV' },
+                        { name: 'OTC:LTCN' },
+                        { name: 'OTC:SRUUF' },
+                        { name: 'NYSE:PTY' },
+                        { name: 'NYSE:DXYZ' },
+                        { name: 'OTC:BCHG' },
+                        { name: 'NYSE:PCN' },
+                        { name: 'NYSE:PDI' },
+                        { name: 'NASDAQ:OXLC' },
+                    ],
+                },
+            ],
+            showSymbolLogo: true,
+            isTransparent: true,
+            locale: 'en',
+        }, srcFile.getStocks);
+
+        // Cleanup function to remove all widgets before re-rendering
+        return () => {
+            if (cleanupStocks) cleanupStocks();
+            if (cleanupCrypto) cleanupCrypto();
+            if (cleanupForex) cleanupForex();
+            if (cleanupEtfs) cleanupEtfs();
+            if (cleanupMutualFunds) cleanupMutualFunds();
+        };
+    }, [isDarkMode]);  // Re-run the effect when `isDarkMode` changes
+
 
     return (
         <section className="recent-post-area-two mb-10">

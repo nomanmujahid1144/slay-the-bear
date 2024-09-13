@@ -1,82 +1,58 @@
 'use client'
 
+import { useDarkMode } from "@/app/components/dark-mode/DarkModeContext";
 import { Heading } from "@/app/components/heading/Heading";
 import { srcFile } from "@/app/utils/tradingViewSrcFiles";
 import { addTradingViewWidget } from "@/app/utils/utils";
 import { useEffect } from "react";
 
-export default function Cryptocurrency({ isDarkMode }) {
+export default function Cryptocurrency() {
+
+    const { isDarkMode } = useDarkMode();
 
     useEffect(() => {
-        const cleanupCryptocurrency = addTradingViewWidget('tradingview-widget-cryptocurrency', {
+        // Function to initialize a TradingView widget
+        const initializeWidget = (containerId, config, callback) => {
+            const widgetContainer = document.getElementById(containerId);
+    
+            if (widgetContainer) {
+                widgetContainer.innerHTML = ''; // Clear the container to remove any duplicate widgets
+            }
+    
+            return addTradingViewWidget(containerId, config, callback);
+        };
+    
+        // Initialize widgets
+        const cleanupCryptocurrency = initializeWidget('tradingview-widget-cryptocurrency', {
             "width": "100%",
             "height": "100%",
             "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "symbolsGroups": [
                 {
                     "name": "Cryptocurrency",
                     "originalName": "Indices",
                     "symbols": [
-                        {
-                            "name": "CRYPTOCAP:BTC"
-                        },
-                        {
-                            "name": "CRYPTOCAP:ETH"
-                        },
-                        {
-                            "name": "CRYPTO:USDTUSD"
-                        },
-                        {
-                            "name": "CRYPTOCAP:BNB"
-                        },
-                        {
-                            "name": "CRYPTO:SOLUSD"
-                        },
-                        {
-                            "name": "CRYPTOCAP:USDC"
-                        },
-                        {
-                            "name": "CRYPTOCAP:XRP"
-                        },
-                        {
-                            "name": "CRYPTO:DOGEUSD"
-                        },
-                        {
-                            "name": "CRYPTO:TONUSD"
-                        },
-                        {
-                            "name": "CRYPTO:TRXUSD"
-                        },
-                        {
-                            "name": "CRYPTO:ADAUSD"
-                        },
-                        {
-                            "name": "CRYPTO:AVAXUSD"
-                        },
-                        {
-                            "name": "CRYPTO:SHIBUSD"
-                        },
-                        {
-                            "name": "CRYPTO:DOTUSD"
-                        },
-                        {
-                            "name": "CRYPTO:LINKUSD"
-                        },
-                        {
-                            "name": "OANDA:BCHUSD"
-                        },
-                        {
-                            "name": "CRYPTOCAP:DAI"
-                        },
-                        {
-                            "name": "CRYPTO:LEOUSD"
-                        },
-                        {
-                            "name": "CRYPTOCAP:LTC"
-                        },
-                        {
-                            "name": "CRYPTOCAP:NEAR"
-                        }
+                        { "name": "CRYPTOCAP:BTC" },
+                        { "name": "CRYPTOCAP:ETH" },
+                        { "name": "CRYPTO:USDTUSD" },
+                        { "name": "CRYPTOCAP:BNB" },
+                        { "name": "CRYPTO:SOLUSD" },
+                        { "name": "CRYPTOCAP:USDC" },
+                        { "name": "CRYPTOCAP:XRP" },
+                        { "name": "CRYPTO:DOGEUSD" },
+                        { "name": "CRYPTO:TONUSD" },
+                        { "name": "CRYPTO:TRXUSD" },
+                        { "name": "CRYPTO:ADAUSD" },
+                        { "name": "CRYPTO:AVAXUSD" },
+                        { "name": "CRYPTO:SHIBUSD" },
+                        { "name": "CRYPTO:DOTUSD" },
+                        { "name": "CRYPTO:LINKUSD" },
+                        { "name": "OANDA:BCHUSD" },
+                        { "name": "CRYPTOCAP:DAI" },
+                        { "name": "CRYPTO:LEOUSD" },
+                        { "name": "CRYPTOCAP:LTC" },
+                        { "name": "CRYPTOCAP:NEAR" }
                     ]
                 }
             ],
@@ -84,78 +60,38 @@ export default function Cryptocurrency({ isDarkMode }) {
             "isTransparent": true,
             "locale": "en"
         }, srcFile.getStocks);
-        const cleanupCryptocurrencyPairs = addTradingViewWidget('tradingview-widget-cryptocurrency-pairs', {
+    
+        const cleanupCryptocurrencyPairs = initializeWidget('tradingview-widget-cryptocurrency-pairs', {
             "width": "100%",
             "height": "100%",
             "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "symbolsGroups": [
                 {
                     "name": "Cryptocurrency",
                     "originalName": "Indices",
                     "symbols": [
-                        {
-                            "name": "BINANCE:BTCUSD"
-                        },
-                        {
-                            "name": "CRYPTOCAP:BTC"
-                        },
-                        {
-                            "name": "BINANCE:ETHUSD"
-                        },
-                        {
-                            "name": "CRYPTO:SOLUSD"
-                        },
-                        {
-                            "name": "PYTH:TONUSD"
-                        },
-                        {
-                            "name": "CRYPTOCAP:XRP"
-                        },
-                        {
-                            "name": "CRYPTOCAP:ETH"
-                        },
-                        {
-                            "name": "BITMEX:BPEPE"
-                        },
-                        {
-                            "name": "CRYPTOCAP:BNB"
-                        },
-                        {
-                            "name": "BINANCE:DOGEUSD"
-                        },
-                        {
-                            "name": "PYTH:USDMXN"
-                        },
-                        {
-                            "name": "WHITEBIT:FETTRY"
-                        },
-                        {
-                            "name": "BINANCE:LINKUSD"
-                        },
-                        {
-                            "name": "BITAZZA:USDTTHB"
-                        },
-                        {
-                            "name": "BINANCE:NFPUSD"
-                        },
-                        {
-                            "name": "BITKUB:XRPTHB"
-                        },
-                        {
-                            "name": "CRYPTO:ADAUSD"
-                        },
-                        {
-                            "name": "CRYPTO:VELOUSD"
-                        },
-                        {
-                            "name": "COINBASE:BCHUSD"
-                        },
-                        {
-                            "name": "CRYPTO:RDNTUSD"
-                        },
-                        {
-                            "name": "CRYPTO:JASMYUSD"
-                        }
+                        { "name": "BINANCE:BTCUSD" },
+                        { "name": "CRYPTOCAP:BTC" },
+                        { "name": "BINANCE:ETHUSD" },
+                        { "name": "CRYPTO:SOLUSD" },
+                        { "name": "PYTH:TONUSD" },
+                        { "name": "CRYPTOCAP:XRP" },
+                        { "name": "CRYPTOCAP:ETH" },
+                        { "name": "BITMEX:BPEPE" },
+                        { "name": "CRYPTOCAP:BNB" },
+                        { "name": "BINANCE:DOGEUSD" },
+                        { "name": "PYTH:USDMXN" },
+                        { "name": "WHITEBIT:FETTRY" },
+                        { "name": "BINANCE:LINKUSD" },
+                        { "name": "BITAZZA:USDTTHB" },
+                        { "name": "BINANCE:NFPUSD" },
+                        { "name": "BITKUB:XRPTHB" },
+                        { "name": "CRYPTO:ADAUSD" },
+                        { "name": "CRYPTO:VELOUSD" },
+                        { "name": "COINBASE:BCHUSD" },
+                        { "name": "CRYPTO:RDNTUSD" },
+                        { "name": "CRYPTO:JASMYUSD" }
                     ]
                 }
             ],
@@ -163,7 +99,8 @@ export default function Cryptocurrency({ isDarkMode }) {
             "isTransparent": true,
             "locale": "en"
         }, srcFile.getStocks);
-        const cleanupAllCryptoNews = addTradingViewWidget('tradingview-widget-crypto-news', {
+    
+        const cleanupAllCryptoNews = initializeWidget('tradingview-widget-crypto-news', {
             "feedMode": "market",
             "market": "crypto",
             "isTransparent": true,
@@ -173,8 +110,9 @@ export default function Cryptocurrency({ isDarkMode }) {
             "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "locale": "en"
         }, srcFile.getTimeline);
-        const cleanupMarketStocksNews = addTradingViewWidget('tradingview-widget-market-stocks-news', {
-            "colorTheme": "light",
+    
+        const cleanupMarketStocksNews = initializeWidget('tradingview-widget-market-stocks-news', {
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "dateRange": "ALL",
             "exchange": "US",
             "showChart": true,
@@ -193,16 +131,17 @@ export default function Cryptocurrency({ isDarkMode }) {
             "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
             "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
             "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "largeChartUrl": `${process.env.baseURL}/symbols`
         }, srcFile.getNews);
-        const cleanupMarketStocksOverview = addTradingViewWidget('tradingview-widget-market-stocks-overview', {
-            "colorTheme": "light",
+    
+        const cleanupMarketStocksOverview = initializeWidget('tradingview-widget-market-stocks-overview', {
             "dateRange": "ALL",
             "showChart": true,
             "locale": "en",
             "width": "100%",
             "height": "100%",
-            "largeChartUrl": "",
+            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "isTransparent": true,
             "showSymbolLogo": false,
             "showFloatingTooltip": true,
@@ -219,83 +158,41 @@ export default function Cryptocurrency({ isDarkMode }) {
                 {
                     "title": "Forex",
                     "symbols": [
-                        {
-                            "s": "FX:EURUSD",
-                            "d": "EUR to USD"
-                        },
-                        {
-                            "s": "FX:GBPUSD",
-                            "d": "GBP to USD"
-                        },
-                        {
-                            "s": "FX:USDJPY",
-                            "d": "USD to JPY"
-                        },
-                        {
-                            "s": "FX:USDCHF",
-                            "d": "USD to CHF"
-                        },
-                        {
-                            "s": "FX:AUDUSD",
-                            "d": "AUD to USD"
-                        },
-                        {
-                            "s": "FX:USDCAD",
-                            "d": "USD to CAD"
-                        }
+                        { "s": "FX:EURUSD", "d": "EUR to USD" },
+                        { "s": "FX:GBPUSD", "d": "GBP to USD" },
+                        { "s": "FX:USDJPY", "d": "USD to JPY" },
+                        { "s": "FX:USDCHF", "d": "USD to CHF" },
+                        { "s": "FX:AUDUSD", "d": "AUD to USD" },
+                        { "s": "FX:USDCAD", "d": "USD to CAD" }
                     ],
                     "originalTitle": "Forex"
                 },
                 {
                     "title": "ETFs",
                     "symbols": [
-                        {
-                            "s": "AMEX:SPY"
-                        },
-                        {
-                            "s": "NASDAQ:QQQ"
-                        },
-                        {
-                            "s": "AMEX:IWM"
-                        },
-                        {
-                            "s": "NASDAQ:TLT"
-                        },
-                        {
-                            "s": "AMEX:SOXL"
-                        },
-                        {
-                            "s": "NASDAQ:TQQQ"
-                        }
+                        { "s": "AMEX:SPY" },
+                        { "s": "NASDAQ:QQQ" },
+                        { "s": "AMEX:IWM" },
+                        { "s": "NASDAQ:TLT" },
+                        { "s": "AMEX:SOXL" },
+                        { "s": "NASDAQ:TQQQ" }
                     ]
                 },
                 {
                     "title": "Mutual Funds",
                     "symbols": [
-                        {
-                            "s": "AMEX:PHYS"
-                        },
-                        {
-                            "s": "AMEX:PSLV"
-                        },
-                        {
-                            "s": "OTC:LTCN"
-                        },
-                        {
-                            "s": "NYSE:PTY"
-                        },
-                        {
-                            "s": "OTC:SRUUF"
-                        },
-                        {
-                            "s": "NYSE:DXYZ"
-                        }
+                        { "s": "AMEX:PHYS" },
+                        { "s": "AMEX:PSLV" },
+                        { "s": "OTC:LTCN" },
+                        { "s": "NYSE:PTY" },
+                        { "s": "OTC:SRUUF" },
+                        { "s": "NYSE:DXYZ" }
                     ]
                 }
             ],
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
-        },srcFile.getMarketOverview);
-
+        }, srcFile.getMarketOverview);
+    
+        // Cleanup function to remove all widgets before re-rendering
         return () => {
             cleanupCryptocurrency();
             cleanupCryptocurrencyPairs();
@@ -304,7 +201,8 @@ export default function Cryptocurrency({ isDarkMode }) {
             cleanupMarketStocksOverview();
             // Call other cleanup functions if more widgets are added
         };
-    }, []);
+    }, [isDarkMode]);
+    
 
     return (
         <section className="top-news-post-area pt-70 pb-70">

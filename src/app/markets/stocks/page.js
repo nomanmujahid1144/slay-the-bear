@@ -1,112 +1,70 @@
 'use client'
 
+import { useDarkMode } from "@/app/components/dark-mode/DarkModeContext";
 import { Heading } from "@/app/components/heading/Heading";
 import { srcFile } from "@/app/utils/tradingViewSrcFiles";
 import { addTradingViewWidget } from "@/app/utils/utils";
 import { useEffect } from "react";
 
-export default function Stocks({ isDarkMode }) {
+export default function Stocks() {
+
+    const { isDarkMode } = useDarkMode();
 
     useEffect(() => {
-        const cleanupAllStocks = addTradingViewWidget('tradingview-widget-markets-stocks', {
+        // Function to initialize a TradingView widget
+        const initializeWidget = (containerId, config, callback) => {
+            const widgetContainer = document.getElementById(containerId);
+
+            if (widgetContainer) {
+                // Clear the existing widget content
+                widgetContainer.innerHTML = ''; // Clear the container to remove any duplicate widgets
+            }
+
+            // Initialize the TradingView widget
+            return addTradingViewWidget(containerId, config, callback);
+        };
+
+        // Initialize all widgets
+        const cleanupAllStocks = initializeWidget('tradingview-widget-markets-stocks', {
             "width": "100%",
             "height": "100%",
             "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "symbolsGroups": [
                 {
                     "name": "Stocks",
                     "originalName": "Indices",
                     "symbols": [
-                        {
-                            "name": "NYSE:BA"
-                        },
-                        {
-                            "name": "NYSE:CVX"
-                        },
-                        {
-                            "name": "NYSE:CAT"
-                        },
-                        {
-                            "name": "NASDAQ:INTC"
-                        },
-                        {
-                            "name": "NASDAQ:MSFT"
-                        },
-                        {
-                            "name": "NYSE:DIS"
-                        },
-                        {
-                            "name": "NYSE:DOW"
-                        },
-                        {
-                            "name": "NASDAQ:CSCO"
-                        },
-                        {
-                            "name": "NYSE:GS"
-                        },
-                        {
-                            "name": "NYSE:JPM"
-                        },
-                        {
-                            "name": "NYSE:KO"
-                        },
-                        {
-                            "name": "NYSE:MCD"
-                        },
-                        {
-                            "name": "NYSE:MRK"
-                        },
-                        {
-                            "name": "NYSE:MMM"
-                        },
-                        {
-                            "name": "NASDAQ:AAPL"
-                        },
-                        {
-                            "name": "NASDAQ:AMZN"
-                        },
-                        {
-                            "name": "NASDAQ:AMGN"
-                        },
-                        {
-                            "name": "NYSE:WMT"
-                        },
-                        {
-                            "name": "NYSE:HD"
-                        },
-                        {
-                            "name": "NYSE:IBM"
-                        },
-                        {
-                            "name": "NYSE:VZ"
-                        },
-                        {
-                            "name": "NYSE:TRV"
-                        },
-                        {
-                            "name": "NYSE:JNJ"
-                        },
-                        {
-                            "name": "NYSE:AXP"
-                        },
-                        {
-                            "name": "NASDAQ:HON"
-                        },
-                        {
-                            "name": "NYSE:CRM"
-                        },
-                        {
-                            "name": "NYSE:V"
-                        },
-                        {
-                            "name": "NYSE:UNH"
-                        },
-                        {
-                            "name": "NYSE:NKE"
-                        },
-                        {
-                            "name": "NYSE:PG"
-                        }
+                        { "name": "NYSE:BA" },
+                        { "name": "NYSE:CVX" },
+                        { "name": "NYSE:CAT" },
+                        { "name": "NASDAQ:INTC" },
+                        { "name": "NASDAQ:MSFT" },
+                        { "name": "NYSE:DIS" },
+                        { "name": "NYSE:DOW" },
+                        { "name": "NASDAQ:CSCO" },
+                        { "name": "NYSE:GS" },
+                        { "name": "NYSE:JPM" },
+                        { "name": "NYSE:KO" },
+                        { "name": "NYSE:MCD" },
+                        { "name": "NYSE:MRK" },
+                        { "name": "NYSE:MMM" },
+                        { "name": "NASDAQ:AAPL" },
+                        { "name": "NASDAQ:AMZN" },
+                        { "name": "NASDAQ:AMGN" },
+                        { "name": "NYSE:WMT" },
+                        { "name": "NYSE:HD" },
+                        { "name": "NYSE:IBM" },
+                        { "name": "NYSE:VZ" },
+                        { "name": "NYSE:TRV" },
+                        { "name": "NYSE:JNJ" },
+                        { "name": "NYSE:AXP" },
+                        { "name": "NASDAQ:HON" },
+                        { "name": "NYSE:CRM" },
+                        { "name": "NYSE:V" },
+                        { "name": "NYSE:UNH" },
+                        { "name": "NYSE:NKE" },
+                        { "name": "NYSE:PG" }
                     ]
                 }
             ],
@@ -114,7 +72,8 @@ export default function Stocks({ isDarkMode }) {
             "isTransparent": true,
             "locale": "en"
         }, srcFile.getStocks);
-        const cleanupAllStocksNews = addTradingViewWidget('tradingview-widget-markets-stocks-news', {
+
+        const cleanupAllStocksNews = initializeWidget('tradingview-widget-markets-stocks-news', {
             "feedMode": "market",
             "market": "stock",
             "isTransparent": true,
@@ -124,7 +83,8 @@ export default function Stocks({ isDarkMode }) {
             "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "locale": "en"
         }, srcFile.getTimeline);
-        const cleanupMarketStocksNews = addTradingViewWidget('tradingview-widget-market-stocks-news', {
+
+        const cleanupMarketStocksNews = initializeWidget('tradingview-widget-market-stocks-news', {
             "colorTheme": "light",
             "dateRange": "ALL",
             "exchange": "US",
@@ -145,8 +105,10 @@ export default function Stocks({ isDarkMode }) {
             "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
             "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
             "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
         }, srcFile.getNews);
-        const cleanupMarketStocksOverview = addTradingViewWidget('tradingview-widget-market-stocks-overview', {
+
+        const cleanupMarketStocksOverview = initializeWidget('tradingview-widget-market-stocks-overview', {
             "colorTheme": "light",
             "dateRange": "ALL",
             "showChart": true,
@@ -170,91 +132,51 @@ export default function Stocks({ isDarkMode }) {
                 {
                     "title": "Forex",
                     "symbols": [
-                        {
-                            "s": "FX:EURUSD",
-                            "d": "EUR to USD"
-                        },
-                        {
-                            "s": "FX:GBPUSD",
-                            "d": "GBP to USD"
-                        },
-                        {
-                            "s": "FX:USDJPY",
-                            "d": "USD to JPY"
-                        },
-                        {
-                            "s": "FX:USDCHF",
-                            "d": "USD to CHF"
-                        },
-                        {
-                            "s": "FX:AUDUSD",
-                            "d": "AUD to USD"
-                        },
-                        {
-                            "s": "FX:USDCAD",
-                            "d": "USD to CAD"
-                        }
+                        { "s": "FX:EURUSD", "d": "EUR to USD" },
+                        { "s": "FX:GBPUSD", "d": "GBP to USD" },
+                        { "s": "FX:USDJPY", "d": "USD to JPY" },
+                        { "s": "FX:USDCHF", "d": "USD to CHF" },
+                        { "s": "FX:AUDUSD", "d": "AUD to USD" },
+                        { "s": "FX:USDCAD", "d": "USD to CAD" }
                     ],
                     "originalTitle": "Forex"
                 },
                 {
                     "title": "ETFs",
                     "symbols": [
-                        {
-                            "s": "AMEX:SPY"
-                        },
-                        {
-                            "s": "NASDAQ:QQQ"
-                        },
-                        {
-                            "s": "AMEX:IWM"
-                        },
-                        {
-                            "s": "NASDAQ:TLT"
-                        },
-                        {
-                            "s": "AMEX:SOXL"
-                        },
-                        {
-                            "s": "NASDAQ:TQQQ"
-                        }
+                        { "s": "AMEX:SPY" },
+                        { "s": "NASDAQ:QQQ" },
+                        { "s": "AMEX:IWM" },
+                        { "s": "NASDAQ:TLT" },
+                        { "s": "AMEX:SOXL" },
+                        { "s": "NASDAQ:TQQQ" }
                     ]
                 },
                 {
                     "title": "Mutual Funds",
                     "symbols": [
-                        {
-                            "s": "AMEX:PHYS"
-                        },
-                        {
-                            "s": "AMEX:PSLV"
-                        },
-                        {
-                            "s": "OTC:LTCN"
-                        },
-                        {
-                            "s": "NYSE:PTY"
-                        },
-                        {
-                            "s": "OTC:SRUUF"
-                        },
-                        {
-                            "s": "NYSE:DXYZ"
-                        }
+                        { "s": "AMEX:PHYS" },
+                        { "s": "AMEX:PSLV" },
+                        { "s": "OTC:LTCN" },
+                        { "s": "NYSE:PTY" },
+                        { "s": "OTC:SRUUF" },
+                        { "s": "NYSE:DXYZ" }
                     ]
                 }
             ],
             "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
         }, srcFile.getMarketOverview);
 
+        // Cleanup function to remove all widgets before re-rendering
         return () => {
-            cleanupAllStocks();
-            cleanupAllStocksNews();
-            cleanupMarketStocksNews();
-            cleanupMarketStocksOverview();
-            // Call other cleanup functions if more widgets are added
+            cleanupAllStocks(); // Clean up stocks widget
+            cleanupAllStocksNews(); // Clean up all stocks news widget
+            cleanupMarketStocksNews(); // Clean up market stocks news widget
+            cleanupMarketStocksOverview(); // Clean up market stocks overview widget
         };
-    }, []);
+    }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
+
 
     return (
         <section className="top-news-post-area pt-70 pb-70">

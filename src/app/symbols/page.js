@@ -1,49 +1,54 @@
 'use client'
 
 import React, { useEffect } from 'react';
+import { srcFile } from '../utils/tradingViewSrcFiles';
+import { useDarkMode } from '../components/dark-mode/DarkModeContext';
+import { addTradingViewWidget } from '../utils/utils';
 
-export default function Symbol({ searchParams, isDarkMode }) {
+export default function Symbol({ searchParams}) {
+
+    const { isDarkMode } = useDarkMode();
+
     useEffect(() => {
         const symbol = searchParams.tvwidgetsymbol;
 
-        // TradingView Symbol Info Widget
-        const symbolInfoScript = document.createElement('script');
-        symbolInfoScript.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js';
-        symbolInfoScript.async = true;
-        symbolInfoScript.innerHTML = JSON.stringify({
-            largeChartUrl: `${process.env.baseURL}/symbols`,
-            symbol: symbol,
-            width: '100%',
-            locale: 'en',
-            colorTheme: 'light',
-            isTransparent: false,
-        });
+        // Function to initialize a TradingView widget
+        const initializeWidget = (containerId, config, callback) => {
+            const widgetContainer = document.getElementById(containerId);
 
-        // Append Symbol Info Script to container
-        document.getElementById('tradingSymbol-widget-container').appendChild(symbolInfoScript);
+            if (widgetContainer) {
+                widgetContainer.innerHTML = ''; // Clear the container to remove any duplicate widgets
+            }
 
-        // TradingView Timeline Widget
-        const timelineScript = document.createElement('script');
-        timelineScript.src = 'https://s3.tradingview.com/external-embedding/embed-widget-timeline.js';
-        timelineScript.async = true;
-        timelineScript.innerHTML = JSON.stringify({
-            feedMode: "symbol",
-            symbol: symbol,
-            isTransparent: true,
-            displayMode: "compact",
-            width: "100%",
-            height: "100%",
-            colorTheme: isDarkMode ? 'dark' : 'light',
-            locale: "en",
-        });
+            return addTradingViewWidget(containerId, config, callback);
+        };
 
-        // Append Timeline Script to container
-        document.getElementById('topnews-widget-container').appendChild(timelineScript);
+        // Initialize widgets
+        const symbolDetails = initializeWidget('tradingSymbol-widget-container', {
+            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
+            "symbol": symbol,
+            "width": '100%',
+            "locale": 'en',
+            "isTransparent": false,
+        }, srcFile.getWidgetSymbolInfo);
+
+        // Initialize widgets
+        const timelineWidget = initializeWidget('topnews-widget-container', {
+            "feedMode": "symbol",
+            "symbol": symbol,
+            "isTransparent": true,
+            "displayMode": "compact",
+            "width": "100%",
+            "height": "100%",
+            "colorTheme": isDarkMode ? 'dark' : 'light',
+            "locale": "en",
+        }, srcFile.getTimeline);
 
         // Cleanup on unmount
         return () => {
-            document.getElementById('tradingSymbol-widget-container').removeChild(symbolInfoScript);
-            document.getElementById('topnews-widget-container').removeChild(timelineScript);
+            symbolDetails();
+            timelineWidget();
         };
     }, [searchParams, isDarkMode]);
 

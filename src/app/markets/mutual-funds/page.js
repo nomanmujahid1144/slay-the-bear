@@ -1,14 +1,31 @@
 'use client'
 
+import { useDarkMode } from "@/app/components/dark-mode/DarkModeContext";
 import { Heading } from "@/app/components/heading/Heading";
 import { srcFile } from "@/app/utils/tradingViewSrcFiles";
 import { addTradingViewWidget } from "@/app/utils/utils";
 import { useEffect } from "react";
 
-export default function MutualFunds({ isDarkMode }) {
+export default function MutualFunds() {
+
+    const { isDarkMode } = useDarkMode();
 
     useEffect(() => {
-        const cleanupMutualFunds = addTradingViewWidget('tradingview-widget-mutual-funds', {
+        // Function to initialize a TradingView widget
+        const initializeWidget = (containerId, config, callback) => {
+            const widgetContainer = document.getElementById(containerId);
+    
+            if (widgetContainer) {
+                // Clear the existing widget content
+                widgetContainer.innerHTML = ''; // Clear the container to remove any duplicate widgets
+            }
+    
+            // Initialize the TradingView widget
+            return addTradingViewWidget(containerId, config, callback);
+        };
+    
+        // Initialize all widgets
+        const cleanupMutualFunds = initializeWidget('tradingview-widget-mutual-funds', {
             "width": "100%",
             "height": "100%",
             "largeChartUrl": `${process.env.baseURL}/symbols`,
@@ -17,55 +34,38 @@ export default function MutualFunds({ isDarkMode }) {
                     "name": "Mutual Funds",
                     "originalName": "Forex",
                     "symbols": [
-                        {
-                            "name": "AMEX:PHYS"
-                        },
-                        {
-                            "name": "AMEX:PSLV"
-                        },
-                        {
-                            "name": "OTC:LTCN"
-                        },
-                        {
-                            "name": "OTC:SRUUF"
-                        },
-                        {
-                            "name": "NYSE:PTY"
-                        },
-                        {
-                            "name": "NYSE:DXYZ"
-                        },
-                        {
-                            "name": "OTC:BCHG"
-                        },
-                        {
-                            "name": "NYSE:PCN"
-                        },
-                        {
-                            "name": "NYSE:PDI"
-                        },
-                        {
-                            "name": "NASDAQ:OXLC"
-                        }
+                        { "name": "AMEX:PHYS" },
+                        { "name": "AMEX:PSLV" },
+                        { "name": "OTC:LTCN" },
+                        { "name": "OTC:SRUUF" },
+                        { "name": "NYSE:PTY" },
+                        { "name": "NYSE:DXYZ" },
+                        { "name": "OTC:BCHG" },
+                        { "name": "NYSE:PCN" },
+                        { "name": "NYSE:PDI" },
+                        { "name": "NASDAQ:OXLC" }
                     ]
                 }
             ],
             "showSymbolLogo": true,
             "isTransparent": true,
-            "locale": "en"
+            "locale": "en",
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}` 
         }, srcFile.getStocks);
-        const cleanupAllMutualFundsNews = addTradingViewWidget('tradingview-widget-mutual-funds-news', {
+    
+        const cleanupMutualFundsNews = initializeWidget('tradingview-widget-mutual-funds-news', {
             "feedMode": "market",
             "market": "stock",
             "isTransparent": true,
             "displayMode": "regular",
             "width": "100%",
             "height": "100%",
-            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`, 
             "locale": "en"
         }, srcFile.getTimeline);
-        const cleanupMarketStocksNews = addTradingViewWidget('tradingview-widget-market-stocks-news', {
-            "colorTheme": "light",
+    
+        const cleanupMarketStocksNews = initializeWidget('tradingview-widget-market-stocks-news', {
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`, 
             "dateRange": "ALL",
             "exchange": "US",
             "showChart": true,
@@ -77,17 +77,18 @@ export default function MutualFunds({ isDarkMode }) {
             "showFloatingTooltip": true,
             "plotLineColorGrowing": "rgb(41,191,240, 1)",
             "plotLineColorFalling": "rgb(15,96,139, 1)",
-            "gridLineColor": "rgba(240, 243, 250, 0)",
-            "scaleFontColor": "rgba(19, 23, 34, 1)",
+            "gridLineColor": `${isDarkMode ? 'rgba(32, 33, 36, 0)' : 'rgba(240, 243, 250, 0)'}`, 
+            "scaleFontColor": `${isDarkMode ? 'rgba(220, 220, 220, 1)' : 'rgba(19, 23, 34, 1)'}`, 
             "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
             "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
             "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
             "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
             "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "largeChartUrl": `${process.env.baseURL}/symbols`
         }, srcFile.getNews);
-        const cleanupMarketStocksOverview = addTradingViewWidget('tradingview-widget-market-stocks-overview', {
-            "colorTheme": "light",
+    
+        const cleanupMarketStocksOverview = initializeWidget('tradingview-widget-market-stocks-overview', {
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`, 
             "dateRange": "ALL",
             "showChart": true,
             "locale": "en",
@@ -99,8 +100,8 @@ export default function MutualFunds({ isDarkMode }) {
             "showFloatingTooltip": true,
             "plotLineColorGrowing": "rgb(41,191,240, 1)",
             "plotLineColorFalling": "rgb(15,96,139, 1)",
-            "gridLineColor": "rgba(240, 243, 250, 0)",
-            "scaleFontColor": "rgba(19, 23, 34, 1)",
+            "gridLineColor": `${isDarkMode ? 'rgba(32, 33, 36, 0)' : 'rgba(240, 243, 250, 0)'}`, 
+            "scaleFontColor": `${isDarkMode ? 'rgba(220, 220, 220, 1)' : 'rgba(19, 23, 34, 1)'}`, 
             "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
             "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
             "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
@@ -110,91 +111,51 @@ export default function MutualFunds({ isDarkMode }) {
                 {
                     "title": "Forex",
                     "symbols": [
-                        {
-                            "s": "FX:EURUSD",
-                            "d": "EUR to USD"
-                        },
-                        {
-                            "s": "FX:GBPUSD",
-                            "d": "GBP to USD"
-                        },
-                        {
-                            "s": "FX:USDJPY",
-                            "d": "USD to JPY"
-                        },
-                        {
-                            "s": "FX:USDCHF",
-                            "d": "USD to CHF"
-                        },
-                        {
-                            "s": "FX:AUDUSD",
-                            "d": "AUD to USD"
-                        },
-                        {
-                            "s": "FX:USDCAD",
-                            "d": "USD to CAD"
-                        }
+                        { "s": "FX:EURUSD", "d": "EUR to USD" },
+                        { "s": "FX:GBPUSD", "d": "GBP to USD" },
+                        { "s": "FX:USDJPY", "d": "USD to JPY" },
+                        { "s": "FX:USDCHF", "d": "USD to CHF" },
+                        { "s": "FX:AUDUSD", "d": "AUD to USD" },
+                        { "s": "FX:USDCAD", "d": "USD to CAD" }
                     ],
                     "originalTitle": "Forex"
                 },
                 {
                     "title": "ETFs",
                     "symbols": [
-                        {
-                            "s": "AMEX:SPY"
-                        },
-                        {
-                            "s": "NASDAQ:QQQ"
-                        },
-                        {
-                            "s": "AMEX:IWM"
-                        },
-                        {
-                            "s": "NASDAQ:TLT"
-                        },
-                        {
-                            "s": "AMEX:SOXL"
-                        },
-                        {
-                            "s": "NASDAQ:TQQQ"
-                        }
+                        { "s": "AMEX:SPY" },
+                        { "s": "NASDAQ:QQQ" },
+                        { "s": "AMEX:IWM" },
+                        { "s": "NASDAQ:TLT" },
+                        { "s": "AMEX:SOXL" },
+                        { "s": "NASDAQ:TQQQ" }
                     ]
                 },
                 {
                     "title": "Mutual Funds",
                     "symbols": [
-                        {
-                            "s": "AMEX:PHYS"
-                        },
-                        {
-                            "s": "AMEX:PSLV"
-                        },
-                        {
-                            "s": "OTC:LTCN"
-                        },
-                        {
-                            "s": "NYSE:PTY"
-                        },
-                        {
-                            "s": "OTC:SRUUF"
-                        },
-                        {
-                            "s": "NYSE:DXYZ"
-                        }
+                        { "s": "AMEX:PHYS" },
+                        { "s": "AMEX:PSLV" },
+                        { "s": "OTC:LTCN" },
+                        { "s": "NYSE:PTY" },
+                        { "s": "OTC:SRUUF" },
+                        { "s": "NYSE:DXYZ" }
                     ]
                 }
             ],
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "largeChartUrl": `${process.env.baseURL}/symbols`
         }, srcFile.getMarketOverview);
-
+    
+        // Cleanup function to remove all widgets before re-rendering
         return () => {
-            cleanupMutualFunds();
-            cleanupAllMutualFundsNews();
-            cleanupMarketStocksNews();
-            cleanupMarketStocksOverview();
-            // Call other cleanup functions if more widgets are added
+            cleanupMutualFunds(); // Clean up mutual funds widget
+            cleanupMutualFundsNews(); // Clean up mutual funds news widget
+            cleanupMarketStocksNews(); // Clean up market stocks news widget
+            cleanupMarketStocksOverview(); // Clean up market stocks overview widget
         };
-    }, []);
+    }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
+    
+
 
     return (
         <section className="top-news-post-area pt-70 pb-70">

@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import axios from 'axios';
 import { srcFile } from "@/app/utils/tradingViewSrcFiles"
 import { addTradingViewWidget } from "@/app/utils/utils"
+import { useDarkMode } from "../../dark-mode/DarkModeContext"
 
 const horizentalPosts = [
     { postTitle: 'Using Instagram Tawo Promote Your', postTag: 'CRYPTOCURRENCY', postDate: '27 AUGUST, 2024', postTime: '', postImage: horizentalImage },
@@ -24,26 +25,47 @@ const horizentalPosts = [
     { postTitle: 'Using Instagram Tawo Promote Your', postTag: 'CRYPTOCURRENCY', postDate: '27 AUGUST, 2024', postTime: '', postImage: horizentalImage }
 ]
 
-export const TopNews = ({ isDarkMode }) => {
-
+export const TopNews = () => {
+    const { isDarkMode } = useDarkMode();
     const [newsData, setNewsData] = useState([]);
 
     useEffect(() => {
-        const cleanupTimeline = addTradingViewWidget('topnews-widget-container', {
-            "feedMode": "all_symbols",
-            "isTransparent": true,
-            "displayMode": "compact",
-            "width": "100%",
-            "height": "100%",
-            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
-            "locale": "en"
-        }, srcFile.getTimeline);
+        const widgetContainerId = 'topnews-widget-container';
 
-        return () => {
-            cleanupTimeline();
-            // Call other cleanup functions if more widgets are added
+        // Function to initialize the TradingView widget
+        const initializeWidget = () => {
+            // Clear the existing widget content
+            const widgetContainer = document.getElementById(widgetContainerId);
+            if (widgetContainer) {
+                widgetContainer.innerHTML = ''; // Clear the container to remove any duplicate widgets
+            }
+
+            // Initialize the TradingView widget
+            return addTradingViewWidget(
+                widgetContainerId,
+                {
+                    feedMode: 'all_symbols',
+                    isTransparent: true,
+                    displayMode: 'compact',
+                    width: '100%',
+                    height: '100%',
+                    colorTheme: isDarkMode ? 'dark' : 'light',
+                    locale: 'en',
+                },
+                srcFile.getTimeline
+            );
         };
-    }, []);
+
+        // Initialize the widget
+        const cleanupTimeline = initializeWidget();
+
+        // Cleanup function to remove the widget before re-rendering
+        return () => {
+            if (cleanupTimeline) {
+                cleanupTimeline(); // Properly cleanup the widget
+            }
+        };
+    }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
 
 
     // Function to format date
@@ -117,6 +139,7 @@ export const TopNews = ({ isDarkMode }) => {
                                             <PostTitle
                                                 extras={'bold-underline'}
                                                 heading={newsData.feed[0].title}
+                                                headingLink={newsData.feed[0].url}
                                             />
                                             <DateTime
                                                 date={formatDate(newsData.feed[0].time_published)}
