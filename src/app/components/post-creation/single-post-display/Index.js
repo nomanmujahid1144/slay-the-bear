@@ -27,6 +27,7 @@ export const SinglePostDisplay = ({postTag, postHeading, postImage, postDate, po
                     />
                     <PostTitle 
                         heading={postHeading}
+                        headingLink={'#'}
                     />
                     <DateTime 
                         date={postDate}

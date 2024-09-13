@@ -3,9 +3,10 @@ import { Heading } from "../components/heading/Heading";
 import { DateTime } from "../components/post-creation/post-date-time/Index";
 import { PostTag } from "../components/post-creation/post-tag/Index";
 import { PostTitle } from "../components/post-creation/post-title/Index";
-import crypoImage from '../../../public/assets/img/blog/cr_recent_post02.jpg'
+import crypoImage from '../../../public/assets/img/blog/cr_recent_post02.jpg';
 import Link from "next/link";
 import Image from "next/image";
+import defaultImage from '../../../public/assets/img/blog/sports_post01.jpg';
 import { NewsTabs } from "../components/news-page/Index";
 
 export default function NewsPage() {
@@ -22,15 +23,15 @@ export default function NewsPage() {
                                 <div className="col-lg-8">
                                     <div className="sports-post">
                                         <div className="sports-post-thumb">
-                                            <Link href="/">
+                                            <a href="/">
                                                 <Image
-                                                    src="/assets/img/blog/sports_post01.jpg"
-                                                    alt="Sports News"
-                                                    width={400}  // adjust dimensions as necessary
-                                                    height={300}
+                                                    src={defaultImage}
+                                                    alt="no image"
+                                                    width={100}
+                                                    height={100}
                                                     layout="responsive"
                                                 />
-                                            </Link>
+                                            </a>
                                         </div>
                                         <div className="sports-post-content">
                                             <PostTag
@@ -81,8 +82,8 @@ export default function NewsPage() {
                                 </div>
                             </div>
                         </div>
-                        <Banner />
-                        <NewsTabs />
+                        {/* <Banner />
+                        <NewsTabs /> */}
                     </div>
                     <div className="col-xl-3 col-lg-8">
                         <div className="sidebar-wrap-three">
@@ -94,7 +95,13 @@ export default function NewsPage() {
                                     <div className="hot-post-item hot-post-item-two">
                                         <div className="hot-post-thumb">
                                             <a href="/">
-                                                <img src="assets/img/blog/nw_banner_post01.jpg" alt="" />
+                                                <Image
+                                                    src={defaultImage}
+                                                    alt="no image"
+                                                    width={100}
+                                                    height={100}
+                                                    layout="responsive"
+                                                />
                                             </a>
                                         </div>
                                         <div className="hot-post-content">
@@ -161,7 +168,13 @@ export default function NewsPage() {
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
                                     <a href="#">
-                                        <img src="assets/img/images/sidebar_img06.jpg" alt="" />
+                                        <Image
+                                            src={defaultImage}
+                                            alt="no image"
+                                            width={100}
+                                            height={100}
+                                            layout="responsive"
+                                        />
                                     </a>
                                 </div>
                             </div>
