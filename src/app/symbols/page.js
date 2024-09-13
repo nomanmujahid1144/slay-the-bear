@@ -12,6 +12,8 @@ export default function Symbol({ searchParams}) {
     useEffect(() => {
         const symbol = searchParams.tvwidgetsymbol;
 
+        console.log(symbol, 'symbol')
+
         // Function to initialize a TradingView widget
         const initializeWidget = (containerId, config, callback) => {
             const widgetContainer = document.getElementById(containerId);
