@@ -1,15 +1,14 @@
 'use client';
 
-import React, { useEffect, useState } from 'react'; // Added useState
+import React, { useEffect, useState, Suspense } from 'react'; // Added Suspense
 import { useSearchParams } from 'next/navigation'; // Import the useSearchParams hook
 import { srcFile } from '../utils/tradingViewSrcFiles';
 import { useDarkMode } from '../components/dark-mode/DarkModeContext';
 import { addTradingViewWidget } from '../utils/utils';
 
-export default function Symbol() {
+function SymbolComponent() { // Renamed to SymbolComponent for clarity
     const searchParams = useSearchParams(); // Use useSearchParams hook
     const { isDarkMode } = useDarkMode();
-
     const [symbol, setSymbol] = useState(''); // Initialize symbol state
 
     useEffect(() => {
@@ -87,5 +86,14 @@ export default function Symbol() {
                 </div>
             </div>
         </section>
+    );
+}
+
+// Wrap SymbolComponent in Suspense
+export default function Symbol() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SymbolComponent />
+        </Suspense>
     );
 }
