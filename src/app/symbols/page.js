@@ -1,19 +1,20 @@
-'use client'
+'use client';
 
 import React, { useEffect } from 'react';
+import { useSearchParams } from 'next/navigation'; // Import the useSearchParams hook
 import { srcFile } from '../utils/tradingViewSrcFiles';
 import { useDarkMode } from '../components/dark-mode/DarkModeContext';
 import { addTradingViewWidget } from '../utils/utils';
 
-export default function Symbol({ searchParams}) {
-
+export default function Symbol() {
+    const searchParams = useSearchParams(); // Use useSearchParams hook
     const { isDarkMode } = useDarkMode();
 
     useEffect(() => {
-        console.log(searchParams, 'searchParams')
-        const symbol = searchParams.tvwidgetsymbol;
+        const symbol = searchParams.get('tvwidgetsymbol'); // Use get() to access query parameter
 
-        console.log(symbol, 'symbol')
+        console.log(searchParams, 'searchParams');
+        console.log(symbol, 'symbol');
 
         // Function to initialize a TradingView widget
         const initializeWidget = (containerId, config, callback) => {
@@ -44,7 +45,7 @@ export default function Symbol({ searchParams}) {
             "displayMode": "compact",
             "width": "100%",
             "height": "100%",
-            "colorTheme": isDarkMode ? 'dark' : 'light',
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "locale": "en",
         }, srcFile.getTimeline);
 
