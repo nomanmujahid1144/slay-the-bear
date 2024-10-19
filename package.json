@@ -14,6 +14,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "axios": "^1.7.7",
+    "financejs": "^4.1.0",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
