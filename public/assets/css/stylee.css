@@ -6601,16 +6601,31 @@ label {
 [tg-theme=dark] .contact-form {
     background: var(--tg-teal);
 }
+[tg-theme=dark] .contact-form .form-grp select,
 [tg-theme=dark] .contact-form .form-grp textarea,
 [tg-theme=dark] .contact-form .form-grp input {
     border-color: var(--tg-gray);
     background: var(--tg-gray);
     color: var(--tg-white);
 }
+[tg-theme=dark] .contact-form .form-grp select::placeholder,
 [tg-theme=dark] .contact-form .form-grp textarea::placeholder,
 [tg-theme=dark] .contact-form .form-grp input::placeholder {
     color: var(--tg-white);
     opacity: .5;
+}
+[tg-theme=dark] tr td {
+    border-color: var(--tg-gray);
+    background: var(--tg-gray);
+    color: var(--tg-white);
+}
+[tg-theme=dark] tr {
+    border: none;
+}
+[tg-theme=dark] thead {
+    border-color: var(--tg-gray);
+    background: rgba(12, 22, 34, .5);
+    color: var(--tg-white);
 }
 [tg-theme=dark] .menu-area .logo {
     display: none !important;

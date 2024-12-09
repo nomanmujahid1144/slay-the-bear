@@ -9,6 +9,7 @@ import { addTradingViewWidget } from "@/app/utils/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Finance } from "financejs";
 import { useEffect, useState } from "react";
+import { ToolDescription } from "../tool-description/ToolDescription";
 
 
 export default function CompoundInterestCalculator() {
@@ -145,6 +146,13 @@ export default function CompoundInterestCalculator() {
         setFutureValue(calculatedFutureValue.toFixed(2));
     };
 
+    const handleReset = () => {
+        setPrincipal(0);
+        setInterestRate(0);
+        setCompoundingFrequency(1);
+        setTimePeriod(0);
+        setFutureValue(null);
+    }
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
@@ -168,7 +176,6 @@ export default function CompoundInterestCalculator() {
                                                 required={true}
                                                 id="principal-amount"
                                                 type="number"
-                                                value={principal}
                                                 onChange={(e) => setPrincipal(e.target.value)}
                                             />
                                         </div>
@@ -182,7 +189,6 @@ export default function CompoundInterestCalculator() {
                                                 id="interest-rate"
                                                 type="number"
                                                 step="0.01"
-                                                value={interestRate}
                                                 onChange={(e) => setInterestRate(e.target.value)}
                                             />
                                         </div>
@@ -195,7 +201,6 @@ export default function CompoundInterestCalculator() {
                                                 required={true}
                                                 id="compounding-frequency"
                                                 type="number"
-                                                value={compoundingFrequency}
                                                 onChange={(e) => setCompoundingFrequency(e.target.value)}
                                             />
                                         </div>
@@ -208,12 +213,14 @@ export default function CompoundInterestCalculator() {
                                                 required={true}
                                                 id="time-period"
                                                 type="number"
-                                                value={timePeriod}
                                                 onChange={(e) => setTimePeriod(e.target.value)}
                                             />
                                         </div>
                                     </div>
-                                    <div className="flex justify-center pt-4">
+                                    <div className="flex justify-center gap-4 pt-4">
+                                        <button onClick={handleReset} type="reset" className="btn btn-two">
+                                            Reset
+                                        </button>
                                         <button type="submit" className="btn btn-two">
                                             Calculate Return
                                         </button>
@@ -228,6 +235,18 @@ export default function CompoundInterestCalculator() {
                                     )}
                                 </div>
                             </div>
+                            <ToolDescription
+                                title={'Summary'}
+                                details={"Shows how savings grow over time due to compounding interest."}
+                            />
+                            <ToolDescription
+                                title={'Example'}
+                                details={'A $1,000 investment at 5% for 5 years grows to $1,276.'}
+                            />
+                            <ToolDescription
+                                title={'Explanation of Results'}
+                                details={'The results demonstrate how your money grows faster due to compounding, where interest is earned on both the principal and previous interest, significantly increasing your total savings over time.'}
+                            />
                         </div>
                     </div>
                     <div className="col-xl-3 col-lg-8">

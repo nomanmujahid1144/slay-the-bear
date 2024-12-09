@@ -9,6 +9,7 @@ import { addTradingViewWidget } from "@/app/utils/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Finance } from "financejs";
 import { useEffect, useState } from "react";
+import { ToolDescription } from "../tool-description/ToolDescription";
 
 
 export default function CertificateOfDepositeCalculator() {
@@ -165,6 +166,14 @@ export default function CertificateOfDepositeCalculator() {
         }
     };
 
+    const handleReset = () => {
+        setPrincipal('');
+        setAnnualInterestRate('');
+        setTimePeriod('');
+        setCompoundingFrequency('annually');
+        setFutureValue(null);
+    }
+
 
 
     return (
@@ -174,7 +183,7 @@ export default function CertificateOfDepositeCalculator() {
                     <div className="col-xl-9">
                         <div className="sidebar-wrap">
                             <Heading
-                                textHeading="Compound Interest Calculator"
+                                textHeading="CD Calculator"
                                 showBtn={false}
                             />
                             <div className="contact-form pb-3">
@@ -189,7 +198,6 @@ export default function CertificateOfDepositeCalculator() {
                                                 required={true}
                                                 id="principal"
                                                 type="number"
-                                                value={principal}
                                                 onChange={(e) => setPrincipal(e.target.value)}
                                             />
                                         </div>
@@ -202,7 +210,6 @@ export default function CertificateOfDepositeCalculator() {
                                                 required={true}
                                                 id="annual-interest-rate"
                                                 type="number"
-                                                value={annualInterestRate}
                                                 onChange={(e) => setAnnualInterestRate(e.target.value)}
                                             />
                                         </div>
@@ -215,7 +222,6 @@ export default function CertificateOfDepositeCalculator() {
                                                 required={true}
                                                 id="time-period"
                                                 type="number"
-                                                value={timePeriod}
                                                 onChange={(e) => setTimePeriod(e.target.value)}
                                             />
                                         </div>
@@ -236,7 +242,10 @@ export default function CertificateOfDepositeCalculator() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="flex justify-center pt-4">
+                                    <div className="flex justify-center gap-4 pt-4">
+                                        <button onClick={handleReset} type="reset" className="btn btn-two">
+                                            Reset
+                                        </button>
                                         <button type="submit" className="btn btn-two">
                                             Calculate Return
                                         </button>
@@ -251,6 +260,18 @@ export default function CertificateOfDepositeCalculator() {
                                     )}
                                 </div>
                             </div>
+                            <ToolDescription
+                                title={'Summary'}
+                                details={"Estimates the future value of a Certificate of Deposit."}
+                            />
+                            <ToolDescription
+                                title={'Example'}
+                                details={'A $5,000 CD at 3% for 3 years grows to $5,463.'}
+                            />
+                            <ToolDescription
+                                title={'Explanation of Results'}
+                                details={'The result shows how much your initial deposit will grow over time, factoring in the interest rate and compounding frequency, helping you choose the best CD to meet your savings goals.'}
+                            />
                         </div>
                     </div>
                     <div className="col-xl-3 col-lg-8">

@@ -9,6 +9,14 @@ module.exports = {
     extend: {
       listStyleType:{
         circle: 'circle'
+      },
+      colors:{
+        'primary': '#29BFF0',
+        'secondary': '#135F8A'
+      },
+      borderColor:{
+        'primary': '#29BFF0',
+        'secondary': '#135F8A'
       }
     },
   },

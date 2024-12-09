@@ -12,15 +12,18 @@ import { useEffect, useState } from "react";
 import { ToolDescription } from "../tool-description/ToolDescription";
 
 
-export default function BudgetCalculator() {
+export default function BondYieldToMaturityCalculator() {
 
     const { isDarkMode } = useDarkMode();
+    const finance = new Finance();
 
-    const [income, setIncome] = useState('');
-    const [expenses, setExpenses] = useState([]);
-    const [newExpense, setNewExpense] = useState({ category: '', amount: '' });
-    const [totalExpenses, setTotalExpenses] = useState(0);
-    const [remaining, setRemaining] = useState(null);
+    // State for inputs
+    const [bondPrice, setBondPrice] = useState('');
+    const [faceValue, setFaceValue] = useState('');
+    const [couponRate, setCouponRate] = useState('');
+    const [periodsToMaturity, setPeriodsToMaturity] = useState('');
+    const [ytm, setYtm] = useState(null);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         // Function to initialize a TradingView widget
@@ -127,43 +130,68 @@ export default function BudgetCalculator() {
         };
     }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
 
-
-    const handleExpenseChange = (e) => {
-        const { name, value } = e.target;
-        setNewExpense((prev) => ({ ...prev, [name]: value }));
-      };      
-
-    const addExpense = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        if (newExpense.category && !isNaN(newExpense.amount) && newExpense.amount > 0) {
-            setExpenses((prev) => [...prev, newExpense]);
-            setTotalExpenses((prev) => prev + parseFloat(newExpense.amount));
-            setNewExpense({ category: '', amount: '' });
-        } else {
-            alert('Please enter a valid category and amount.');
+        setError('');
+
+        // Validate inputs
+        if (
+            bondPrice === '' ||
+            faceValue === '' ||
+            couponRate === '' ||
+            periodsToMaturity === ''
+        ) {
+            setError('Please fill out all fields.');
+            return;
         }
+
+        // Convert inputs to numerical values
+        const bondDetails = {
+            price: parseFloat(bondPrice),
+            faceValue: parseFloat(faceValue),
+            couponRate: parseFloat(couponRate) / 100, // Convert to decimal
+            periodsToMaturity: parseInt(periodsToMaturity),
+        };
+
+        // Check for negative or zero values
+        if (
+            bondDetails.price <= 0 ||
+            bondDetails.faceValue <= 0 ||
+            bondDetails.couponRate < 0 ||
+            bondDetails.periodsToMaturity <= 0
+        ) {
+            setError('All inputs must be positive values.');
+            return;
+        }
+
+        // Calculate YTM
+        const ytmValue = calculateYTM(bondDetails);
+        setYtm(ytmValue);
     };
 
-    const calculateRemaining = () => {
-        if (!isNaN(income) && income > 0) {
-            setRemaining(income - totalExpenses);
-        } else {
-            alert('Please enter a valid income.');
-        }
+    const calculateYTM = (bondDetails) => {
+        const { price, faceValue, couponRate, periodsToMaturity } = bondDetails;
+
+        // Coupon Payment
+        const couponPayment = couponRate * faceValue;
+
+        // Approximation Formula for YTM
+        const annualYield =
+            (couponPayment + (faceValue - price) / periodsToMaturity) /
+            ((price + faceValue) / 2);
+
+        return annualYield * 100; // Convert to percentage
     };
 
     const handleReset = () => {
-        setIncome('');
-        setExpenses([]);
-        setNewExpense({ category: '', amount: '' });
-        setTotalExpenses(0);
-        setRemaining(null);
+        setBondPrice('');
+        setFaceValue('');
+        setCouponRate('');
+        setPeriodsToMaturity('');
+        setYtm(null);
+        setError('');
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        calculateRemaining();
-    };
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
@@ -172,95 +200,100 @@ export default function BudgetCalculator() {
                     <div className="col-xl-9">
                         <div className="sidebar-wrap">
                             <Heading
-                                textHeading="Budget Calculator"
+                                textHeading="Bond Yield to Maturity (YTM) Calculator"
                                 showBtn={false}
                             />
                             <div className="contact-form pb-3">
                                 <form onSubmit={handleSubmit}>
                                     <div className="row">
-                                        <div className="col-md-4">
+                                        <div className="col-md-6">
                                             <InputField
                                                 isFontAwsome={true}
                                                 fontAwsomeIcon="fa-dollar-sign"
-                                                label="Monthly Income ($):"
-                                                placeholder="Enter Your Income"
+                                                label="Bond Price:"
+                                                placeholder="Enter bond price"
                                                 required={true}
-                                                id="income"
+                                                id="bond-price"
                                                 type="number"
-                                                value={income}
-                                                onChange={(e) => setIncome(e.target.value)}
+                                                value={bondPrice}
+                                                onChange={(e) => setBondPrice(e.target.value)}
                                             />
                                         </div>
-                                        <div className="col-md-4">
-                                            <InputField
-                                                isFontAwsome={true}
-                                                fontAwsomeIcon="fa-tag"
-                                                label="Expense Category:"
-                                                placeholder="Enter Expense Category"
-                                                id="category"
-                                                type="text"
-                                                name="category"
-                                                value={newExpense.category}
-                                                onChange={handleExpenseChange}
-                                            />
-                                        </div>
-                                        <div className="col-md-4">
+                                        <div className="col-md-6">
                                             <InputField
                                                 isFontAwsome={true}
                                                 fontAwsomeIcon="fa-dollar-sign"
-                                                label="Expense Amount ($):"
-                                                placeholder="Enter Expense Amount"
-                                                id="amount"
+                                                label="Face Value:"
+                                                placeholder="Enter face value"
+                                                required={true}
+                                                id="face-value"
                                                 type="number"
-                                                name="amount"
-                                                value={newExpense.amount}
-                                                onChange={handleExpenseChange}
+                                                value={faceValue}
+                                                onChange={(e) => setFaceValue(e.target.value)}
                                             />
-                                        </div>
-                                        <div className="flex justify-center pt-4">
-                                            <button onClick={addExpense} className="btn btn-two">
-                                                Add Expense
-                                            </button>
                                         </div>
                                     </div>
-                                    <div className="pt-4">
-                                        <h3>Current Expenses:</h3>
-                                        <ul>
-                                            {expenses.map((expense, index) => (
-                                                <li key={index}>
-                                                    {expense.category}: ${parseFloat(expense.amount).toFixed(2)}
-                                                </li>
-                                            ))}
-                                        </ul>
+                                    <div className="row pt-4">
+                                        <div className="col-md-6">
+                                            <InputField
+                                                isFontAwsome={true}
+                                                fontAwsomeIcon="fa-percent"
+                                                label="Coupon Rate (%):"
+                                                placeholder="Enter coupon rate"
+                                                required={true}
+                                                id="coupon-rate"
+                                                type="number"
+                                                value={couponRate}
+                                                onChange={(e) => setCouponRate(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <InputField
+                                                isFontAwsome={true}
+                                                fontAwsomeIcon="fa-calendar-day"
+                                                label="Periods to Maturity:"
+                                                placeholder="Enter periods to maturity"
+                                                required={true}
+                                                id="periods-to-maturity"
+                                                type="number"
+                                                value={periodsToMaturity}
+                                                onChange={(e) => setPeriodsToMaturity(e.target.value)}
+                                            />
+                                        </div>
                                     </div>
                                     <div className="flex justify-center gap-4 pt-4">
                                         <button onClick={handleReset} type="reset" className="btn btn-two">
                                             Reset
                                         </button>
                                         <button type="submit" className="btn btn-two">
-                                            Calculate Remaining Budget
+                                            Calculate YTM
                                         </button>
                                     </div>
-                                    <div className="pt-10">
-                                        {remaining !== null && (
-                                            <div>
-                                                <h3>Remaining Budget: ${remaining.toFixed(2)}</h3>
-                                            </div>
-                                        )}
-                                    </div>
                                 </form>
+                                <div className="pt-10">
+                                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                                    {ytm !== null && (
+                                        <div>
+                                            <h3>Yield to Maturity (YTM): {ytm.toFixed(2)}%</h3>
+                                            <p>
+                                                The YTM represents the annualized return you can expect to earn if you hold the bond to maturity. In this case, it is {ytm.toFixed(2)}%.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+
                             </div>
                             <ToolDescription
                                 title={'Summary'}
-                                details={"Helps manage income and expenses by creating a monthly or yearly budget."}
+                                details={"Estimates the total return if you hold a bond until maturity."}
                             />
                             <ToolDescription
                                 title={'Example'}
-                                details={'$3,000 income and $2,000 expenses leave you $1,000 for savings.'}
+                                details={'A bond bought for $950 with a $1,000 face value and 5% coupon yields 5.45%.'}
                             />
                             <ToolDescription
                                 title={'Explanation of Results'}
-                                details={'The results break down your expenses by category, showing where you may be overspending and how much is left for savings or other financial goals. This helps you plan a more effective budget.'}
+                                details={'The result shows the annualized return you can expect to earn if you hold the bond to maturity, helping you compare bonds and make more informed investment choices.'}
                             />
                         </div>
                     </div>

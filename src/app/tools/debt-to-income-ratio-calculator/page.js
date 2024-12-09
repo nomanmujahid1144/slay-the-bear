@@ -9,6 +9,7 @@ import { addTradingViewWidget } from "@/app/utils/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Finance } from "financejs";
 import { useEffect, useState } from "react";
+import { ToolDescription } from "../tool-description/ToolDescription";
 
 
 export default function DeptToIncomeRatioCalculator() {
@@ -138,6 +139,12 @@ export default function DeptToIncomeRatioCalculator() {
     };
 
 
+    const handleReset = () => {
+        setDebtPayments('');
+        setMonthlyIncome('');
+        setDTIR(null);
+    }
+
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
@@ -146,7 +153,7 @@ export default function DeptToIncomeRatioCalculator() {
                     <div className="col-xl-9">
                         <div className="sidebar-wrap">
                             <Heading
-                                textHeading="Compound Interest Calculator"
+                                textHeading="Debt-to-Income Ratio Calculator"
                                 showBtn={false}
                             />
                             <div className="contact-form pb-3">
@@ -179,7 +186,10 @@ export default function DeptToIncomeRatioCalculator() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="flex justify-center pt-4">
+                                    <div className="flex justify-center gap-4 pt-4">
+                                        <button onClick={handleReset} type="reset" className="btn btn-two">
+                                            Reset
+                                        </button>
                                         <button type="submit" className="btn btn-two">
                                             Calculate Debt-to-Income Ratio
                                         </button>
@@ -192,6 +202,18 @@ export default function DeptToIncomeRatioCalculator() {
                                     )}
                                 </div>
                             </div>
+                            <ToolDescription
+                                title={'Summary'}
+                                details={"Assesses debt level relative to income, commonly used in loan approvals."}
+                            />
+                            <ToolDescription
+                                title={'Example'}
+                                details={'If your debt is $1,000 and income is $5,000, your ratio is 20%.'}
+                            />
+                            <ToolDescription
+                                title={'Explanation of Results'}
+                                details={'The result gives you a percentage that helps assess whether your debt load is manageable. Lenders use this ratio to determine your ability to take on more debt, so a lower percentage is better.'}
+                            />
                         </div>
                     </div>
                     <div className="col-xl-3 col-lg-8">

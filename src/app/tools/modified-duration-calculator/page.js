@@ -12,15 +12,19 @@ import { useEffect, useState } from "react";
 import { ToolDescription } from "../tool-description/ToolDescription";
 
 
-export default function BudgetCalculator() {
+export default function BreakEvenAnalysisCalculator() {
 
     const { isDarkMode } = useDarkMode();
+    const finance = new Finance();
 
-    const [income, setIncome] = useState('');
-    const [expenses, setExpenses] = useState([]);
-    const [newExpense, setNewExpense] = useState({ category: '', amount: '' });
-    const [totalExpenses, setTotalExpenses] = useState(0);
-    const [remaining, setRemaining] = useState(null);
+    // State for inputs
+    const [bondPrice, setBondPrice] = useState('');
+    const [faceValue, setFaceValue] = useState('');
+    const [couponRate, setCouponRate] = useState('');
+    const [yieldRate, setYieldRate] = useState('');
+    const [periodsPerYear, setPeriodsPerYear] = useState(1); // Default is annual bond (1 period per year)
+    const [modifiedDuration, setModifiedDuration] = useState(null);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         // Function to initialize a TradingView widget
@@ -127,43 +131,75 @@ export default function BudgetCalculator() {
         };
     }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
 
-
-    const handleExpenseChange = (e) => {
-        const { name, value } = e.target;
-        setNewExpense((prev) => ({ ...prev, [name]: value }));
-      };      
-
-    const addExpense = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        if (newExpense.category && !isNaN(newExpense.amount) && newExpense.amount > 0) {
-            setExpenses((prev) => [...prev, newExpense]);
-            setTotalExpenses((prev) => prev + parseFloat(newExpense.amount));
-            setNewExpense({ category: '', amount: '' });
-        } else {
-            alert('Please enter a valid category and amount.');
+        setError('');
+
+        // Validate inputs
+        if (
+            bondPrice === '' ||
+            faceValue === '' ||
+            couponRate === '' ||
+            yieldRate === ''
+        ) {
+            setError('Please fill out all fields.');
+            return;
         }
+
+        // Parse input values
+        const bondDetails = {
+            price: parseFloat(bondPrice),
+            faceValue: parseFloat(faceValue),
+            couponRate: parseFloat(couponRate) / 100, // Convert to decimal
+            yieldRate: parseFloat(yieldRate) / 100, // Convert to decimal
+            periodsPerYear: parseInt(periodsPerYear),
+        };
+
+        // Calculate Macaulay Duration
+        const macaulayDuration = calculateMacaulayDuration(bondDetails);
+
+        // Calculate Modified Duration
+        const modifiedDurationValue =
+            macaulayDuration / (1 + bondDetails.yieldRate / bondDetails.periodsPerYear);
+
+        setModifiedDuration(modifiedDurationValue);
     };
 
-    const calculateRemaining = () => {
-        if (!isNaN(income) && income > 0) {
-            setRemaining(income - totalExpenses);
-        } else {
-            alert('Please enter a valid income.');
+    const calculateMacaulayDuration = (bondDetails) => {
+        const { price, faceValue, couponRate, yieldRate, periodsPerYear } = bondDetails;
+        let macaulayDuration = 0;
+        let totalPresentValue = 0;
+
+        for (let t = 1; t <= periodsPerYear; t++) {
+            // Coupon payment
+            const couponPayment = couponRate * faceValue / periodsPerYear;
+
+            // Present value of coupon payment at time t
+            const presentValueOfCoupon = couponPayment / Math.pow(1 + yieldRate / periodsPerYear, t);
+            macaulayDuration += t * presentValueOfCoupon;
+            totalPresentValue += presentValueOfCoupon;
         }
+
+        // Adding face value at maturity
+        const presentValueOfFaceValue = faceValue / Math.pow(1 + yieldRate / periodsPerYear, periodsPerYear);
+        macaulayDuration += periodsPerYear * presentValueOfFaceValue;
+        totalPresentValue += presentValueOfFaceValue;
+
+        // Final Macaulay Duration
+        return macaulayDuration / totalPresentValue;
     };
 
     const handleReset = () => {
-        setIncome('');
-        setExpenses([]);
-        setNewExpense({ category: '', amount: '' });
-        setTotalExpenses(0);
-        setRemaining(null);
+        setBondPrice('');
+        setFaceValue('');
+        setCouponRate('');
+        setYieldRate('');
+        setPeriodsPerYear(1);
+        setModifiedDuration(null);
+        setError('');
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        calculateRemaining();
-    };
+
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
@@ -172,95 +208,117 @@ export default function BudgetCalculator() {
                     <div className="col-xl-9">
                         <div className="sidebar-wrap">
                             <Heading
-                                textHeading="Budget Calculator"
+                                textHeading="Modified Duration Calculator"
                                 showBtn={false}
                             />
                             <div className="contact-form pb-3">
                                 <form onSubmit={handleSubmit}>
                                     <div className="row">
-                                        <div className="col-md-4">
+                                        <div className="col-md-6">
                                             <InputField
                                                 isFontAwsome={true}
                                                 fontAwsomeIcon="fa-dollar-sign"
-                                                label="Monthly Income ($):"
-                                                placeholder="Enter Your Income"
+                                                label="Bond Price:"
+                                                placeholder="Enter bond price"
                                                 required={true}
-                                                id="income"
+                                                id="bond-price"
                                                 type="number"
-                                                value={income}
-                                                onChange={(e) => setIncome(e.target.value)}
+                                                value={bondPrice}
+                                                onChange={(e) => setBondPrice(e.target.value)}
                                             />
                                         </div>
-                                        <div className="col-md-4">
-                                            <InputField
-                                                isFontAwsome={true}
-                                                fontAwsomeIcon="fa-tag"
-                                                label="Expense Category:"
-                                                placeholder="Enter Expense Category"
-                                                id="category"
-                                                type="text"
-                                                name="category"
-                                                value={newExpense.category}
-                                                onChange={handleExpenseChange}
-                                            />
-                                        </div>
-                                        <div className="col-md-4">
+                                        <div className="col-md-6">
                                             <InputField
                                                 isFontAwsome={true}
                                                 fontAwsomeIcon="fa-dollar-sign"
-                                                label="Expense Amount ($):"
-                                                placeholder="Enter Expense Amount"
-                                                id="amount"
+                                                label="Face Value:"
+                                                placeholder="Enter face value"
+                                                required={true}
+                                                id="face-value"
                                                 type="number"
-                                                name="amount"
-                                                value={newExpense.amount}
-                                                onChange={handleExpenseChange}
+                                                value={faceValue}
+                                                onChange={(e) => setFaceValue(e.target.value)}
                                             />
-                                        </div>
-                                        <div className="flex justify-center pt-4">
-                                            <button onClick={addExpense} className="btn btn-two">
-                                                Add Expense
-                                            </button>
                                         </div>
                                     </div>
-                                    <div className="pt-4">
-                                        <h3>Current Expenses:</h3>
-                                        <ul>
-                                            {expenses.map((expense, index) => (
-                                                <li key={index}>
-                                                    {expense.category}: ${parseFloat(expense.amount).toFixed(2)}
-                                                </li>
-                                            ))}
-                                        </ul>
+                                    <div className="row pt-4">
+                                        <div className="col-md-6">
+                                            <InputField
+                                                isFontAwsome={true}
+                                                fontAwsomeIcon="fa-percent"
+                                                label="Coupon Rate (%):"
+                                                placeholder="Enter coupon rate"
+                                                required={true}
+                                                id="coupon-rate"
+                                                type="number"
+                                                value={couponRate}
+                                                onChange={(e) => setCouponRate(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <InputField
+                                                isFontAwsome={true}
+                                                fontAwsomeIcon="fa-percent"
+                                                label="Yield to Maturity (%):"
+                                                placeholder="Enter yield to maturity"
+                                                required={true}
+                                                id="yield-rate"
+                                                type="number"
+                                                value={yieldRate}
+                                                onChange={(e) => setYieldRate(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="row pt-4">
+                                        <div className="col-md-6">
+                                            <div className="form-grp">
+                                                <label>Periods per Year:</label>
+                                                <select
+                                                    className="form-select"
+                                                    value={periodsPerYear}
+                                                    onChange={(e) => setPeriodsPerYear(Number(e.target.value))}
+                                                >
+                                                    <option value={1}>Annual</option>
+                                                    <option value={2}>Semi-Annual</option>
+                                                    <option value={4}>Quarterly</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="flex justify-center gap-4 pt-4">
                                         <button onClick={handleReset} type="reset" className="btn btn-two">
                                             Reset
                                         </button>
                                         <button type="submit" className="btn btn-two">
-                                            Calculate Remaining Budget
+                                            Calculate Modified Duration
                                         </button>
                                     </div>
-                                    <div className="pt-10">
-                                        {remaining !== null && (
-                                            <div>
-                                                <h3>Remaining Budget: ${remaining.toFixed(2)}</h3>
-                                            </div>
-                                        )}
-                                    </div>
                                 </form>
+                                <div className="pt-10">
+                                    {error && <div className="error">{error}</div>}
+
+                                    {modifiedDuration !== null && (
+                                        <div className="result">
+                                            <h3>Modified Duration: {modifiedDuration.toFixed(2)}</h3>
+                                            <p>
+                                                This means that for every 1% change in interest rates, the bond's price will change by approximately {modifiedDuration.toFixed(2)}%.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+
                             </div>
                             <ToolDescription
                                 title={'Summary'}
-                                details={"Helps manage income and expenses by creating a monthly or yearly budget."}
+                                details={"Measures a bond’s sensitivity to interest rate changes."}
                             />
                             <ToolDescription
                                 title={'Example'}
-                                details={'$3,000 income and $2,000 expenses leave you $1,000 for savings.'}
+                                details={'A bond with a duration of 5 will decrease 5% in price for every 1% rise in interest rates.'}
                             />
                             <ToolDescription
                                 title={'Explanation of Results'}
-                                details={'The results break down your expenses by category, showing where you may be overspending and how much is left for savings or other financial goals. This helps you plan a more effective budget.'}
+                                details={'The result helps you assess the interest rate risk of your bond investments, allowing you to make informed decisions about which bonds to hold during periods of changing interest rates.'}
                             />
                         </div>
                     </div>

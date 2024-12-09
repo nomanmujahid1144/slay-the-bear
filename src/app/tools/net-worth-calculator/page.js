@@ -9,6 +9,7 @@ import { addTradingViewWidget } from "@/app/utils/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Finance } from "financejs";
 import { useEffect, useState } from "react";
+import { ToolDescription } from "../tool-description/ToolDescription";
 
 
 export default function NetWorthCalculator() {
@@ -140,6 +141,12 @@ export default function NetWorthCalculator() {
         }
     };
 
+    const handleReset = () => {
+        setAssets('');
+        setLiabilities('');
+        setNetWorth(null);
+    }
+
 
 
     return (
@@ -149,7 +156,7 @@ export default function NetWorthCalculator() {
                     <div className="col-xl-9">
                         <div className="sidebar-wrap">
                             <Heading
-                                textHeading="Compound Interest Calculator"
+                                textHeading="Net Worth Calculator"
                                 showBtn={false}
                             />
                             <div className="contact-form pb-3">
@@ -182,7 +189,10 @@ export default function NetWorthCalculator() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="flex justify-center pt-4">
+                                    <div className="flex justify-center gap-4 pt-4">
+                                        <button onClick={handleReset} type="reset" className="btn btn-two">
+                                            Reset
+                                        </button>
                                         <button type="submit" className="btn btn-two">
                                             Calculate Net Worth
                                         </button>
@@ -195,6 +205,18 @@ export default function NetWorthCalculator() {
                                     )}
                                 </div>
                             </div>
+                            <ToolDescription
+                                title={'Summary'}
+                                details={"Calculates your net worth by subtracting liabilities from assets."}
+                            />
+                            <ToolDescription
+                                title={'Example'}
+                                details={'With $100,000 in assets and $50,000 in liabilities, your net worth is $50,000.'}
+                            />
+                            <ToolDescription
+                                title={'Explanation of Results'}
+                                details={'The result shows a snapshot of your financial health, highlighting areas to improve, such as paying down debt or increasing assets, to boost your net worth over time.'}
+                            />
                         </div>
                     </div>
                     <div className="col-xl-3 col-lg-8">

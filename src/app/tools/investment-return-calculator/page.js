@@ -2,26 +2,24 @@
 
 import { useDarkMode } from "@/app/components/dark-mode/DarkModeContext";
 import InputField from "@/app/components/fields/Input";
-import SelectionBox from "@/app/components/fields/Select";
 import { Heading } from "@/app/components/heading/Heading";
 import { srcFile } from "@/app/utils/tradingViewSrcFiles";
 import { addTradingViewWidget } from "@/app/utils/utils";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Finance } from "financejs";
 import { useEffect, useState } from "react";
+import { ToolDescription } from "../tool-description/ToolDescription";
 
 
 export default function InvestmentReturnCalculator() {
 
     const { isDarkMode } = useDarkMode();
-    const finance = new Finance();
 
     // State for inputs
-    const [initialInvestment, setInitialInvestment] = useState(0);
-    const [earnings, setEarnings] = useState(0);
+    const [initialInvestment, setInitialInvestment] = useState('');
+    const [annualReturnRate, setAnnualReturnRate] = useState('');
+    const [investmentYears, setInvestmentYears] = useState('');
 
     // State for the result
-    const [roi, setRoi] = useState(null);
+    const [futureValue, setFutureValue] = useState(null);
 
     useEffect(() => {
         // Function to initialize a TradingView widget
@@ -130,16 +128,30 @@ export default function InvestmentReturnCalculator() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+    
         // Parse input values
-        const investment = parseFloat(initialInvestment);
-        const earningsValue = parseFloat(earnings);
+        const principal = parseFloat(initialInvestment);
+        const rate = parseFloat(annualReturnRate) / 100; // Convert percentage to decimal
+        const years = parseInt(investmentYears, 10);
+    
+        if (!principal || !rate || !years) {
+            alert('Please enter valid inputs for all fields.');
+            return;
+        }
+    
+        // Calculate Future Value using the compound interest formula
+        const futureValue = principal * Math.pow(1 + rate, years);
+    
+        // Set the result
+        setFutureValue(futureValue.toFixed(2)); // Format to 2 decimal places
+    };
+    
 
-        // Calculate ROI using financejs
-        const calculatedRoi = finance.ROI(investment, earningsValue);
-
-        // Set the ROI result
-        setRoi(calculatedRoi.toFixed(2)); // Format to 2 decimal places
+    const handleReset = () => {
+        setInitialInvestment('');
+        setAnnualReturnRate('');
+        setInvestmentYears('');
+        setFutureValue(null);
     };
 
 
@@ -157,7 +169,7 @@ export default function InvestmentReturnCalculator() {
                             <div className="contact-form pb-3">
                                 <form onSubmit={handleSubmit}>
                                     <div className="row">
-                                        <div className="col-md-6">
+                                        <div className="col-md-4">
                                             <InputField
                                                 isFontAwsome={true}
                                                 fontAwsomeIcon="fa-dollar-sign"
@@ -166,39 +178,64 @@ export default function InvestmentReturnCalculator() {
                                                 required={true}
                                                 id="initial-investment"
                                                 type="number"
-                                                value={initialInvestment}
                                                 onChange={(e) => setInitialInvestment(e.target.value)}
                                             />
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-4">
                                             <InputField
                                                 isFontAwsome={true}
-                                                fontAwsomeIcon="fa-dollar-sign"
-                                                label="Earnings:"
-                                                placeholder="Enter Earnings"
+                                                fontAwsomeIcon="fa-percentage"
+                                                label="Annual Return Rate (%):"
+                                                placeholder="Enter Annual Return Rate"
                                                 required={true}
-                                                id="earnings"
+                                                id="annual-return-rate"
                                                 type="number"
-                                                value={earnings}
-                                                onChange={(e) => setEarnings(e.target.value)}
+                                                onChange={(e) => setAnnualReturnRate(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="col-md-4">
+                                            <InputField
+                                                isFontAwsome={true}
+                                                fontAwsomeIcon="fa-calendar"
+                                                label="Investment Period (Years):"
+                                                placeholder="Enter Investment Period"
+                                                required={true}
+                                                id="investment-years"
+                                                type="number"
+                                                onChange={(e) => setInvestmentYears(e.target.value)}
                                             />
                                         </div>
                                     </div>
-                                    <div className="flex justify-center pt-4">
+                                    <div className="flex justify-center gap-4 pt-4">
+                                        <button onClick={handleReset} type="reset" className="btn btn-two">
+                                            Reset
+                                        </button>
                                         <button type="submit" className="btn btn-two">
-                                            Calculate ROI
+                                            Calculate Return
                                         </button>
                                     </div>
                                 </form>
-                                <div className=" pt-10">
+                                <div className="pt-10">
                                     {/* Display the result */}
-                                    {roi !== null && (
+                                    {futureValue !== null && (
                                         <div>
-                                            <h3>Return on Investment (ROI): {roi}%</h3>
+                                            <h3>Future Value of Investment: ${futureValue}</h3>
                                         </div>
                                     )}
                                 </div>
                             </div>
+                            <ToolDescription
+                                title={'Summary'}
+                                details={" Projects potential growth on an investment over time."}
+                            />
+                            <ToolDescription
+                                title={'Example'}
+                                details={' Investing $10,000 at 8% for 10 years results in $21,589.'}
+                            />
+                            <ToolDescription
+                                title={'Explanation of Results'}
+                                details={'The results illustrate how your initial investment will grow over time based on the given return rate, showing the effect of compounding interest on your future wealth.'}
+                            />
                         </div>
                     </div>
                     <div className="col-xl-3 col-lg-8">

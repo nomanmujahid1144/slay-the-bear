@@ -9,6 +9,7 @@ import { addTradingViewWidget } from "@/app/utils/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Finance } from "financejs";
 import { useEffect, useState } from "react";
+import { ToolDescription } from "../tool-description/ToolDescription";
 
 
 export default function MortgageCalculator() {
@@ -144,8 +145,6 @@ export default function MortgageCalculator() {
         const term = parseFloat(loanTerm); // Total number of payments based on term
         const paymentMode = parseInt(paymentType, 10); // Payment type (0 = years, 1 = months)
 
-        console.log(paymentMode, 'paymentMode')
-
         // Using FinanceJS to calculate the mortgage payment
         const payment = finance.AM(principal, rate, term, paymentMode);
 
@@ -156,6 +155,14 @@ export default function MortgageCalculator() {
 
         setMonthlyPayment(payment.toFixed(2)); // Set the monthly payment result
     };
+
+    const handleReset = () => {
+        setLoanAmount(0);
+        setInterestRate(0);
+        setLoanTerm(0);
+        setPaymentType(0);
+        setMonthlyPayment(null)
+    }
 
 
     return (
@@ -181,7 +188,7 @@ export default function MortgageCalculator() {
                                                     required={true}
                                                     id="loan-amount"
                                                     type="number"
-                                                    value={loanAmount}
+                                                    // value={loanAmount}
                                                     onChange={(e) => setLoanAmount(e.target.value)}
                                                 />
                                             </div>
@@ -197,7 +204,7 @@ export default function MortgageCalculator() {
                                                     id="interest-rate"
                                                     type="number"
                                                     step="0.01"
-                                                    value={interestRate}
+                                                    // value={interestRate}
                                                     onChange={(e) => setInterestRate(e.target.value)}
                                                 />
                                             </div>
@@ -212,7 +219,7 @@ export default function MortgageCalculator() {
                                                     required={true}
                                                     id="loan-terms"
                                                     type="number"
-                                                    value={loanTerm}
+                                                    // value={loanTerm}
                                                     onChange={(e) => setLoanTerm(e.target.value)}
                                                 />
                                             </div>
@@ -233,7 +240,10 @@ export default function MortgageCalculator() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex justify-center pt-4">
+                                    <div className="flex justify-center gap-4 pt-4">
+                                        <button onClick={handleReset} type="reset" className="btn btn-two">
+                                            Reset
+                                        </button>
                                         <button type="submit" className="btn btn-two">
                                             Calculate
                                         </button>
@@ -248,6 +258,18 @@ export default function MortgageCalculator() {
                                     )}
                                 </div>
                             </div>
+                            <ToolDescription 
+                                title={'Summary'}
+                                details={'Calculates monthly mortgage payments based on loan amount, interest rate, and term.'}
+                            />
+                            <ToolDescription 
+                                title={'Example'}
+                                details={'A $200,000 loan at 5% for 30 years shows monthly payments of $1,073.64.'}
+                            />
+                            <ToolDescription 
+                                title={'Explanation of Results'}
+                                details={'The result is broken into two parts—principal (the amount reducing your loan balance) and interest (what you pay for borrowing). Over time, more of your payment will go toward the principal as the loan matures.'}
+                            />
                         </div>
                     </div>
                     <div className="col-xl-3 col-lg-8">

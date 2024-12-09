@@ -3,7 +3,7 @@ import Link from "next/link"
 export const Goto = ({buttonText, goTo}) => {
     return (
         <div className="view-all-btn">
-            <Link href={`${goTo}`} className="link-btn">
+            <Link href={`${goTo}`} className="link-btn" >
                 {buttonText}
                 <span className="svg-icon">
                     <svg

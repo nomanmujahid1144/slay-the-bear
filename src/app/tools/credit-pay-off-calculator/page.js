@@ -9,6 +9,7 @@ import { addTradingViewWidget } from "@/app/utils/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Finance } from "financejs";
 import { useEffect, useState } from "react";
+import { ToolDescription } from "../tool-description/ToolDescription";
 
 
 export default function CreditCardPayoffCalculator() {
@@ -151,6 +152,15 @@ export default function CreditCardPayoffCalculator() {
         }
     };
 
+    
+    const handleReset = () => {
+        setBalance('');
+        setInterestRate('');
+        setMonthlyPayment('');
+        setMonthsToPayoff(null);
+        setTotalInterest(null);
+    }
+
 
 
     return (
@@ -160,7 +170,7 @@ export default function CreditCardPayoffCalculator() {
                     <div className="col-xl-9">
                         <div className="sidebar-wrap">
                             <Heading
-                                textHeading="Compound Interest Calculator"
+                                textHeading="Credit Card Payoff Calculator"
                                 showBtn={false}
                             />
                             <div className="contact-form pb-3">
@@ -206,7 +216,10 @@ export default function CreditCardPayoffCalculator() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="flex justify-center pt-4">
+                                    <div className="flex justify-center gap-4 pt-4">
+                                        <button onClick={handleReset} type="reset" className="btn btn-two">
+                                            Reset
+                                        </button>
                                         <button type="submit" className="btn btn-two">
                                             Calculate Payoff Time
                                         </button>
@@ -222,6 +235,18 @@ export default function CreditCardPayoffCalculator() {
                                     )}
                                 </div>
                             </div>
+                            <ToolDescription
+                                title={'Summary'}
+                                details={"Estimates time and interest needed to pay off credit card debt based on your payments."}
+                            />
+                            <ToolDescription
+                                title={'Example'}
+                                details={' A $5,000 balance at 18% interest with $200 monthly payments will take around 32 months to pay off.'}
+                            />
+                            <ToolDescription
+                                title={'Explanation of Results'}
+                                details={'The results show how long it will take to pay off your debt and how much interest you’ll pay over time. It helps you develop a repayment strategy to minimize interest costs and pay down debt faster.'}
+                            />
                         </div>
                     </div>
                     <div className="col-xl-3 col-lg-8">

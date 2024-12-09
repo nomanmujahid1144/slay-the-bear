@@ -7,7 +7,7 @@ export const PostTitle = ({extras, heading, headingLink, isIcon, icon}) => {
             {isIcon && (
                 <FontAwesomeIcon icon={icon} className="!w-3 !mr-3" />
             )}
-            <Link href={headingLink}>
+            <Link href={headingLink} target="_blank">
                 {heading}
             </Link>
         </h2>

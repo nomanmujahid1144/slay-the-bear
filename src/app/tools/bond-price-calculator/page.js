@@ -12,15 +12,18 @@ import { useEffect, useState } from "react";
 import { ToolDescription } from "../tool-description/ToolDescription";
 
 
-export default function BudgetCalculator() {
+export default function BondPriceCalculator() {
 
     const { isDarkMode } = useDarkMode();
+    const finance = new Finance();
 
-    const [income, setIncome] = useState('');
-    const [expenses, setExpenses] = useState([]);
-    const [newExpense, setNewExpense] = useState({ category: '', amount: '' });
-    const [totalExpenses, setTotalExpenses] = useState(0);
-    const [remaining, setRemaining] = useState(null);
+    // State for inputs
+    const [couponPayment, setCouponPayment] = useState('');
+    const [yieldRate, setYieldRate] = useState('');
+    const [yearsToMaturity, setYearsToMaturity] = useState('');
+    const [faceValue, setFaceValue] = useState('');
+    const [bondPrice, setBondPrice] = useState(null);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         // Function to initialize a TradingView widget
@@ -127,43 +130,59 @@ export default function BudgetCalculator() {
         };
     }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
 
-
-    const handleExpenseChange = (e) => {
-        const { name, value } = e.target;
-        setNewExpense((prev) => ({ ...prev, [name]: value }));
-      };      
-
-    const addExpense = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        if (newExpense.category && !isNaN(newExpense.amount) && newExpense.amount > 0) {
-            setExpenses((prev) => [...prev, newExpense]);
-            setTotalExpenses((prev) => prev + parseFloat(newExpense.amount));
-            setNewExpense({ category: '', amount: '' });
-        } else {
-            alert('Please enter a valid category and amount.');
+        setError('');
+
+        // Validate inputs
+        if (
+            couponPayment === '' ||
+            yieldRate === '' ||
+            yearsToMaturity === '' ||
+            faceValue === ''
+        ) {
+            setError('Please fill out all fields.');
+            return;
         }
+
+        // Convert inputs to numerical values
+        const bondDetails = {
+            couponPayment: parseFloat(couponPayment),
+            yieldRate: parseFloat(yieldRate) / 100, // Convert to decimal
+            yearsToMaturity: parseInt(yearsToMaturity),
+            faceValue: parseFloat(faceValue),
+        };
+
+        // Calculate the bond price
+        const price = calculateBondPrice(bondDetails);
+        setBondPrice(price);
     };
 
-    const calculateRemaining = () => {
-        if (!isNaN(income) && income > 0) {
-            setRemaining(income - totalExpenses);
-        } else {
-            alert('Please enter a valid income.');
+    const calculateBondPrice = (bondDetails) => {
+        const { couponPayment, yieldRate, yearsToMaturity, faceValue } = bondDetails;
+
+        // Calculate the present value of coupon payments
+        let presentValueCoupons = 0;
+        for (let t = 1; t <= yearsToMaturity; t++) {
+            presentValueCoupons += couponPayment / Math.pow(1 + yieldRate, t);
         }
+
+        // Calculate the present value of the face value (principal)
+        const presentValueFaceValue = faceValue / Math.pow(1 + yieldRate, yearsToMaturity);
+
+        // Total bond price is the sum of the present values
+        return presentValueCoupons + presentValueFaceValue;
     };
 
     const handleReset = () => {
-        setIncome('');
-        setExpenses([]);
-        setNewExpense({ category: '', amount: '' });
-        setTotalExpenses(0);
-        setRemaining(null);
+        setCouponPayment('');
+        setYieldRate('');
+        setYearsToMaturity('');
+        setFaceValue('');
+        setBondPrice(null);
+        setError('');
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        calculateRemaining();
-    };
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
@@ -172,95 +191,100 @@ export default function BudgetCalculator() {
                     <div className="col-xl-9">
                         <div className="sidebar-wrap">
                             <Heading
-                                textHeading="Budget Calculator"
+                                textHeading="Bond Price Calculator"
                                 showBtn={false}
                             />
                             <div className="contact-form pb-3">
                                 <form onSubmit={handleSubmit}>
                                     <div className="row">
-                                        <div className="col-md-4">
+                                        <div className="col-md-6">
                                             <InputField
                                                 isFontAwsome={true}
                                                 fontAwsomeIcon="fa-dollar-sign"
-                                                label="Monthly Income ($):"
-                                                placeholder="Enter Your Income"
+                                                label="Coupon Payment:"
+                                                placeholder="Enter coupon payment"
                                                 required={true}
-                                                id="income"
+                                                id="coupon-payment"
                                                 type="number"
-                                                value={income}
-                                                onChange={(e) => setIncome(e.target.value)}
+                                                value={couponPayment}
+                                                onChange={(e) => setCouponPayment(e.target.value)}
                                             />
                                         </div>
-                                        <div className="col-md-4">
+                                        <div className="col-md-6">
                                             <InputField
                                                 isFontAwsome={true}
-                                                fontAwsomeIcon="fa-tag"
-                                                label="Expense Category:"
-                                                placeholder="Enter Expense Category"
-                                                id="category"
-                                                type="text"
-                                                name="category"
-                                                value={newExpense.category}
-                                                onChange={handleExpenseChange}
-                                            />
-                                        </div>
-                                        <div className="col-md-4">
-                                            <InputField
-                                                isFontAwsome={true}
-                                                fontAwsomeIcon="fa-dollar-sign"
-                                                label="Expense Amount ($):"
-                                                placeholder="Enter Expense Amount"
-                                                id="amount"
+                                                fontAwsomeIcon="fa-percent"
+                                                label="Yield Rate (%):"
+                                                placeholder="Enter yield rate"
+                                                required={true}
+                                                id="yield-rate"
                                                 type="number"
-                                                name="amount"
-                                                value={newExpense.amount}
-                                                onChange={handleExpenseChange}
+                                                value={yieldRate}
+                                                onChange={(e) => setYieldRate(e.target.value)}
                                             />
-                                        </div>
-                                        <div className="flex justify-center pt-4">
-                                            <button onClick={addExpense} className="btn btn-two">
-                                                Add Expense
-                                            </button>
                                         </div>
                                     </div>
-                                    <div className="pt-4">
-                                        <h3>Current Expenses:</h3>
-                                        <ul>
-                                            {expenses.map((expense, index) => (
-                                                <li key={index}>
-                                                    {expense.category}: ${parseFloat(expense.amount).toFixed(2)}
-                                                </li>
-                                            ))}
-                                        </ul>
+                                    <div className="row pt-4">
+                                        <div className="col-md-6">
+                                            <InputField
+                                                isFontAwsome={true}
+                                                fontAwsomeIcon="fa-calendar-day"
+                                                label="Years to Maturity:"
+                                                placeholder="Enter years to maturity"
+                                                required={true}
+                                                id="years-to-maturity"
+                                                type="number"
+                                                value={yearsToMaturity}
+                                                onChange={(e) => setYearsToMaturity(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <InputField
+                                                isFontAwsome={true}
+                                                fontAwsomeIcon="fa-dollar-sign"
+                                                label="Face Value:"
+                                                placeholder="Enter face value"
+                                                required={true}
+                                                id="face-value"
+                                                type="number"
+                                                value={faceValue}
+                                                onChange={(e) => setFaceValue(e.target.value)}
+                                            />
+                                        </div>
                                     </div>
                                     <div className="flex justify-center gap-4 pt-4">
                                         <button onClick={handleReset} type="reset" className="btn btn-two">
                                             Reset
                                         </button>
                                         <button type="submit" className="btn btn-two">
-                                            Calculate Remaining Budget
+                                            Calculate Bond Price
                                         </button>
                                     </div>
-                                    <div className="pt-10">
-                                        {remaining !== null && (
-                                            <div>
-                                                <h3>Remaining Budget: ${remaining.toFixed(2)}</h3>
-                                            </div>
-                                        )}
-                                    </div>
                                 </form>
+                                <div className="pt-10">
+                                    {/* Display the result */}
+                                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                                    {bondPrice !== null && (
+                                        <div>
+                                            <h3>Bond Price: ${bondPrice.toFixed(2)}</h3>
+                                            <p>
+                                                The bond's price today, based on the present value of its future payments, is <strong>${bondPrice.toFixed(2)}</strong>.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                             <ToolDescription
                                 title={'Summary'}
-                                details={"Helps manage income and expenses by creating a monthly or yearly budget."}
+                                details={"Calculates the current price of a bond based on future cash flows."}
                             />
                             <ToolDescription
                                 title={'Example'}
-                                details={'$3,000 income and $2,000 expenses leave you $1,000 for savings.'}
+                                details={'A bond with $50 annual coupons and a 4% yield is priced at $1,080.'}
                             />
                             <ToolDescription
                                 title={'Explanation of Results'}
-                                details={'The results break down your expenses by category, showing where you may be overspending and how much is left for savings or other financial goals. This helps you plan a more effective budget.'}
+                                details={"The result shows the bond's price today, considering the present value of its future payments. This helps ensure you're paying a fair price for a bond or selling it at its correct value."}
                             />
                         </div>
                     </div>

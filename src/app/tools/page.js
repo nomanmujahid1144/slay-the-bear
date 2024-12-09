@@ -153,13 +153,13 @@ const currencyAndBusinessCalculators = [
     {
         calculatorName: 'Currency Converter',
         calculatorDescription: 'Convert the value of one currency into another using real-time exchange rates. Ideal for international transactions and travel.',
-        gotoLink: '#',
+        gotoLink: '/tools/currency-converter',
         calculatorImage: calculatorImage
     },
     {
         calculatorName: 'Break-Even Analysis Calculator',
         calculatorDescription: 'Determine the number of units needed to sell to cover costs. Useful for businesses in setting pricing strategies and controlling costs for profitability.',
-        gotoLink: '#',
+        gotoLink: '/tools/break-even-analysis-calculator',
         calculatorImage: calculatorImage
     },
 ];
@@ -168,19 +168,19 @@ const bondCalculator = [
     {
         calculatorName: 'Modified Duration Calculator',
         calculatorDescription: 'Measure a bond’s price sensitivity to interest rate changes. Helps investors manage interest rate risk in their bond portfolios.',
-        gotoLink: '#',
+        gotoLink: '/tools/modified-duration-calculator',
         calculatorImage: calculatorImage
     },
     {
         calculatorName: 'Bond Yield to Maturity (YTM) Calculator',
         calculatorDescription: 'Estimate the total return on a bond if held until maturity. Compare bonds based on expected returns and make informed investment decisions.',
-        gotoLink: '#',
+        gotoLink: '/tools/bond-yield-to-maturity-calculator',
         calculatorImage: calculatorImage
     },
     {
         calculatorName: 'Bond Price Calculator',
         calculatorDescription: 'Determine the current market price of a bond by discounting its future cash flows. Ensures fair pricing for buying or selling bonds.',
-        gotoLink: '#',
+        gotoLink: '/tools/bond-price-calculator',
         calculatorImage: calculatorImage
     },
 ];
@@ -208,7 +208,7 @@ export default function Tools() {
                                 <div className="contact-info-item !bg-transparent">
                                     <div className="hot-post-wrap">
                                         <div className="hot-post-item">
-                                            <div className="hot-post-thumb border-deault">
+                                            {/* <div className="hot-post-thumb border-deault">
                                                 <Link href={calculator.gotoLink}>
                                                     <Image
                                                         src={calculator.calculatorImage}
@@ -217,7 +217,7 @@ export default function Tools() {
                                                         alt={`${calculator.calculatorName} Image`}
                                                     />
                                                 </Link>
-                                            </div>
+                                            </div> */}
                                             <div className="hot-post-content">
                                                 <PostTitle
                                                     isIcon={true}
@@ -253,7 +253,7 @@ export default function Tools() {
                                 <div className="contact-info-item !bg-transparent">
                                     <div className="hot-post-wrap">
                                         <div className="hot-post-item">
-                                            <div className="hot-post-thumb border-deault">
+                                            {/* <div className="hot-post-thumb border-deault">
                                                 <Link href={calculator.gotoLink}>
                                                     <Image
                                                         src={calculator.calculatorImage}
@@ -262,7 +262,7 @@ export default function Tools() {
                                                         alt={`${calculator.calculatorName} Image`}
                                                     />
                                                 </Link>
-                                            </div>
+                                            </div> */}
                                             <div className="hot-post-content">
                                                 <PostTitle
                                                     isIcon={true}
@@ -298,7 +298,7 @@ export default function Tools() {
                                 <div className="contact-info-item !bg-transparent">
                                     <div className="hot-post-wrap">
                                         <div className="hot-post-item">
-                                            <div className="hot-post-thumb border-deault">
+                                            {/* <div className="hot-post-thumb border-deault">
                                                 <Link href={calculator.gotoLink}>
                                                     <Image
                                                         src={calculator.calculatorImage}
@@ -307,7 +307,7 @@ export default function Tools() {
                                                         alt={`${calculator.calculatorName} Image`}
                                                     />
                                                 </Link>
-                                            </div>
+                                            </div> */}
                                             <div className="hot-post-content">
                                                 <PostTitle
                                                     isIcon={true}
@@ -343,7 +343,7 @@ export default function Tools() {
                                 <div className="contact-info-item !bg-transparent">
                                     <div className="hot-post-wrap">
                                         <div className="hot-post-item">
-                                            <div className="hot-post-thumb border-deault">
+                                            {/* <div className="hot-post-thumb border-deault">
                                                 <Link href={calculator.gotoLink}>
                                                     <Image
                                                         src={calculator.calculatorImage}
@@ -352,13 +352,13 @@ export default function Tools() {
                                                         alt={`${calculator.calculatorName} Image`}
                                                     />
                                                 </Link>
-                                            </div>
+                                            </div> */}
                                             <div className="hot-post-content">
                                                 <PostTitle
                                                     isIcon={true}
                                                     icon={'fa-solid fa-calculator'}
                                                     heading={calculator.calculatorName}
-                                                    headingLink={'#'}
+                                                    headingLink={calculator.gotoLink}
                                                 />
                                                 <PostDescription
                                                     description={calculator.calculatorDescription}
@@ -388,7 +388,7 @@ export default function Tools() {
                                 <div className="contact-info-item !bg-transparent">
                                     <div className="hot-post-wrap">
                                         <div className="hot-post-item">
-                                            <div className="hot-post-thumb border-deault">
+                                            {/* <div className="hot-post-thumb border-deault">
                                                 <Link href={calculator.gotoLink}>
                                                     <Image
                                                         src={calculator.calculatorImage}
@@ -397,13 +397,13 @@ export default function Tools() {
                                                         alt={`${calculator.calculatorName} Image`}
                                                     />
                                                 </Link>
-                                            </div>
+                                            </div> */}
                                             <div className="hot-post-content">
                                                 <PostTitle
                                                     isIcon={true}
                                                     icon={'fa-solid fa-calculator'}
                                                     heading={calculator.calculatorName}
-                                                    headingLink={'#'}
+                                                    headingLink={calculator.gotoLink}
                                                 />
                                                 <PostDescription
                                                     description={calculator.calculatorDescription}

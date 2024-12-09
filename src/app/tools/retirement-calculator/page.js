@@ -9,6 +9,7 @@ import { addTradingViewWidget } from "@/app/utils/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Finance } from "financejs";
 import { useEffect, useState } from "react";
+import { ToolDescription } from "../tool-description/ToolDescription";
 
 
 export default function RetirementCalculator() {
@@ -147,6 +148,15 @@ export default function RetirementCalculator() {
         setFutureValue(totalFutureValue.toFixed(2));
     };
 
+    const handleReset = () => {
+        setCurrentAge(0);
+        setRetirementAge(0);
+        setCurrentSavings(0);
+        setAnnualContributions(0);
+        setExpectedRateOfReturn(0);
+        setFutureValue(null);
+    }
+
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
@@ -170,7 +180,6 @@ export default function RetirementCalculator() {
                                                     required={true}
                                                     id="current-age"
                                                     type="number"
-                                                    value={currentAge}
                                                     onChange={(e) => setCurrentAge(e.target.value)}
                                                 />
                                             </div>
@@ -184,7 +193,6 @@ export default function RetirementCalculator() {
                                                     required={true}
                                                     id="retirement-age"
                                                     type="number"
-                                                    value={retirementAge}
                                                     onChange={(e) => setRetirementAge(e.target.value)}
                                                 />
                                             </div>
@@ -199,7 +207,6 @@ export default function RetirementCalculator() {
                                                     required={true}
                                                     id="current-savings"
                                                     type="number"
-                                                    value={currentSavings}
                                                     onChange={(e) => setCurrentSavings(e.target.value)}
                                                 />
                                             </div>
@@ -216,7 +223,6 @@ export default function RetirementCalculator() {
                                                     required={true}
                                                     id="annual-contributions"
                                                     type="number"
-                                                    value={annualContributions}
                                                     onChange={(e) => setAnnualContributions(e.target.value)}
                                                 />
                                             </div>
@@ -232,13 +238,15 @@ export default function RetirementCalculator() {
                                                     id="expected-return"
                                                     type="number"
                                                     step="0.01"
-                                                    value={expectedRateOfReturn}
                                                     onChange={(e) => setExpectedRateOfReturn(e.target.value)}
                                                 />
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex justify-center pt-4">
+                                    <div className="flex justify-center gap-4 pt-4">
+                                        <button onClick={handleReset} type="reset" className="btn btn-two">
+                                            Reset
+                                        </button>
                                         <button type="submit" className="btn btn-two">
                                             Calculate Retirement Savings
                                         </button>
@@ -254,6 +262,18 @@ export default function RetirementCalculator() {
                                     )}
                                 </div>
                             </div>
+                            <ToolDescription
+                                title={'Summary'}
+                                details={"Estimates how much you'll need for retirement based on current savings, contributions, and expenses."}
+                            />
+                            <ToolDescription
+                                title={'Example'}
+                                details={'Saving $500 per month with a 6% return could give you $500,000 by retirement.'}
+                            />
+                            <ToolDescription
+                                title={'Explanation of Results'}
+                                details={'The result shows your total savings at retirement age and compares it to your expected expenses. If there’s a gap, you’ll know you need to save more or adjust your retirement expectations.'}
+                            />
                         </div>
                     </div>
                     <div className="col-xl-3 col-lg-8">

@@ -9,6 +9,7 @@ import { addTradingViewWidget } from "@/app/utils/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Finance } from "financejs";
 import { useEffect, useState } from "react";
+import { ToolDescription } from "../tool-description/ToolDescription";
 
 
 export default function RuleOf72Calculator() {
@@ -135,8 +136,13 @@ export default function RuleOf72Calculator() {
         const years = finance.R72(rate);
 
         // Set the result in state
-        setYearsToDouble(years.toFixed(2)); // Set the years to double result
+        setYearsToDouble(years); // Set the years to double result
     };
+
+    const handleReset = () => {
+        setAnnualRate(0);
+        setYearsToDouble(null);
+    }
 
 
     return (
@@ -159,10 +165,12 @@ export default function RuleOf72Calculator() {
                                         required={true}
                                         id="annual-rate"
                                         type="number"
-                                        value={annualRate}
                                         onChange={(e) => setAnnualRate(e.target.value)}
                                     />
-                                    <div className="flex justify-center pt-4">
+                                    <div className="flex justify-center gap-4 pt-4">
+                                        <button onClick={handleReset} type="reset" className="btn btn-two">
+                                            Reset
+                                        </button>
                                         <button type="submit" className="btn btn-two">
                                             Calculate Years to Double
                                         </button>
@@ -177,6 +185,18 @@ export default function RuleOf72Calculator() {
                                     )}
                                 </div>
                             </div>
+                            <ToolDescription
+                                title={'Summary'}
+                                details={"Estimates the time it takes for your investment to double."}
+                            />
+                            <ToolDescription
+                                title={'Example'}
+                                details={'At 6% interest, your money doubles in 12 years.'}
+                            />
+                            <ToolDescription
+                                title={'Explanation of Results'}
+                                details={'The Rule of 72 provides a quick way to estimate how long it will take for your investment to double, helping you compare different investment rates to find the best option for growth.'}
+                            />
                         </div>
                     </div>
                     <div className="col-xl-3 col-lg-8">

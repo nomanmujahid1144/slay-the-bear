@@ -48,7 +48,42 @@ const menuItems = [
     },
     {
         navbarName: 'Tool Section',
-        subMenu: [],
+        subMenu: [
+            {
+                navbarName: 'Free Tools',
+                subMenu: [
+                    {
+                        navbarName: 'Loan Amortization Calculator',
+                        navLink: '/tools/loan-amortization'
+                    },
+                    {
+                        navbarName: 'Mortgage Calculator',
+                        navLink: '/tools/mortgage-calculator'
+                    },
+                    {
+                        navbarName: 'Retirement Calculator',
+                        navLink: '/tools/retirement-calculator'
+                    },
+                    {
+                        navbarName: 'Investment Return Calculator',
+                        navLink: '/tools/investment-return-calculator'
+                    },
+                    {
+                        navbarName: 'Compound Interest Calculator',
+                        navLink: '/tools/compound-interest-calculator'
+                    },
+                    {
+                        navbarName: 'More In Calculators',
+                        navLink: '/tools'
+                    },
+                ],
+                navLink: '/tools'
+            },
+            {
+                navbarName: 'Paid Tools',
+                navLink: '/paid-tools'
+            },
+        ],
         navLink: '/tools'
     },
     {
@@ -96,12 +131,10 @@ export const Navbar = () => {
                         }));
                         setSuggestions(symbols);  // Set the state with fetched symbols
                     } else {
-                        console.log('Status:', response.status);
                         setSuggestions([]);  // Clear suggestions if API call fails
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error.message);
                     setSuggestions([]);  // Clear suggestions on error
                 });
         } else {
@@ -123,13 +156,14 @@ export const Navbar = () => {
                     <div className="container">
                         <div className="row align-items-center">
                             <div className="col-lg-3">
-                                <Link href={'/'}>
+                                <Link href={'/'} className="w-fit flex flex-col items-center justify-center">
                                     <Image
                                         src={logoImage}
                                         alt="logo"
                                         width={130}
                                         height={70}
                                     />
+                                    <p className="font-bold text-[#29BFF0]">Slay the Bear</p>
                                 </Link>
                             </div>
                             <div className="col-lg-6">
@@ -153,7 +187,7 @@ export const Navbar = () => {
                                     </form>
                                 </div>
                             </div>
-                            <div className="col-lg-3">
+                            <div className="col-lg-3 flex justify-center">
                                 <div className="hl-right-side-four">
                                     <div className="subscribe-btn">
                                         <Link href="/login" className="btn btn-two">
@@ -181,26 +215,48 @@ export const Navbar = () => {
                                                         {item.subMenu.length > 0 && (
                                                             <ul className="sub-menu">
                                                                 {item.subMenu.map((subItem, subIndex) => (
-                                                                    <li key={subIndex}>
-                                                                        <Link href={subItem.navLink}>
-                                                                            {subItem.navbarName}
-                                                                        </Link>
-                                                                    </li>
+                                                                    <>
+                                                                        {subItem?.subMenu?.length > 0 ? (
+                                                                            <>
+                                                                                <li key={index} className={`${subItem.subMenu.length > 0 ? 'menu-item-has-children active' : ''}`}>
+                                                                                    <Link href={subItem.navLink}>
+                                                                                        {subItem.navbarName}
+                                                                                    </Link>
+                                                                                    <ul className="sub-menu">
+                                                                                        {subItem?.subMenu?.map((subItem, index) => (
+                                                                                            <li key={subIndex}>
+                                                                                                <Link href={subItem.navLink}>
+                                                                                                    {subItem.navbarName}
+                                                                                                </Link>
+                                                                                            </li>
+                                                                                        ))}
+                                                                                    </ul>
+                                                                                </li>
+                                                                            </>
+                                                                        ) : (
+                                                                            <li key={subIndex}>
+                                                                                <Link href={subItem.navLink}>
+                                                                                    {subItem.navbarName}
+                                                                                </Link>
+                                                                            </li>
+                                                                        )}
+                                                                    </>
                                                                 ))}
-                                                            </ul>
+                                                            </ul >
                                                         )}
                                                     </li>
                                                 ))}
                                             </ul>
                                         </div>
                                         <div className="logo d-lg-none white-logo">
-                                            <Link href={'/'}>
+                                            <Link href={'/'} className="w-fit flex flex-col items-center justify-center">
                                                 <Image
                                                     src={logoImage}
                                                     alt="logo"
                                                     width={100}
                                                     height={70}
                                                 />
+                                                <p className="font-bold text-[#29BFF0]">Slay the Bear</p>
                                             </Link>
                                         </div>
                                         <div className="mobile-nav-toggler" onClick={handleMobileVersion}>

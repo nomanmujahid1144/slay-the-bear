@@ -9,6 +9,7 @@ import { addTradingViewWidget } from "@/app/utils/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Finance } from "financejs";
 import { useEffect, useState } from "react";
+import { ToolDescription } from "../tool-description/ToolDescription";
 
 
 export default function RuleOf72Calculator() {
@@ -142,6 +143,13 @@ export default function RuleOf72Calculator() {
         }
     };
 
+    const handleReset = () => {
+        setNumShares('');
+        setAnnualDividend('');
+        setTimePeriod('');
+        setTotalDividendIncome(null)
+    }
+
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
@@ -150,7 +158,7 @@ export default function RuleOf72Calculator() {
                     <div className="col-xl-9">
                         <div className="sidebar-wrap">
                             <Heading
-                                textHeading="Rule of 72 Calculator"
+                                textHeading="Dividend Calculator"
                                 showBtn={false}
                             />
                             <div className="contact-form pb-3">
@@ -196,8 +204,10 @@ export default function RuleOf72Calculator() {
                                             />
                                         </div>
                                     </div>
-
-                                    <div className="flex justify-center pt-4">
+                                    <div className="flex justify-center gap-4 pt-4">
+                                        <button onClick={handleReset} type="reset" className="btn btn-two">
+                                            Reset
+                                        </button>
                                         <button type="submit" className="btn btn-two">
                                             Calculate Dividend Income
                                         </button>
@@ -212,6 +222,18 @@ export default function RuleOf72Calculator() {
                                     )}
                                 </div>
                             </div>
+                            <ToolDescription
+                                title={'Summary'}
+                                details={"Estimates income from dividend-paying stocks."}
+                            />
+                            <ToolDescription
+                                title={'Example'}
+                                details={'Owning 100 shares with a $3 dividend generates $300 annually.'}
+                            />
+                            <ToolDescription
+                                title={'Explanation of Results'}
+                                details={'The result shows how much income you can expect from dividends, helping you gauge the cash flow your investments generate and its role in your overall financial plan.'}
+                            />
                         </div>
                     </div>
                     <div className="col-xl-3 col-lg-8">

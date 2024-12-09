@@ -9,23 +9,61 @@ import { addTradingViewWidget } from "@/app/utils/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Finance } from "financejs";
 import { useEffect, useState } from "react";
+import { ToolDescription } from "../tool-description/ToolDescription";
 
 
 export default function LoanAmortizationCalculator() {
 
     const { isDarkMode } = useDarkMode();
     const finance = new Finance();
-
-    // State for inputs
-    const [loanAmount, setLoanAmount] = useState(0);
-    const [interestRate, setInterestRate] = useState(0);
+    const [principal, setPrincipal] = useState(0);
+    const [annualInterestRate, setAnnualInterestRate] = useState(0);
     const [loanTerm, setLoanTerm] = useState(0);
     const [extraPayment, setExtraPayment] = useState(0);
-    const [loanTermType, setLoanTermType] = useState(0); // 0 for Years, 1 for Months
+    const [loanTermType, setLoanTermType] = useState(0); // 0 for years, 1 for months
     const [amortizationSchedule, setAmortizationSchedule] = useState([]);
 
-    // State for the result
-    const [monthlyPayment, setMonthlyPayment] = useState(null);
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        calculateAmortization();
+    };
+
+    const calculateAmortization = () => {
+        const totalPayments = loanTermType === 0 ? loanTerm * 12 : loanTerm; // Convert years to months if needed
+        const monthlyInterestRate = (annualInterestRate / 100) / 12;
+
+        const baseMonthlyPayment = (principal * monthlyInterestRate) /
+            (1 - Math.pow(1 + monthlyInterestRate, -totalPayments));
+
+        let balance = principal;
+        let paymentSchedule = [];
+
+        for (let i = 1; i <= totalPayments; i++) {
+            const interestPayment = balance * monthlyInterestRate;
+            const principalPayment = baseMonthlyPayment + extraPayment - interestPayment;
+            balance -= principalPayment;
+
+            paymentSchedule.push({
+                month: i,
+                principalPayment: principalPayment.toFixed(2),
+                interestPayment: interestPayment.toFixed(2),
+                balance: Math.max(balance, 0).toFixed(2)
+            });
+
+            if (balance <= 0) break;
+        }
+
+        setAmortizationSchedule(paymentSchedule);
+    };
+
+    const handleReset = () => {
+        setPrincipal(0);
+        setAnnualInterestRate(0);
+        setLoanTerm(0);
+        setExtraPayment(0);
+        setLoanTermType(0);
+        setAmortizationSchedule([]);
+    }
 
     useEffect(() => {
         // Function to initialize a TradingView widget
@@ -132,26 +170,7 @@ export default function LoanAmortizationCalculator() {
         };
     }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
 
-    const handleSubmit = (e) => {
-        e.preventDefault(); // Prevent the default form submission behavior
-
-        const principal = parseFloat(currentSavings); // Current savings as principal
-        const rate = parseFloat(expectedRateOfReturn); // Expected annual rate of return
-        const term = retirementAge - currentAge; // Total years until retirement
-        const annualContribution = parseFloat(annualContributions); // Annual contributions
-
-        // Future Value of Current Savings
-        const futureValueOfSavings = principal * Math.pow(1 + (rate / 100), term);
-
-        // Future Value of Annual Contributions
-        const futureValueOfContributions = annualContribution * ((Math.pow(1 + (rate / 100), term) - 1) / (rate / 100));
-
-        // Total future value
-        const totalFutureValue = futureValueOfSavings + futureValueOfContributions;
-
-        // Update the state with the calculated total future value
-        setRetirementAmount(totalFutureValue.toFixed(2));
-    };
+    // Additional code to calculate the loan amortization schedule
 
 
     return (
@@ -177,8 +196,7 @@ export default function LoanAmortizationCalculator() {
                                                     required={true}
                                                     id="loan-amount"
                                                     type="number"
-                                                    value={loanAmount}
-                                                    onChange={(e) => setLoanAmount(e.target.value)}
+                                                    onChange={(e) => setPrincipal(parseFloat(e.target.value))}
                                                 />
                                             </div>
                                         </div>
@@ -186,15 +204,13 @@ export default function LoanAmortizationCalculator() {
                                             <div className="form-grp">
                                                 <InputField
                                                     isFontAwsome={true}
-                                                    fontAwsomeIcon="fa-percentage"
-                                                    label="Interest Rate (%):"
+                                                    fontAwsomeIcon="fa-percent"
+                                                    label="Annual Interest Rate (%):"
                                                     placeholder="Enter interest rate"
                                                     required={true}
                                                     id="interest-rate"
                                                     type="number"
-                                                    step="0.01"
-                                                    value={interestRate}
-                                                    onChange={(e) => setInterestRate(e.target.value)}
+                                                    onChange={(e) => setAnnualInterestRate(parseFloat(e.target.value))}
                                                 />
                                             </div>
                                         </div>
@@ -208,8 +224,7 @@ export default function LoanAmortizationCalculator() {
                                                     required={true}
                                                     id="loan-terms"
                                                     type="number"
-                                                    value={loanTerm}
-                                                    onChange={(e) => setLoanTerm(e.target.value)}
+                                                    onChange={(e) => setLoanTerm(parseFloat(e.target.value))}
                                                 />
                                             </div>
                                         </div>
@@ -224,8 +239,7 @@ export default function LoanAmortizationCalculator() {
                                                     placeholder="Enter extra payment"
                                                     id="extra-payment"
                                                     type="number"
-                                                    value={extraPayment}
-                                                    onChange={(e) => setExtraPayment(e.target.value)}
+                                                    onChange={(e) => setExtraPayment(parseFloat(e.target.value))}
                                                 />
                                             </div>
                                         </div>
@@ -243,19 +257,23 @@ export default function LoanAmortizationCalculator() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex justify-center pt-4">
+                                    <div className="flex justify-center gap-4 pt-4">
+                                        <button onClick={handleReset} type="reset" className="btn btn-two">
+                                            Reset
+                                        </button>
                                         <button type="submit" className="btn btn-two">
                                             Calculate
                                         </button>
                                     </div>
                                 </form>
+
                                 <div className="relative overflow-x-auto pt-10">
-                                    {/* Display the result */}
+                                    {/* Display the amortization schedule */}
                                     {amortizationSchedule.length > 0 && (
                                         <>
                                             <h3 className="pb-3">Amortization Schedule</h3>
                                             <table className="w-full text-sm text-left rtl:text-right text-gray-900">
-                                                <thead className="text-xs text-gray-700 uppercase bg-gray-200 ">
+                                                <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                                                     <tr>
                                                         <th scope="col" className="px-6 py-3">Month</th>
                                                         <th scope="col" className="px-6 py-3">Principal Payment</th>
@@ -278,6 +296,18 @@ export default function LoanAmortizationCalculator() {
                                     )}
                                 </div>
                             </div>
+                            <ToolDescription
+                                title={'Summary'}
+                                details={'Breaks down each loan payment over time, showing how much goes to interest vs. principal.'}
+                            />
+                            <ToolDescription
+                                title={'Example'}
+                                details={'A $50,000 loan at 4% for 5 years shows an amortization schedule.'}
+                            />
+                            <ToolDescription
+                                title={'Explanation of Results'}
+                                details={'The results provide a detailed payment schedule, illustrating how early payments are mostly interest, with a gradual shift toward paying off the loan balance (principal) as the loan matures.'}
+                            />
                         </div>
                     </div>
                     <div className="col-xl-3 col-lg-8">

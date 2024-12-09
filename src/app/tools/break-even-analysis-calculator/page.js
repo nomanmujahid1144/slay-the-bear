@@ -12,15 +12,17 @@ import { useEffect, useState } from "react";
 import { ToolDescription } from "../tool-description/ToolDescription";
 
 
-export default function BudgetCalculator() {
+export default function ModifiedDurationCalculator() {
 
     const { isDarkMode } = useDarkMode();
 
-    const [income, setIncome] = useState('');
-    const [expenses, setExpenses] = useState([]);
-    const [newExpense, setNewExpense] = useState({ category: '', amount: '' });
-    const [totalExpenses, setTotalExpenses] = useState(0);
-    const [remaining, setRemaining] = useState(null);
+    // State for inputs
+    const [fixedCosts, setFixedCosts] = useState('');
+    const [variableCostPerUnit, setVariableCostPerUnit] = useState('');
+    const [sellingPricePerUnit, setSellingPricePerUnit] = useState('');
+    const [breakEvenUnits, setBreakEvenUnits] = useState(null);
+    const [error, setError] = useState('');
+
 
     useEffect(() => {
         // Function to initialize a TradingView widget
@@ -127,43 +129,48 @@ export default function BudgetCalculator() {
         };
     }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
 
-
-    const handleExpenseChange = (e) => {
-        const { name, value } = e.target;
-        setNewExpense((prev) => ({ ...prev, [name]: value }));
-      };      
-
-    const addExpense = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        if (newExpense.category && !isNaN(newExpense.amount) && newExpense.amount > 0) {
-            setExpenses((prev) => [...prev, newExpense]);
-            setTotalExpenses((prev) => prev + parseFloat(newExpense.amount));
-            setNewExpense({ category: '', amount: '' });
-        } else {
-            alert('Please enter a valid category and amount.');
-        }
-    };
+        setError('');
 
-    const calculateRemaining = () => {
-        if (!isNaN(income) && income > 0) {
-            setRemaining(income - totalExpenses);
+        // Validate inputs
+        if (fixedCosts === '' || variableCostPerUnit === '' || sellingPricePerUnit === '') {
+            setError('Please fill out all fields.');
+            return;
+        }
+
+        const fixedCostsNum = parseFloat(fixedCosts);
+        const variableCostNum = parseFloat(variableCostPerUnit);
+        const sellingPriceNum = parseFloat(sellingPricePerUnit);
+
+        // Ensure the selling price is greater than the variable cost
+        if (sellingPriceNum <= variableCostNum) {
+            setError(
+                'Selling price must be greater than the variable cost per unit to calculate break-even.'
+            );
+            return;
+        }
+
+        // Calculate break-even point
+        const breakEven = fixedCostsNum / (sellingPriceNum - variableCostNum);
+
+        // If the break-even point is valid, calculate; otherwise, return error
+        if (breakEven > 0) {
+            setBreakEvenUnits(Math.ceil(breakEven)); // Rounded up to the next whole unit
         } else {
-            alert('Please enter a valid income.');
+            setError('No feasible break-even point with the given costs and price.');
         }
     };
 
     const handleReset = () => {
-        setIncome('');
-        setExpenses([]);
-        setNewExpense({ category: '', amount: '' });
-        setTotalExpenses(0);
-        setRemaining(null);
+        setFixedCosts('');
+        setVariableCostPerUnit('');
+        setSellingPricePerUnit('');
+        setBreakEvenUnits(null);
+        setError('');
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        calculateRemaining();
-    };
+
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
@@ -172,95 +179,88 @@ export default function BudgetCalculator() {
                     <div className="col-xl-9">
                         <div className="sidebar-wrap">
                             <Heading
-                                textHeading="Budget Calculator"
+                                textHeading="Break-Even Analysis Calculator"
                                 showBtn={false}
                             />
                             <div className="contact-form pb-3">
                                 <form onSubmit={handleSubmit}>
                                     <div className="row">
-                                        <div className="col-md-4">
+                                        <div className="col-md-6">
                                             <InputField
                                                 isFontAwsome={true}
                                                 fontAwsomeIcon="fa-dollar-sign"
-                                                label="Monthly Income ($):"
-                                                placeholder="Enter Your Income"
+                                                label="Fixed Costs ($):"
+                                                placeholder="Enter total fixed costs"
                                                 required={true}
-                                                id="income"
+                                                id="fixed-costs"
                                                 type="number"
-                                                value={income}
-                                                onChange={(e) => setIncome(e.target.value)}
+                                                value={fixedCosts}
+                                                onChange={(e) => setFixedCosts(e.target.value)}
                                             />
                                         </div>
-                                        <div className="col-md-4">
-                                            <InputField
-                                                isFontAwsome={true}
-                                                fontAwsomeIcon="fa-tag"
-                                                label="Expense Category:"
-                                                placeholder="Enter Expense Category"
-                                                id="category"
-                                                type="text"
-                                                name="category"
-                                                value={newExpense.category}
-                                                onChange={handleExpenseChange}
-                                            />
-                                        </div>
-                                        <div className="col-md-4">
+                                        <div className="col-md-6">
                                             <InputField
                                                 isFontAwsome={true}
                                                 fontAwsomeIcon="fa-dollar-sign"
-                                                label="Expense Amount ($):"
-                                                placeholder="Enter Expense Amount"
-                                                id="amount"
+                                                label="Variable Cost per Unit ($):"
+                                                placeholder="Enter variable cost per unit"
+                                                required={true}
+                                                id="variable-cost"
                                                 type="number"
-                                                name="amount"
-                                                value={newExpense.amount}
-                                                onChange={handleExpenseChange}
+                                                value={variableCostPerUnit}
+                                                onChange={(e) => setVariableCostPerUnit(e.target.value)}
                                             />
-                                        </div>
-                                        <div className="flex justify-center pt-4">
-                                            <button onClick={addExpense} className="btn btn-two">
-                                                Add Expense
-                                            </button>
                                         </div>
                                     </div>
-                                    <div className="pt-4">
-                                        <h3>Current Expenses:</h3>
-                                        <ul>
-                                            {expenses.map((expense, index) => (
-                                                <li key={index}>
-                                                    {expense.category}: ${parseFloat(expense.amount).toFixed(2)}
-                                                </li>
-                                            ))}
-                                        </ul>
+                                    <div className="row pt-4">
+                                        <div className="col-md-6">
+                                            <InputField
+                                                isFontAwsome={true}
+                                                fontAwsomeIcon="fa-dollar-sign"
+                                                label="Selling Price per Unit ($):"
+                                                placeholder="Enter selling price per unit"
+                                                required={true}
+                                                id="selling-price"
+                                                type="number"
+                                                value={sellingPricePerUnit}
+                                                onChange={(e) => setSellingPricePerUnit(e.target.value)}
+                                            />
+                                        </div>
                                     </div>
                                     <div className="flex justify-center gap-4 pt-4">
                                         <button onClick={handleReset} type="reset" className="btn btn-two">
                                             Reset
                                         </button>
                                         <button type="submit" className="btn btn-two">
-                                            Calculate Remaining Budget
+                                            Calculate Break-Even
                                         </button>
                                     </div>
-                                    <div className="pt-10">
-                                        {remaining !== null && (
-                                            <div>
-                                                <h3>Remaining Budget: ${remaining.toFixed(2)}</h3>
-                                            </div>
-                                        )}
-                                    </div>
                                 </form>
+                                <div className="pt-10">
+                                    {/* Display the result */}
+                                    {error && <p className="text-red-600 pt-3">{error}</p>}
+                                    {breakEvenUnits !== null && !error && (
+                                        <div className="result pt-4">
+                                            <h3>Break-Even Point</h3>
+                                            <p>
+                                                You need to sell approximately <strong>{breakEvenUnits}</strong> units
+                                                to cover your costs.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                             <ToolDescription
                                 title={'Summary'}
-                                details={"Helps manage income and expenses by creating a monthly or yearly budget."}
+                                details={"Determines how many units you need to sell to cover costs."}
                             />
                             <ToolDescription
                                 title={'Example'}
-                                details={'$3,000 income and $2,000 expenses leave you $1,000 for savings.'}
+                                details={'Selling 667 units at $20 covers $10,000 in fixed costs.'}
                             />
                             <ToolDescription
                                 title={'Explanation of Results'}
-                                details={'The results break down your expenses by category, showing where you may be overspending and how much is left for savings or other financial goals. This helps you plan a more effective budget.'}
+                                details={'The results show the point at which your business begins to make a profit, helping you set appropriate sales goals and pricing strategies to ensure profitability.'}
                             />
                         </div>
                     </div>

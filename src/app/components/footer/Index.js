@@ -13,11 +13,11 @@ const companyPages = [
 ];
 
 const markets = [
-    {name: 'Stocks', link: '#'},
-    {name: 'Cryptocurrency', link: '#'},
-    {name: 'Forex', link: '#'},
-    {name: 'ETFs', link: '#'},
-    {name: 'Mutual Funds', link: '#'},
+    { name: 'Stocks', link: '#' },
+    { name: 'Cryptocurrency', link: '#' },
+    { name: 'Forex', link: '#' },
+    { name: 'ETFs', link: '#' },
+    { name: 'Mutual Funds', link: '#' },
 ]
 
 export const Footer = () => {
@@ -30,13 +30,14 @@ export const Footer = () => {
                             <div class="col-lg-3 col-md-7">
                                 <div class="footer-widget">
                                     <div class="fw-logo">
-                                        <Link href={'/'}>
+                                        <Link href={'/'} className="w-fit flex flex-col items-center justify-center">
                                             <Image
                                                 src={logo}
                                                 alt="footer logo"
                                                 width={170}
                                                 height={100}
                                             />
+                                            <p className="font-bold text-[#29BFF0]">Slay the Bear</p>
                                         </Link>
                                     </div>
                                     <div class="fw-logo d-none">
@@ -50,10 +51,10 @@ export const Footer = () => {
                                         </Link>
                                     </div>
                                     <div class="footer-content">
-                                            <p>
-                                                Footer description here
-                                                
-                                            </p>
+                                        <p>
+                                            Footer description here
+
+                                        </p>
                                     </div>
                                 </div>
                             </div>

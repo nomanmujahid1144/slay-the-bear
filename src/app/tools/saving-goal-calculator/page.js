@@ -9,6 +9,7 @@ import { addTradingViewWidget } from "@/app/utils/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Finance } from "financejs";
 import { useEffect, useState } from "react";
+import { ToolDescription } from "../tool-description/ToolDescription";
 
 
 export default function SavingGoalCalculator() {
@@ -19,7 +20,6 @@ export default function SavingGoalCalculator() {
     // State for inputs
     const [savingsGoal, setSavingsGoal] = useState(0);
     const [currentSavings, setCurrentSavings] = useState(0);
-    const [regularContribution, setRegularContribution] = useState(0);
     const [timeFrame, setTimeFrame] = useState(1); // Default to 1 year
     const [requiredSavings, setRequiredSavings] = useState(null);
 
@@ -130,26 +130,37 @@ export default function SavingGoalCalculator() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+    
         // Parse input values
         const goal = parseFloat(savingsGoal);
         const current = parseFloat(currentSavings);
-        const contribution = parseFloat(regularContribution);
         const years = parseFloat(timeFrame);
         const totalMonths = years * 12;
-
-        // Calculate required savings using financejs
-        // Calculate the future value of current savings
-        const futureValueCurrent = finance.FV(0, totalMonths, contribution, current, false); // Future value of current savings
-
-        // The amount still needed to reach the savings goal
-        const remainingGoal = goal - futureValueCurrent;
-
-        // If the remaining goal is less than or equal to 0, no additional savings are needed
-        const requiredPerPeriod = remainingGoal > 0 ? remainingGoal / totalMonths : 0;
-
-        setRequiredSavings(requiredPerPeriod.toFixed(2)); // Set the required savings per period result
+    
+        // Validate input values
+        if (!goal || !years || goal <= 0 || years <= 0) {
+            alert('Please enter valid positive numbers for savings goal and time frame.');
+            return;
+        }
+    
+        // Calculate the remaining amount needed
+        const remainingGoal = goal - current;
+    
+        // Determine required monthly contribution
+        const requiredPerMonth = remainingGoal > 0 ? remainingGoal / totalMonths : 0;
+    
+        // Set the result
+        setRequiredSavings(requiredPerMonth.toFixed(2)); // Format to 2 decimal places
     };
+    
+
+
+    const handleReset = () => {
+        setSavingsGoal(0);
+        setCurrentSavings(0);
+        setTimeFrame(1);
+        setRequiredSavings(null);
+    }
 
 
     return (
@@ -174,7 +185,6 @@ export default function SavingGoalCalculator() {
                                                 required={true}
                                                 id="savings-goal"
                                                 type="number"
-                                                value={savingsGoal}
                                                 onChange={(e) => setSavingsGoal(e.target.value)}
                                             />
                                         </div>
@@ -187,25 +197,11 @@ export default function SavingGoalCalculator() {
                                                 required={true}
                                                 id="current-savings"
                                                 type="number"
-                                                value={currentSavings}
                                                 onChange={(e) => setCurrentSavings(e.target.value)}
                                             />
                                         </div>
                                     </div>
                                     <div className="row pt-4">
-                                        <div className="col-md-6">
-                                            <InputField
-                                                isFontAwsome={true}
-                                                fontAwsomeIcon="fa-dollar-sign"
-                                                label="Regular Contribution:"
-                                                placeholder="Enter Regular Contribution"
-                                                required={true}
-                                                id="regular-contribution"
-                                                type="number"
-                                                value={regularContribution}
-                                                onChange={(e) => setRegularContribution(e.target.value)}
-                                            />
-                                        </div>
                                         <div className="col-md-6">
                                             <InputField
                                                 isFontAwsome={true}
@@ -215,12 +211,14 @@ export default function SavingGoalCalculator() {
                                                 required={true}
                                                 id="time-frame"
                                                 type="number"
-                                                value={timeFrame}
                                                 onChange={(e) => setTimeFrame(e.target.value)}
                                             />
                                         </div>
                                     </div>
-                                    <div className="flex justify-center pt-4">
+                                    <div className="flex justify-center gap-4 pt-4">
+                                        <button onClick={handleReset} type="reset" className="btn btn-two">
+                                            Reset
+                                        </button>
                                         <button type="submit" className="btn btn-two">
                                             Calculate Required Savings
                                         </button>
@@ -235,6 +233,18 @@ export default function SavingGoalCalculator() {
                                     )}
                                 </div>
                             </div>
+                            <ToolDescription
+                                title={'Summary'}
+                                details={"Helps determine how much you need to save regularly to reach a financial goal."}
+                            />
+                            <ToolDescription
+                                title={'Example'}
+                                details={'To save $10,000 in 3 years, you need to save $277 monthly.'}
+                            />
+                            <ToolDescription
+                                title={'Explanation of Results'}
+                                details={'The calculator shows the amount you must save each month, helping you understand the discipline needed to reach your financial goal within your desired timeframe.'}
+                            />
                         </div>
                     </div>
                     <div className="col-xl-3 col-lg-8">

@@ -6,24 +6,18 @@ import { Heading } from "../../heading/Heading"
 import { PostDescription } from "../../post-creation/post-description/Index"
 import { PostTag } from "../../post-creation/post-tag/Index"
 import { PostTitle } from "../../post-creation/post-title/Index"
-import { HotPicks } from "../hot-news/Index"
 import { Market } from "../market/Index";
 import horizentalImage from '../../../../../public/assets/img/blog/cr_recent_post03.jpg';
 import { SmallPostTitle } from "../../post-creation/post-title/SmallPostTitle"
 import Link from "next/link"
-import Image from "next/image"
 import { Goto } from "../../Buttons/Goto"
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import { srcFile } from "@/app/utils/tradingViewSrcFiles"
 import { addTradingViewWidget } from "@/app/utils/utils"
+import { srcFileAlphaVantage } from "@/app/utils/alphaVantageSrcFile";
 import { useDarkMode } from "../../dark-mode/DarkModeContext"
-
-const horizentalPosts = [
-    { postTitle: 'Using Instagram Tawo Promote Your', postTag: 'CRYPTOCURRENCY', postDate: '27 AUGUST, 2024', postTime: '', postImage: horizentalImage },
-    { postTitle: 'Using Instagram Tawo Promote Your', postTag: 'CRYPTOCURRENCY', postDate: '27 AUGUST, 2024', postTime: '', postImage: horizentalImage },
-    { postTitle: 'Using Instagram Tawo Promote Your', postTag: 'CRYPTOCURRENCY', postDate: '27 AUGUST, 2024', postTime: '', postImage: horizentalImage }
-]
+import { formatDate, formatTimeInMinutes } from "@/app/utils/extrasFunctions"
 
 export const TopNews = () => {
     const { isDarkMode } = useDarkMode();
@@ -67,35 +61,13 @@ export const TopNews = () => {
         };
     }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
 
-
-    // Function to format date
-    const formatDate = (dateStr) => {
-        const year = dateStr.substring(0, 4);
-        const month = parseInt(dateStr.substring(4, 6), 10) - 1; // Month is zero-based
-        const day = dateStr.substring(6, 8);
-
-        const date = new Date(year, month, day);
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return date.toLocaleDateString('en-US', options);
-    };
-
-    // Function to format time in minutes
-    const formatTimeInMinutes = (timeStr) => {
-        const hour = parseInt(timeStr.substring(9, 11), 10);
-        const minute = parseInt(timeStr.substring(11, 13), 10);
-        const minutesSinceMidnight = hour * 60 + minute; // Calculate total minutes
-        return `${minutesSinceMidnight} Mins`;
-    };
-
     useEffect(() => {
-
-        const url = `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&sort=LATEST&apikey=${process.env.alphaVantageStockApi}`;
+        const url = `${srcFileAlphaVantage.latestNews}${process.env.alphaVantageStockApi}`;
 
         // Fetch data using axios
         axios
             .get(url)
             .then((response) => {
-                console.log(response.data, 'response.data')
                 setNewsData(response.data);
             })
             .catch((err) => {
@@ -117,79 +89,81 @@ export const TopNews = () => {
                         </div>
                         <div className="row">
                             {newsData.feed?.length > 0 && (
-                                <div className="col-12">
-                                    <div className="top-news-post">
-                                        {newsData.feed[0].banner_image !== '' && (
-                                            <div className="top-news-post-thumb">
-                                                <Link href={newsData.feed[0].url}>
-                                                    <img src={newsData.feed[0].banner_image} alt={newsData.feed[0].source + ' image'} />
-                                                </Link>
-                                                {/* <a
-                                                href="https://www.youtube.com/watch?v=G_AEL-Xo5l8"
-                                                className="paly-btn popup-video"
-                                            >
-                                                <i className="fas fa-play" />
-                                            </a> */}
-                                            </div>
-                                        )}
-                                        <div className="top-news-post-content">
-                                            <PostTag
+                                <>
+                                    <div className="col-12">
+                                        <div className="top-news-post">
+                                            {newsData.feed[0].banner_image !== '' || newsData.feed[0].banner_image !== null && (
+                                                <div className="top-news-post-thumb">
+                                                    <Link href={newsData.feed[0].url} target="_blank">
+                                                        <img src={newsData.feed[0].banner_image} alt={newsData.feed[0].source + ' image'} />
+                                                    </Link>
+                                                </div>
+                                            )}
+                                            <div className="top-news-post-content">
+                                                {/* <PostTag
                                                 tagName={'Sports'}
-                                            />
-                                            <PostTitle
-                                                extras={'bold-underline'}
-                                                heading={newsData.feed[0].title}
-                                                headingLink={newsData.feed[0].url}
-                                            />
-                                            <DateTime
-                                                date={formatDate(newsData.feed[0].time_published)}
-                                                time={formatTimeInMinutes(newsData.feed[0].time_published)}
-                                            />
-                                            <PostDescription
-                                                description={newsData.feed[0].summary}
-                                            />
-                                            <div className="view-all-btn">
-                                                <Goto
-                                                    buttonText={'Read More'}
-                                                    goTo={newsData.feed[0].url}
+                                            /> */}
+                                                <PostTitle
+                                                    extras={'bold-underline'}
+                                                    heading={newsData.feed[0].title}
+                                                    headingLink={newsData.feed[0].url}
                                                 />
+                                                <DateTime
+                                                    date={formatDate(newsData.feed[0].time_published)}
+                                                    time={formatTimeInMinutes(newsData.feed[0].time_published)}
+                                                />
+                                                <PostDescription
+                                                    description={newsData.feed[0].summary}
+                                                />
+                                                <div className="view-all-btn">
+                                                    <Goto
+                                                        buttonText={'Read More'}
+                                                        goTo={newsData.feed[0].url}
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                    {newsData?.feed?.slice(1, 4).map((newsData, index) => (
+                                        <div className="col-lg-4" key={index}>
+                                            <div className="horizontal-post-four">
+                                                <div className="horizontal-post-thumb-four">
+                                                    {newsData.banner_image !== '' && (
+                                                        <div className="top-news-post-thumb">
+                                                            <Link href={newsData.url} target="_blank">
+                                                                <img
+                                                                    src={newsData.banner_image}
+                                                                    className="!w-[100px] !h-[104px]"
+                                                                    alt={newsData.source + ' image'}
+                                                                />
+                                                            </Link>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="horizontal-post-content-four">
+                                                    <PostTag
+                                                        tagName={newsData.postTag}
+                                                    />
+                                                    <SmallPostTitle
+                                                        title={
+                                                            newsData.title.length > 40
+                                                                ? `${newsData.title.substring(0, 40)}...`
+                                                                : newsData.title
+                                                        }
+                                                        headingLink={newsData.url}
+                                                    />
+                                                    <DateTime
+                                                        date={formatDate(newsData.time_published)}
+                                                        time={formatTimeInMinutes(newsData.time_published)}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </>
                             )}
-                            {horizentalPosts.map((horizentalPost, index) => (
-                                <div className="col-lg-4" key={index}>
-                                    <div className="horizontal-post-four">
-                                        <div className="horizontal-post-thumb-four">
-                                            <Link href="#">
-                                                <Image
-                                                    src={horizentalPost.postImage}
-                                                    layout="responsive"
-                                                    width={100}
-                                                    height={150}
-                                                    alt="no image"
-                                                />
-                                            </Link>
-                                        </div>
-                                        <div className="horizontal-post-content-four">
-                                            <PostTag
-                                                tagName={horizentalPost.postTag}
-                                            />
-                                            <SmallPostTitle
-                                                title={horizentalPost.postTitle}
-                                            />
-                                            <DateTime
-                                                date={horizentalPost.postDate}
-                                                time={horizentalPost.postTime}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
                         </div>
                         <Banner />
-                        <HotPicks />
                         <Market
                             market="Markets"
                         />

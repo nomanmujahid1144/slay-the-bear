@@ -3,6 +3,7 @@ import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css'; // Import Swiper styles
 import 'swiper/css/autoplay'; // Import Swiper styles
+import Link from 'next/link';
 
 
 export const TrendingNews = () => {
@@ -84,24 +85,24 @@ export const TrendingNews = () => {
                                 <h5 className="title">Follow Us:</h5>
                                 <ul className="list-wrap">
                                     <li>
-                                        <a href="#">
+                                        <Link href="https://facebook.com/SlayTheBearApp" target='_blank'>
                                             <i className="fab fa-facebook-f" />
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <Link href="https://twitter.com/slaythebearapp" target='_blank'>
                                             <i className="fab fa-twitter" />
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <Link href="https://www.instagram.com/slaythebear" target='_blank'>
                                             <i className="fab fa-instagram" />
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <Link href="https://www.linkedin.com/company/slaythebear" target='_blank'>
                                             <i className="fab fa-linkedin-in" />
-                                        </a>
+                                        </Link>
                                     </li>
                                 </ul>
                             </div>
