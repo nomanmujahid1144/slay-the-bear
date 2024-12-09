@@ -268,8 +268,9 @@ export default function BondPriceCalculator() {
                                         <div>
                                             <h3>Bond Price: ${bondPrice.toFixed(2)}</h3>
                                             <p>
-                                                The bond's price today, based on the present value of its future payments, is <strong>${bondPrice.toFixed(2)}</strong>.
+                                                The bond&apos;s price today, based on the present value of its future payments, is <strong>${bondPrice.toFixed(2)}</strong>.
                                             </p>
+
                                         </div>
                                     )}
                                 </div>

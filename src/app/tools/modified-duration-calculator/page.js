@@ -301,8 +301,9 @@ export default function BreakEvenAnalysisCalculator() {
                                         <div className="result">
                                             <h3>Modified Duration: {modifiedDuration.toFixed(2)}</h3>
                                             <p>
-                                                This means that for every 1% change in interest rates, the bond's price will change by approximately {modifiedDuration.toFixed(2)}%.
+                                                This means that for every 1% change in interest rates, the bond&apos;s price will change by approximately {modifiedDuration.toFixed(2)}%.
                                             </p>
+
                                         </div>
                                     )}
                                 </div>
