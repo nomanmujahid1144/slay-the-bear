@@ -104,7 +104,7 @@ export default function Pricing() {
                                             <li><i class="fas fa-check"></i>Gutenberg Integration</li>
                                             <li><i class="fas fa-check"></i>Gutenberg Integration</li>
                                             <li><i class="fas fa-check"></i>Gutenberg Integration</li>
-                                        </ul>
+                                        </ul> 
                                     </div>
                                 </div>
                             </div>
