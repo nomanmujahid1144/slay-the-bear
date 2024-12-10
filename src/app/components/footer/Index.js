@@ -3,21 +3,21 @@ import Link from "next/link";
 import logo from '../../../../public/assets/img/logo/logo.png';
 
 const companyPages = [
-    { name: 'Home', link: '#' },
+    { name: 'Home', link: '/' },
     { name: 'About Us', link: '#' },
-    { name: 'Tool Section', link: '#' },
-    { name: 'News Page', link: '#' },
-    { name: 'Paid Tool', link: '#' },
-    { name: 'Ads Free Version', link: '#' },
+    { name: 'News Page', link: '/news' },
+    { name: 'Tool Section', link: '/tools' },
+    { name: 'Paid Tool', link: '/paid-tools' },
+    { name: 'Ads Free Version', link: '/pricing' },
     { name: 'Support', link: '/support' },
 ];
 
 const markets = [
-    { name: 'Stocks', link: '#' },
-    { name: 'Cryptocurrency', link: '#' },
-    { name: 'Forex', link: '#' },
-    { name: 'ETFs', link: '#' },
-    { name: 'Mutual Funds', link: '#' },
+    { name: 'Stocks', link: '/markets/stocks' },
+    { name: 'Cryptocurrency', link: '/markets/cryptocurrency' },
+    { name: 'Forex', link: '/markets/forex' },
+    { name: 'ETFs', link: '/markets/etfs' },
+    { name: 'Mutual Funds', link: '/markets/mutual-funds' },
 ]
 
 export const Footer = () => {
@@ -105,11 +105,10 @@ export const Footer = () => {
                                     <h4 class="fw-title">Follow us On</h4>
                                     <div class="footer-link-wrap">
                                         <ul class="list-wrap">
-                                            <li><a href="#">facebook</a></li>
-                                            <li><a href="#">Twitter</a></li>
-                                            <li><a href="#">Instagram</a></li>
-                                            <li><a href="#">Youtube</a></li>
-                                            <li><a href="#">Pinterest</a></li>
+                                            <li><a target="_blank" href="https://www.facebook.com/SlayTheBearApp">facebook</a></li>
+                                            <li><a target="_blank" href="https://twitter.com/slaythebearapp">Twitter</a></li>
+                                            <li><a target="_blank" href="https://www.instagram.com/slaythebear/">Instagram</a></li>
+                                            <li><a target="_blank" href="https://www.linkedin.com/company/slaythebear">LinkedIn</a></li>
                                         </ul>
                                     </div>
                                 </div>
