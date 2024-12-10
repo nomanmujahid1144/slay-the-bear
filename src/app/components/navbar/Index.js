@@ -94,7 +94,7 @@ const menuItems = [
     {
         navbarName: 'Subscriptions',
         subMenu: [],
-        navLink: '/paid-tools'
+        navLink: '/pricing'
     }
 ];
 
