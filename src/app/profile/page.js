@@ -119,7 +119,7 @@ export default function Profile() {
                         </form>
                     </div>
                     <p className="mt-2">
-                        Can't remember your current password.{" "}
+                        Can&apos;t remember your current password.{" "}
                         <a
                             className="text-sm font-semibold text-blue-600 underline decoration-2"
                             href="#"
