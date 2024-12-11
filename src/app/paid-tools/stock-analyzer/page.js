@@ -231,7 +231,7 @@ export default function PortfolioOptimizerCalculator() {
                     <div className="col-xl-9">
                         <div className="sidebar-wrap">
                             <Heading
-                                textHeading="Portfolio Optimizer"
+                                textHeading="Stock Analyzer"
                                 showBtn={false}
                             />
                             <div className="contact-form pb-3">

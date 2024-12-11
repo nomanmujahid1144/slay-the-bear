@@ -1,4 +1,5 @@
 'use client'
+
 import Link from "next/link";
 import { TrendingNews } from "../trending-news-slider/Index";
 import Image from "next/image";
