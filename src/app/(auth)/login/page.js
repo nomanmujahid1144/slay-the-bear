@@ -1,14 +1,16 @@
 'use client'
 
-import { useState } from "react";
-import InputField from "../components/fields/Input";
-import { DefaultButton } from "../components/Buttons/Default";
+import { useEffect, useState } from "react";
+import InputField from "@/app/components/fields/Input";
+import { DefaultButton } from "@/app/components/Buttons/Default";
 import Link from "next/link";
-import { AuthBackground } from "../components/Auths/AuthBackground";
-import { AuthHeading } from "../components/Auths/AuthHeading";
-import { AuthSubHeading } from "../components/Auths/AuthSubHeading";
+import { AuthBackground } from "@/app/components/Auths/AuthBackground";
+import { AuthHeading } from "@/app/components/Auths/AuthHeading";
+import { AuthSubHeading } from "@/app/components/Auths/AuthSubHeading";
 import { useRouter } from 'next/navigation';
-import axiosInstance from "../utils/axiosInstance";
+import axiosInstance from "@/app/utils/axiosInstance";
+import toast from "react-hot-toast";
+import { checkIsLoggedInUser } from "@/helpers/checkLoggedInUser";
 
 export default function Login() {
     const router = useRouter();
@@ -17,6 +19,8 @@ export default function Login() {
         email: "",
         password: ""
     });
+    const [disabledButton, setDisabledButton] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
     const onChange = (e) => {
@@ -26,28 +30,31 @@ export default function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { email, password } = credentials;
+            setLoading(true);
 
-            const response = await axiosInstance.post('/api/auth/login', {
-                email,
-                password,
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+            const response = await axiosInstance.post('/api/users/login', credentials);
 
             if (response.status === 200) { // Use response.status for axios instead of response.ok
-                router.push('/profile');
+                toast.success('Login successfully');
+                setLoading(false);
+                router.push('/');
             } else {
-                console.error('Login failed:', response.data.message);
+                setLoading(false);
+                toast.error(response.data.message)
             }
         } catch (error) {
-            console.error('Error during login:', error);
+            setLoading(false);
+            toast.error(error.response.data.message)
         }
     };
 
-
+    useEffect(() => {
+        if (credentials.email.length > 0 && credentials.password.length > 0) {
+            setDisabledButton(false);
+        } else {
+            setDisabledButton(true)
+        }
+    }, [credentials])
 
 
     // Function to toggle password visibility
@@ -58,10 +65,10 @@ export default function Login() {
     return (
         <AuthBackground>
             <AuthHeading
-                title={'Sign In'}
+                title={'Welcome Back, Please Sign In'}
             />
             <AuthSubHeading
-                subHeading={'Sign In to your account'}
+                subHeading={'Enter your credentials to log in to your account.'}
             />
             <form onSubmit={handleSubmit}>
                 <div className="row">
@@ -92,7 +99,10 @@ export default function Login() {
                 </Link>
                 <DefaultButton
                     type={'submit'}
-                    text={'Login'}
+                    text={'Sign In'}
+                    loadingText={'Authenticating, please wait...'}
+                    loading={loading}
+                    disabled={disabledButton}
                 />
                 <div className="d-flex gap-2 align-items-center justify-content-center pt-3">
                     Do you have an account?

@@ -92,7 +92,7 @@ export const TopNews = () => {
                                 <>
                                     <div className="col-12">
                                         <div className="top-news-post">
-                                            {newsData.feed[0].banner_image !== '' || newsData.feed[0].banner_image !== null && (
+                                            {newsData.feed[0].banner_image !== '' && (
                                                 <div className="top-news-post-thumb">
                                                     <Link href={newsData.feed[0].url} target="_blank">
                                                         <img src={newsData.feed[0].banner_image} alt={newsData.feed[0].source + ' image'} />

@@ -5,9 +5,15 @@ import { TrendingNews } from "../trending-news-slider/Index";
 import Image from "next/image";
 import logoImage from '../../../../public/assets/img/logo/logo.png';
 import { MobileVersion } from "./MobileVersion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FinentialNewsMarquee } from "../finential-news-marquee/Index";
 import axios from "axios";
+import { checkIsLoggedInUser } from "@/helpers/checkLoggedInUser";
+import defaultProfileImage from '../../../../public/assets/img/default/defaultUserMaleTmp.png';
+import axiosInstance from "@/app/utils/axiosInstance";
+import toast from "react-hot-toast";
+import { usePathname, useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 const menuItems = [
@@ -81,8 +87,8 @@ const menuItems = [
                 navLink: '/tools'
             },
             {
-                navbarName: 'Paid Tools',
-                navLink: '/paid-tools'
+                navbarName: 'Premium Tools',
+                navLink: '/premium-tools'
             },
         ],
         navLink: '/tools'
@@ -101,14 +107,21 @@ const menuItems = [
 
 export const Navbar = () => {
 
+    const router = useRouter();
+    const pathname = usePathname();
+
     const [isMobileVersion, setMobileVerion] = useState(false);
     const [suggestions, setSuggestions] = useState([]);
+    const [isLoggedInUser, setIsLoggedInUser] = useState(null);
+
+    // For LoggedIn User
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleMobileVersion = () => {
         setMobileVerion(!isMobileVersion)
     }
 
-    // Function to handle search keyword change
+
     const handleSearchKeyword = (event) => {
         const keyword = event.target.value;
 
@@ -145,6 +158,34 @@ export const Navbar = () => {
 
     const handleCleanSuggestions = () => {
         setSuggestions([]);
+    }
+
+    const getUsersData = async () => {
+        const response = await checkIsLoggedInUser();
+        if (response.success) {
+            setIsLoggedInUser(response.data);
+        } else {
+            setIsLoggedInUser(null)
+        }
+    }
+
+    useEffect(() => {
+        getUsersData();
+    }, [pathname])
+
+
+    const toggleDropdown = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
+
+    const handleLogout = async () => {
+        const response = await axiosInstance.get('/api/users/logout');
+        if (response.data.success) {
+            setIsMenuOpen(!isMenuOpen);
+            toast("Logout successfully")
+            setIsLoggedInUser(null)
+            router.push('/')
+        }
     }
 
     return (
@@ -189,13 +230,65 @@ export const Navbar = () => {
                                 </div>
                             </div>
                             <div className="col-lg-3 flex justify-center">
-                                <div className="hl-right-side-four">
-                                    <div className="subscribe-btn">
-                                        <Link href="/login" className="btn btn-two">
-                                            Sign In
-                                        </Link>
+                                {isLoggedInUser == null ? (
+                                    <div className="hl-right-side-four">
+                                        <div className="subscribe-btn">
+                                            <Link href="/login" className="btn btn-two">
+                                                Sign In
+                                            </Link>
+                                        </div>
                                     </div>
-                                </div>
+                                ) : (
+                                    <div className="relative inline-block text-left">
+                                        {/* Avatar Button */}
+                                        <div onClick={toggleDropdown} className="flex justify-center items-center gap-2 cursor-pointer">
+                                            <Image
+                                                id="avatarButton"
+                                                className="w-11 h-11 rounded-full"
+                                                src={defaultProfileImage}
+                                                alt="User dropdown"
+                                            />
+                                            <div className="flex justify-between gap-2 items-center">
+                                                <p className="text-sm font-medium text-black">
+                                                    {isLoggedInUser?.firstName + " " + isLoggedInUser?.lastName}
+                                                </p>
+                                                <FontAwesomeIcon size="xs" icon="fa-solid fa-chevron-down" />
+                                            </div>
+                                        </div>
+                                        {/* Dropdown menu */}
+                                        {isMenuOpen && (
+                                            <div
+                                                id="userDropdown"
+                                                className="absolute z-10 -ml-32 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+                                            >
+                                                <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                                    <div>{isLoggedInUser?.firstName + " " + isLoggedInUser?.lastName}</div>
+                                                    <div className="font-medium truncate">{isLoggedInUser?.email}</div>
+                                                </div>
+                                                <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+                                                    <li>
+                                                        <Link onClick={toggleDropdown} href="/profile" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" >
+                                                            Profile
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link onClick={toggleDropdown} href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" >
+                                                            Settings
+                                                        </Link>
+                                                    </li>
+                                                </ul>
+                                                <div className="py-1">
+                                                    <p
+                                                        onClick={handleLogout}
+                                                        className="block px-4 cursor-pointer py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                                                    >
+                                                        Sign out
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

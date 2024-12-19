@@ -91,7 +91,7 @@ export default function NewsPage() {
                                     <>
                                         <div className="col-lg-8">
                                             <div className="sports-post">
-                                                {newsData.feed[0].banner_image !== '' || newsData.feed[0].banner_image !== null && (
+                                                {newsData.feed[0].banner_image !== '' && (
                                                     <div className="sports-post-thumb">
                                                         <Link href={newsData.feed[0].url} target="_blank">
                                                             <img src={newsData.feed[0].banner_image} alt={newsData.feed[0].source + ' image'} />

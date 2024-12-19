@@ -1,5 +1,5 @@
 export const AuthHeading = ({title}) => {
     return (
-        <h4 className="title">{title}</h4>
+        <h4 className="title text-center">{title}</h4>
     )
 }

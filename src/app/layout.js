@@ -22,6 +22,7 @@ import { ScrollToTop } from "./components/scroll-to-top";
 // Import FontAwesomeIcons
 import "./components/fontawesomeIcons";
 import { DarkModeProvider, useDarkMode } from "./components/dark-mode/DarkModeContext";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -46,6 +47,7 @@ function DarkModeLayout({ children }) {
           <Navbar />
         </header>
         <main>{React.cloneElement(children, { isDarkMode })}</main>
+        <Toaster />
         <footer>
           <Footer />
         </footer>

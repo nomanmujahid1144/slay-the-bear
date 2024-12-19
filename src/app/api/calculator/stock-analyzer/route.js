@@ -59,21 +59,26 @@ async function analyzeStock(stockSymbol, term) {
         if (term === 'Long Term') {
             if (intrinsicValue > currentPrice) {
                 recommendation = 'Strong Buy';
-                explanation = `The stock is **undervalued** for the long term. Intrinsic Value: $${intrinsicValue.toFixed(2)}, Current Price: $${currentPrice.toFixed(2)}. Suggests future growth.`;
+                explanation = `The stock is undervalued for the long term, meaning it is priced lower than its actual worth. This suggests it could be a good investment for future growth.`;
+                // explanation = `The stock is **undervalued** for the long term. Intrinsic Value: $${intrinsicValue.toFixed(2)}, Current Price: $${currentPrice.toFixed(2)}. Suggests future growth.`;
             } else {
                 recommendation = 'Sell';
-                explanation = `The stock is **overvalued** for the long term. Intrinsic Value: $${intrinsicValue.toFixed(2)}, Current Price: $${currentPrice.toFixed(2)}. Suggests limited growth.`;
+                explanation = `The stock is overvalued for the long term, meaning it is priced higher than what it's worth. This suggests it might not grow much and could be a good time to sell.`;
+                // explanation = `The stock is **overvalued** for the long term. Intrinsic Value: $${intrinsicValue.toFixed(2)}, Current Price: $${currentPrice.toFixed(2)}. Suggests limited growth.`;
             }
         } else {
             if (peRatio < 15 && pbRatio < 1.5) {
                 recommendation = 'Buy';
-                explanation = `The stock is **undervalued** for the short term with a P/E ratio of ${peRatio} and a P/B ratio of ${pbRatio}. Suggests it's a potential buy.`;
+                explanation = `The stock is undervalued for the short term, meaning it's cheap compared to what the company earns and owns. This could make it a good buy right now.`;
+                // explanation = `The stock is **undervalued** for the short term with a P/E ratio of ${peRatio} and a P/B ratio of ${pbRatio}. Suggests it's a potential buy.`;
             } else if (peRatio > 25 || pbRatio > 3.0) {
                 recommendation = 'Sell';
-                explanation = `The stock is **overvalued** for the short term with a P/E ratio of ${peRatio} and a P/B ratio of ${pbRatio}. Suggests a potential sell.`;
+                explanation = `The stock is overvalued for the short term, meaning it's expensive compared to what the company earns and owns. This could be a good time to sell before the price drops.`;
+                // explanation = `The stock is **overvalued** for the short term with a P/E ratio of ${peRatio} and a P/B ratio of ${pbRatio}. Suggests a potential sell.`;
             } else {
                 recommendation = 'Hold';
-                explanation = `The stock is **fairly priced** for the short term with a P/E ratio of ${peRatio} and a P/B ratio of ${pbRatio}. Suggests waiting for further developments.`;
+                explanation = `The stock is fairly priced for the short term, meaning it's neither too cheap nor too expensive. It might be best to wait and see how it performs before buying or selling.`;
+                // explanation = `The stock is **fairly priced** for the short term with a P/E ratio of ${peRatio} and a P/B ratio of ${pbRatio}. Suggests waiting for further developments.`;
             }
         }
 
