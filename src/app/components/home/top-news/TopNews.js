@@ -73,6 +73,7 @@ export const TopNews = () => {
                 setNewsData(response.data);
             })
             .catch((err) => {
+                setNewsData([])
                 console.error('Error:', err);
             });
     }, []);
@@ -90,7 +91,6 @@ export const TopNews = () => {
                             </div>
                         </div>
                         <div className="row">
-                            {console.log(newsData, 'newsData')}
                             {newsData.feed?.length > 0 && (
                                 <>
                                     <div className="col-12">
