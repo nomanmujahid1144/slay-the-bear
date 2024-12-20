@@ -191,14 +191,14 @@ export const TopNews = () => {
                             </div>
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
-                                    <a href="#">
+                                    {/* <a href="#">
                                         <Image
                                             src={slideBarImage}
                                             alt="no image found"
                                             className="w-full h-auto"
                                             unoptimized
                                         />
-                                    </a>
+                                    </a> */}
                                 </div>
                             </div>
                         </div>
