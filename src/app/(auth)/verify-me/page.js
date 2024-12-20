@@ -6,12 +6,10 @@ import { AuthHeading } from "@/app/components/Auths/AuthHeading";
 import { AuthSubHeading } from "@/app/components/Auths/AuthSubHeading";
 import axiosInstance from "@/app/utils/axiosInstance";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { Suspense } from "react";
 
 export default function VerifyMe() {
-    const searchParams = useSearchParams();
     const router = useRouter();
 
 
@@ -19,9 +17,11 @@ export default function VerifyMe() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        const token = searchParams.get("token");
+        // const token = searchParams.get("token");
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get("token");
         setToken(token || "");
-    }, [searchParams])
+    }, [])
 
 
     const verifyForgetToken = async (e) => {
@@ -49,7 +49,6 @@ export default function VerifyMe() {
     };
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
             <AuthBackground>
                 <AuthHeading
                     title={'Verify Your Identity to Proceed'}
@@ -67,6 +66,5 @@ export default function VerifyMe() {
                 </form>
                 <p className="ajax-response mb-0" />
             </AuthBackground>
-        </Suspense>
     )
 }

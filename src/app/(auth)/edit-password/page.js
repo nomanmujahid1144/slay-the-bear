@@ -7,7 +7,7 @@ import Link from "next/link";
 import { AuthBackground } from "@/app/components/Auths/AuthBackground";
 import { AuthHeading } from "@/app/components/Auths/AuthHeading";
 import { AuthSubHeading } from "@/app/components/Auths/AuthSubHeading";
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import axiosInstance from "@/app/utils/axiosInstance";
 import toast from "react-hot-toast";
 import { checkIsLoggedInUser } from "@/helpers/checkLoggedInUser";
@@ -19,7 +19,6 @@ import { Goto } from "@/app/components/Buttons/Goto";
 import { Suspense } from 'react'
 
 export default function Login() {
-    const searchParams = useSearchParams();
     const router = useRouter();
 
     const [credentials, setCredentials] = useState({
@@ -96,11 +95,13 @@ export default function Login() {
     }, [credentials])
 
     useEffect(() => {
-        const token = searchParams.get("token");
-        const id = searchParams.get("id");
+        // const token = searchParams.get("token");
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get("token");
+        const id = params.get("id");
         setToken(token || "");
         setUserId(id || "");
-    }, [searchParams])
+    }, [])
 
     // const checkTokenIsValid = async () => {
     //     try {
@@ -131,7 +132,7 @@ export default function Login() {
     };
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <>
             {(token.length > 0 && userId.length > 0) ? (
                 <AuthBackground>
                     <AuthHeading
@@ -208,6 +209,6 @@ export default function Login() {
                 </div>
             )
             }
-        </Suspense>
+        </>
     );
 }

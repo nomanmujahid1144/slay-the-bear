@@ -5,12 +5,11 @@ import { AuthBackground } from "@/app/components/Auths/AuthBackground";
 import { AuthHeading } from "@/app/components/Auths/AuthHeading";
 import { AuthSubHeading } from "@/app/components/Auths/AuthSubHeading";
 import axiosInstance from "@/app/utils/axiosInstance";
-import { Suspense, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 export default function VerifyEmail() {
-    const searchParams = useSearchParams();
     const router = useRouter();
 
 
@@ -18,9 +17,11 @@ export default function VerifyEmail() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        const token = searchParams.get("token");
+        // const token = searchParams.get("token");
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get("token");
         setToken(token || "");
-    }, [searchParams])
+    }, [])
 
 
     const verifyEmail = async (e) => {
@@ -48,7 +49,6 @@ export default function VerifyEmail() {
     };
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
             <AuthBackground>
                 <AuthHeading
                     title={'Verify Your Email Address'}
@@ -66,6 +66,5 @@ export default function VerifyEmail() {
                 </form>
                 <p className="ajax-response mb-0" />
             </AuthBackground>
-        </Suspense>
     )
 }
