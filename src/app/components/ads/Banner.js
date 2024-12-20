@@ -1,4 +1,6 @@
+import Image from "next/image"
 import Link from "next/link"
+import advImage from '../../../../public/assets/img/images/advertisement11.jpg';
 
 export const Banner = () => {
     return (
@@ -6,9 +8,13 @@ export const Banner = () => {
             <div className="container">
                 <div className="ad-banner-img">
                     <Link href="#">
-                        <img
-                            src="assets/img/images/advertisement11.jpg"
-                            alt=""
+                        <Image
+                            src={advImage}
+                            alt="no-advertisement image"
+                            className="w-full h-auto"
+                            width={100}
+                            height={100}
+                            unoptimized
                         />
                     </Link>
                 </div>

@@ -74,8 +74,8 @@ export const FinentialNewsMarquee = () => {
                 <div className="container">
                     <div className="row align-items-center">
                         <div className="col-lg-12">
-                            <div class="coin-item-wrap">
-                                <div class="row coin-active">
+                            <div className="coin-item-wrap">
+                                <div className="row coin-active">
 
                                     {/* <Marquee>
                                         <div className="col">

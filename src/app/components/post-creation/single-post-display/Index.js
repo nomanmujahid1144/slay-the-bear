@@ -14,7 +14,12 @@ export const SinglePostDisplay = ({ postTag, postHeading, postURL, postSource, p
                 <div className="weekly-post-thumb">
                     {(postImage !== '' || postImage !== null) && (
                         <Link href={postURL} target="_blank">
-                            <img src={postImage} alt={postSource + ' image'} />
+                            <Image
+                                src={postImage}
+                                alt={postSource + ' image'}
+                                className="w-full h-auto"
+                                unoptimized
+                            />
                         </Link>
                     )}
                 </div>

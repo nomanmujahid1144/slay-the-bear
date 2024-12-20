@@ -5,6 +5,8 @@ import { Heading } from "@/app/components/heading/Heading";
 import { srcFile } from "@/app/utils/tradingViewSrcFiles";
 import { addTradingViewWidget } from "@/app/utils/utils";
 import { useEffect } from "react";
+import Image from "next/image";
+import slideBarImage from '../../../../public/assets/img/images/sidebar_img06.jpg';
 
 export default function Forex() {
 
@@ -217,7 +219,12 @@ export default function Forex() {
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
                                     <a href="#">
-                                        <img src="../assets/img/images/sidebar_img06.jpg" alt="" />
+                                        <Image
+                                            src={slideBarImage}
+                                            alt="no image found"
+                                            className="w-full h-auto"
+                                            unoptimized
+                                        />
                                     </a>
                                 </div>
                             </div>

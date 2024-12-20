@@ -5,10 +5,8 @@ import { Heading } from "../components/heading/Heading";
 import { DateTime } from "../components/post-creation/post-date-time/Index";
 import { PostTag } from "../components/post-creation/post-tag/Index";
 import { PostTitle } from "../components/post-creation/post-title/Index";
-import crypoImage from '../../../public/assets/img/blog/cr_recent_post02.jpg';
 import Link from "next/link";
 import Image from "next/image";
-import defaultImage from '../../../public/assets/img/blog/sports_post01.jpg';
 import { NewsTabs } from "../components/news-page/Index";
 import { useEffect, useState } from "react";
 import { srcFileAlphaVantage } from "@/app/utils/alphaVantageSrcFile";
@@ -20,6 +18,8 @@ import { SmallPostTitle } from "../components/post-creation/post-title/SmallPost
 import { useDarkMode } from "../components/dark-mode/DarkModeContext";
 import { addTradingViewWidget } from "../utils/utils";
 import { srcFile } from "../utils/tradingViewSrcFiles";
+import Image from "next/image";
+import slideBarImage from '../../../../public/assets/img/images/sidebar_img06.jpg';
 
 export default function NewsPage() {
     const { isDarkMode } = useDarkMode();
@@ -57,7 +57,7 @@ export default function NewsPage() {
                     feedMode: 'all_symbols',
                     isTransparent: true,
                     displayMode: 'compact',
-                    width: '100%',
+                    width: 'auto',
                     height: '100%',
                     colorTheme: isDarkMode ? 'dark' : 'light',
                     locale: 'en',
@@ -94,7 +94,10 @@ export default function NewsPage() {
                                                 {newsData.feed[0].banner_image !== '' && (
                                                     <div className="sports-post-thumb">
                                                         <Link href={newsData.feed[0].url} target="_blank">
-                                                            <img src={newsData.feed[0].banner_image} alt={newsData.feed[0].source + ' image'} />
+                                                            <Image src={newsData.feed[0].banner_image} alt={newsData.feed[0].source + ' image'}
+                                                                className="w-full h-auto"
+                                                                unoptimized
+                                                            />
                                                         </Link>
                                                     </div>
                                                 )}
@@ -128,10 +131,12 @@ export default function NewsPage() {
                                                             {newsData.banner_image !== '' && (
                                                                 <div className="top-news-post-thumb">
                                                                     <Link href={newsData.url} target="_blank">
-                                                                        <img
+                                                                        <Image
                                                                             src={newsData.banner_image}
                                                                             className="!w-[100px] !h-[104px]"
                                                                             alt={newsData.source + ' image'}
+                                                                            style={{ width: '100px', height: '104px' }}
+                                                                            layout="intrinsic"
                                                                         />
                                                                     </Link>
                                                                 </div>
@@ -175,7 +180,11 @@ export default function NewsPage() {
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
                                     <a href="#">
-                                        <img src="assets/img/images/sidebar_img06.jpg" alt="" />
+                                        <Image src={slideBarImage} alt="no image"
+                                            style={{ width: 'auto', height: 'auto' }}
+                                            className=" w-auto h-auto"
+                                            layout="intrinsic"
+                                        />
                                     </a>
                                 </div>
                             </div>

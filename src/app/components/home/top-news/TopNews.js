@@ -18,6 +18,8 @@ import { addTradingViewWidget } from "@/app/utils/utils"
 import { srcFileAlphaVantage } from "@/app/utils/alphaVantageSrcFile";
 import { useDarkMode } from "../../dark-mode/DarkModeContext"
 import { formatDate, formatTimeInMinutes } from "@/app/utils/extrasFunctions"
+import Image from "next/image"
+import slideBarImage from '../../../../../public/assets/img/images/sidebar_img06.jpg';
 
 export const TopNews = () => {
     const { isDarkMode } = useDarkMode();
@@ -41,7 +43,7 @@ export const TopNews = () => {
                     feedMode: 'all_symbols',
                     isTransparent: true,
                     displayMode: 'compact',
-                    width: '100%',
+                    width: 'auto',
                     height: '100%',
                     colorTheme: isDarkMode ? 'dark' : 'light',
                     locale: 'en',
@@ -88,6 +90,7 @@ export const TopNews = () => {
                             </div>
                         </div>
                         <div className="row">
+                            {console.log(newsData, 'newsData')}
                             {newsData.feed?.length > 0 && (
                                 <>
                                     <div className="col-12">
@@ -95,7 +98,14 @@ export const TopNews = () => {
                                             {newsData.feed[0].banner_image !== '' && (
                                                 <div className="top-news-post-thumb">
                                                     <Link href={newsData.feed[0].url} target="_blank">
-                                                        <img src={newsData.feed[0].banner_image} alt={newsData.feed[0].source + ' image'} />
+                                                        <Image
+                                                            src={newsData.feed[0].banner_image}
+                                                            className="w-full h-auto"
+                                                            width={1200}
+                                                            height={800}
+                                                            alt={newsData.feed[0].source + ' image'}
+                                                            unoptimized
+                                                        />
                                                     </Link>
                                                 </div>
                                             )}
@@ -131,10 +141,13 @@ export const TopNews = () => {
                                                     {newsData.banner_image !== '' && (
                                                         <div className="top-news-post-thumb">
                                                             <Link href={newsData.url} target="_blank">
-                                                                <img
+                                                                <Image
                                                                     src={newsData.banner_image}
                                                                     className="!w-[100px] !h-[104px]"
                                                                     alt={newsData.source + ' image'}
+                                                                    unoptimized
+                                                                    width={100}
+                                                                    height={104}
                                                                 />
                                                             </Link>
                                                         </div>
@@ -179,7 +192,12 @@ export const TopNews = () => {
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
                                     <a href="#">
-                                        <img src="assets/img/images/sidebar_img06.jpg" alt="" />
+                                        <Image
+                                            src={slideBarImage}
+                                            alt="no image found"
+                                            className="w-full h-auto"
+                                            unoptimized
+                                        />
                                     </a>
                                 </div>
                             </div>

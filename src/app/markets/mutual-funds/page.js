@@ -5,6 +5,8 @@ import { Heading } from "@/app/components/heading/Heading";
 import { srcFile } from "@/app/utils/tradingViewSrcFiles";
 import { addTradingViewWidget } from "@/app/utils/utils";
 import { useEffect } from "react";
+import Image from "next/image";
+import slideBarImage from '../../../../public/assets/img/images/sidebar_img06.jpg';
 
 export default function MutualFunds() {
 
@@ -14,16 +16,16 @@ export default function MutualFunds() {
         // Function to initialize a TradingView widget
         const initializeWidget = (containerId, config, callback) => {
             const widgetContainer = document.getElementById(containerId);
-    
+
             if (widgetContainer) {
                 // Clear the existing widget content
                 widgetContainer.innerHTML = ''; // Clear the container to remove any duplicate widgets
             }
-    
+
             // Initialize the TradingView widget
             return addTradingViewWidget(containerId, config, callback);
         };
-    
+
         // Initialize all widgets
         const cleanupMutualFunds = initializeWidget('tradingview-widget-mutual-funds', {
             "width": "100%",
@@ -50,9 +52,9 @@ export default function MutualFunds() {
             "showSymbolLogo": true,
             "isTransparent": true,
             "locale": "en",
-            "colorTheme": `${isDarkMode ? 'dark' : 'light'}` 
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`
         }, srcFile.getStocks);
-    
+
         const cleanupMutualFundsNews = initializeWidget('tradingview-widget-mutual-funds-news', {
             "feedMode": "market",
             "market": "stock",
@@ -60,12 +62,12 @@ export default function MutualFunds() {
             "displayMode": "regular",
             "width": "100%",
             "height": "100%",
-            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`, 
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "locale": "en"
         }, srcFile.getTimeline);
-    
+
         const cleanupMarketStocksNews = initializeWidget('tradingview-widget-market-stocks-news', {
-            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`, 
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "dateRange": "ALL",
             "exchange": "US",
             "showChart": true,
@@ -77,8 +79,8 @@ export default function MutualFunds() {
             "showFloatingTooltip": true,
             "plotLineColorGrowing": "rgb(41,191,240, 1)",
             "plotLineColorFalling": "rgb(15,96,139, 1)",
-            "gridLineColor": `${isDarkMode ? 'rgba(32, 33, 36, 0)' : 'rgba(240, 243, 250, 0)'}`, 
-            "scaleFontColor": `${isDarkMode ? 'rgba(220, 220, 220, 1)' : 'rgba(19, 23, 34, 1)'}`, 
+            "gridLineColor": `${isDarkMode ? 'rgba(32, 33, 36, 0)' : 'rgba(240, 243, 250, 0)'}`,
+            "scaleFontColor": `${isDarkMode ? 'rgba(220, 220, 220, 1)' : 'rgba(19, 23, 34, 1)'}`,
             "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
             "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
             "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
@@ -86,9 +88,9 @@ export default function MutualFunds() {
             "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
             "largeChartUrl": `${process.env.baseURL}/symbols`
         }, srcFile.getNews);
-    
+
         const cleanupMarketStocksOverview = initializeWidget('tradingview-widget-market-stocks-overview', {
-            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`, 
+            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "dateRange": "ALL",
             "showChart": true,
             "locale": "en",
@@ -100,8 +102,8 @@ export default function MutualFunds() {
             "showFloatingTooltip": true,
             "plotLineColorGrowing": "rgb(41,191,240, 1)",
             "plotLineColorFalling": "rgb(15,96,139, 1)",
-            "gridLineColor": `${isDarkMode ? 'rgba(32, 33, 36, 0)' : 'rgba(240, 243, 250, 0)'}`, 
-            "scaleFontColor": `${isDarkMode ? 'rgba(220, 220, 220, 1)' : 'rgba(19, 23, 34, 1)'}`, 
+            "gridLineColor": `${isDarkMode ? 'rgba(32, 33, 36, 0)' : 'rgba(240, 243, 250, 0)'}`,
+            "scaleFontColor": `${isDarkMode ? 'rgba(220, 220, 220, 1)' : 'rgba(19, 23, 34, 1)'}`,
             "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
             "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
             "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
@@ -145,7 +147,7 @@ export default function MutualFunds() {
             ],
             "largeChartUrl": `${process.env.baseURL}/symbols`
         }, srcFile.getMarketOverview);
-    
+
         // Cleanup function to remove all widgets before re-rendering
         return () => {
             cleanupMutualFunds(); // Clean up mutual funds widget
@@ -154,7 +156,7 @@ export default function MutualFunds() {
             cleanupMarketStocksOverview(); // Clean up market stocks overview widget
         };
     }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
-    
+
 
 
     return (
@@ -188,7 +190,12 @@ export default function MutualFunds() {
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
                                     <a href="#">
-                                        <img src="../assets/img/images/sidebar_img06.jpg" alt="" />
+                                        <Image
+                                            src={slideBarImage}
+                                            alt="no image found"
+                                            className="w-full h-auto"
+                                            unoptimized
+                                        />
                                     </a>
                                 </div>
                             </div>

@@ -3,6 +3,9 @@
 import { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import Image from 'next/image';
+import logo from '../../../../public/assets/img/logo/logo.png';
+import whiteLogo from '../../../../public/assets/img/logo/w_logo.png';
 
 const menuItems = [
   {
@@ -80,44 +83,44 @@ export const MobileVersion = ({ isMobileVersion, handleMobileVersion }) => {
   }
 
 
-      // Function to handle search keyword change
-      const handleSearchKeyword = (event) => {
-        const keyword = event.target.value;
+  // Function to handle search keyword change
+  const handleSearchKeyword = (event) => {
+    const keyword = event.target.value;
 
-        // Check if input has more than one character
-        if (keyword.length > 1) {
-            const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${keyword}&apikey=${process.env.alphaVantageStockApi}`;
+    // Check if input has more than one character
+    if (keyword.length > 1) {
+      const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${keyword}&apikey=${process.env.alphaVantageStockApi}`;
 
-            // Using axios to make a GET request
-            axios.get(url, {
-                headers: {
-                    'User-Agent': 'axios'  // Optionally set User-Agent header
-                }
-            })
-                .then(response => {
-                    // Check if the request was successful
-                    if (response.status === 200) {
-                        const data = response.data['bestMatches'];  // Extracting the 'bestMatches' key from response data
-                        const symbols = data.map(item => ({
-                            symbol: item["1. symbol"],
-                            name: item["2. name"]
-                        }));
-                        setSuggestions(symbols);  // Set the state with fetched symbols
-                    } else {
-                        setSuggestions([]);  // Clear suggestions if API call fails
-                    }
-                })
-                .catch(error => {
-                    setSuggestions([]);  // Clear suggestions on error
-                });
-        } else {
-            setSuggestions([]);  // Clear suggestions if input is less than 2 characters
+      // Using axios to make a GET request
+      axios.get(url, {
+        headers: {
+          'User-Agent': 'axios'  // Optionally set User-Agent header
         }
-    };
-
-    const handleCleanSuggestions = () => {
-        setSuggestions([]);
+      })
+        .then(response => {
+          // Check if the request was successful
+          if (response.status === 200) {
+            const data = response.data['bestMatches'];  // Extracting the 'bestMatches' key from response data
+            const symbols = data.map(item => ({
+              symbol: item["1. symbol"],
+              name: item["2. name"]
+            }));
+            setSuggestions(symbols);  // Set the state with fetched symbols
+          } else {
+            setSuggestions([]);  // Clear suggestions if API call fails
+          }
+        })
+        .catch(error => {
+          setSuggestions([]);  // Clear suggestions on error
+        });
+    } else {
+      setSuggestions([]);  // Clear suggestions if input is less than 2 characters
     }
+  };
+
+  const handleCleanSuggestions = () => {
+    setSuggestions([]);
+  }
 
   return (
     <>
@@ -128,13 +131,14 @@ export const MobileVersion = ({ isMobileVersion, handleMobileVersion }) => {
           </div>
           <div className="nav-logo">
             <Link href="/" className="w-fit flex flex-col items-center justify-center">
-              <img src="assets/img/logo/logo.png" alt="Logo" />
+              <Image src={logo} alt="Logo" layout="intrinsic" className=" w-auto h-auto" style={{ width: 'auto', height: 'auto' }} />
               <p className="font-bold text-[#29BFF0]">Slay the Bear</p>
             </Link>
           </div>
           <div className="nav-logo d-none">
             <Link href="/" className="w-fit flex flex-col items-center justify-center">
-              <img src="assets/img/logo/w_logo.png" alt="Logo" />
+              <Image src={whiteLogo} alt="Logo" layout="intrinsic" className=" w-auto h-auto" style={{ width: 'auto', height: 'auto' }}
+              />
               <p className="font-bold text-[#29BFF0]">Slay the Bear</p>
             </Link>
           </div>
@@ -158,7 +162,7 @@ export const MobileVersion = ({ isMobileVersion, handleMobileVersion }) => {
             </form>
           </div>
           <div className="menu-outer">
-            <ul class="navigation">
+            <ul className="navigation">
               {menuItems.map((item, index) => (
                 <li key={index} className={`${item.subMenu.length > 0 ? 'menu-item-has-children' : ''} ${dropdowns[index] ? 'active' : ''}`}>
                   <Link href={item.navLink}>

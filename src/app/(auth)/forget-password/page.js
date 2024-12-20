@@ -74,7 +74,7 @@ export default function ForgetPassword() {
                     text={'Send Email'}
                     loadingText={'Processed'}
                     loading={loading}
-                    disabled={disabledButton}
+                    disabled={disabledButton || loading}
                 />
                 <div className="d-flex gap-2 align-items-center justify-content-center pt-3">
                     I remember my Password

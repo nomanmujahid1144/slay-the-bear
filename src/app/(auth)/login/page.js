@@ -102,7 +102,7 @@ export default function Login() {
                     text={'Sign In'}
                     loadingText={'Authenticating, please wait...'}
                     loading={loading}
-                    disabled={disabledButton}
+                    disabled={disabledButton || loading}
                 />
                 <div className="d-flex gap-2 align-items-center justify-content-center pt-3">
                     Do you have an account?

@@ -6,10 +6,11 @@ import SelectionBox from "@/app/components/fields/Select";
 import { Heading } from "@/app/components/heading/Heading";
 import { srcFile } from "@/app/utils/tradingViewSrcFiles";
 import { addTradingViewWidget } from "@/app/utils/utils";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Finance } from "financejs";
 import { useEffect, useState } from "react";
 import { ToolDescription } from "../tool-description/ToolDescription";
+import Image from "next/image";
+import slideBarImage from '../../../../public/assets/img/images/sidebar_img06.jpg';
 
 
 export default function MortgageCalculator() {
@@ -258,15 +259,15 @@ export default function MortgageCalculator() {
                                     )}
                                 </div>
                             </div>
-                            <ToolDescription 
+                            <ToolDescription
                                 title={'Summary'}
                                 details={'Calculates monthly mortgage payments based on loan amount, interest rate, and term.'}
                             />
-                            <ToolDescription 
+                            <ToolDescription
                                 title={'Example'}
                                 details={'A $200,000 loan at 5% for 30 years shows monthly payments of $1,073.64.'}
                             />
-                            <ToolDescription 
+                            <ToolDescription
                                 title={'Explanation of Results'}
                                 details={'The result is broken into two parts—principal (the amount reducing your loan balance) and interest (what you pay for borrowing). Over time, more of your payment will go toward the principal as the loan matures.'}
                             />
@@ -281,7 +282,12 @@ export default function MortgageCalculator() {
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
                                     <a href="#">
-                                        <img src="../assets/img/images/sidebar_img06.jpg" alt="" />
+                                        <Image
+                                            src={slideBarImage}
+                                            alt="no image found"
+                                            className="w-full h-auto"
+                                            unoptimized
+                                        />
                                     </a>
                                 </div>
                             </div>

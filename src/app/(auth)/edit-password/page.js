@@ -16,6 +16,7 @@ import dynamic from 'next/dynamic';
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 import NotFoundAnimation from '../../../../public/assets/animation/not-found.json';
 import { Goto } from "@/app/components/Buttons/Goto";
+import { Suspense } from 'react'
 
 export default function Login() {
     const searchParams = useSearchParams();
@@ -49,13 +50,17 @@ export default function Login() {
         }
     };
 
+    const isPasswordValid = () => {
+        return credentials.password === credentials.confirmPassword;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             setLoading(true);
 
             // Final check for password match
-            if (credentials.password !== credentials.confirmPassword) {
+            if (!isPasswordValid()) {
                 toast.error("Passwords do not match");
                 return;
             }
@@ -93,10 +98,9 @@ export default function Login() {
     useEffect(() => {
         const token = searchParams.get("token");
         const id = searchParams.get("id");
-        console.log(id, 'ID')
         setToken(token || "");
         setUserId(id || "");
-    }, [])
+    }, [searchParams])
 
     // const checkTokenIsValid = async () => {
     //     try {
@@ -127,7 +131,7 @@ export default function Login() {
     };
 
     return (
-        <>
+        <Suspense >
             {(token.length > 0 && userId.length > 0) ? (
                 <AuthBackground>
                     <AuthHeading
@@ -180,7 +184,7 @@ export default function Login() {
                             text={'Update Password'}
                             loadingText={'Please wait, updating password...'}
                             loading={loading}
-                            disabled={disabledButton}
+                            disabled={disabledButton || loading}
                         />
                         <div className="d-flex gap-2 align-items-center justify-content-center pt-3">
                             Remember your password?
@@ -204,6 +208,6 @@ export default function Login() {
                 </div>
             )
             }
-        </>
+        </Suspense>
     );
 }

@@ -6,10 +6,11 @@ import SelectionBox from "@/app/components/fields/Select";
 import { Heading } from "@/app/components/heading/Heading";
 import { srcFile } from "@/app/utils/tradingViewSrcFiles";
 import { addTradingViewWidget } from "@/app/utils/utils";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Finance } from "financejs";
 import { useEffect, useState } from "react";
 import { ToolDescription } from "../tool-description/ToolDescription";
+import Image from "next/image";
+import slideBarImage from '../../../../public/assets/img/images/sidebar_img06.jpg';
 
 
 export default function CertificateOfDepositeCalculator() {
@@ -283,7 +284,12 @@ export default function CertificateOfDepositeCalculator() {
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
                                     <a href="#">
-                                        <img src="../assets/img/images/sidebar_img06.jpg" alt="" />
+                                        <Image
+                                            src={slideBarImage}
+                                            alt="no image found"
+                                            className="w-full h-auto"
+                                            unoptimized
+                                        />
                                     </a>
                                 </div>
                             </div>

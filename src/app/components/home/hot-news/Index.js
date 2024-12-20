@@ -4,6 +4,8 @@ import { Heading } from "../../heading/Heading";
 import { PostTag } from "../../post-creation/post-tag/Index";
 import { SmallPostTitle } from "../../post-creation/post-title/SmallPostTitle";
 import { DateTime } from "../../post-creation/post-date-time/Index";
+import politicsImage from '../../../../../public/assets/img/blog/politics_post01.jpg';
+import Image from "next/image";
 
 const hotPicks = [
     {
@@ -52,7 +54,12 @@ export const HotPicks = () => {
                                 <div className="editor-post-three">
                                     <div className="editor-post-thumb-three">
                                         <Link href="/">
-                                            <img src="assets/img/blog/politics_post01.jpg" alt />
+                                            <Image
+                                                src={politicsImage} 
+                                                alt="no image found" 
+                                                className="w-full h-auto"
+                                                unoptimized
+                                            />
                                         </Link>
                                         <Link href="/" className="paly-btn popup-video">
                                             <i className="fas fa-play" />

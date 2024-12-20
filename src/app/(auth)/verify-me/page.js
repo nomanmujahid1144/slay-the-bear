@@ -8,6 +8,7 @@ import axiosInstance from "@/app/utils/axiosInstance";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
+import { Suspense } from "react";
 
 export default function VerifyMe() {
     const searchParams = useSearchParams();
@@ -20,15 +21,15 @@ export default function VerifyMe() {
     useEffect(() => {
         const token = searchParams.get("token");
         setToken(token || "");
-    })
+    }, [searchParams])
 
 
     const verifyForgetToken = async (e) => {
         e.preventDefault();
         try {
             setLoading(true);
-            if(token.length > 0){
-                const response = await axiosInstance.post('/api/users/verify-reset-password', {token});
+            if (token.length > 0) {
+                const response = await axiosInstance.post('/api/users/verify-reset-password', { token });
                 setLoading(false);
                 console.log(response, 'response')
                 if (response.status === 200) { // Use response.status for axios instead of response.ok
@@ -36,7 +37,7 @@ export default function VerifyMe() {
                 } else {
                     toast.error(response.data.message);
                 }
-            }else{
+            } else {
                 setLoading(false);
                 toast.error("Token Does not Exists");
             }
@@ -48,22 +49,24 @@ export default function VerifyMe() {
     };
 
     return (
-        <AuthBackground>
-            <AuthHeading
-                title={'Verify Your Identity to Proceed'}
-            />
-            <AuthSubHeading
-                subHeading={'Click the button below to confirm your identity and continue with resetting your password.'}
-            />
-            <form onSubmit={verifyForgetToken}>
-                <DefaultButton
-                    type={'submit'}
-                    text={'Create New Password'}
-                    loadingText={'Verifying, please wait...'}
-                    loading={loading}
+        <Suspense>
+            <AuthBackground>
+                <AuthHeading
+                    title={'Verify Your Identity to Proceed'}
                 />
-            </form>
-            <p className="ajax-response mb-0" />
-        </AuthBackground>
+                <AuthSubHeading
+                    subHeading={'Click the button below to confirm your identity and continue with resetting your password.'}
+                />
+                <form onSubmit={verifyForgetToken}>
+                    <DefaultButton
+                        type={'submit'}
+                        text={'Create New Password'}
+                        loadingText={'Verifying, please wait...'}
+                        loading={loading}
+                    />
+                </form>
+                <p className="ajax-response mb-0" />
+            </AuthBackground>
+        </Suspense>
     )
 }

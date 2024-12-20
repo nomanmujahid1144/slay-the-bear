@@ -5,7 +5,8 @@ import { Heading } from "../heading/Heading";
 import { Banner } from "../ads/Banner";
 import { SinglePostDisplay } from "../post-creation/single-post-display/Index";
 import { fetchNews, formatDate, formatTimeInMinutes } from "@/app/utils/extrasFunctions";
-import Lottie from "lottie-react";
+import dynamic from 'next/dynamic';
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 import loadingAnimation from '../../../../public/assets/animation/loading.json';
 
 export const NewsTabs = () => {

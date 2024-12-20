@@ -7,6 +7,8 @@ import { srcFile } from "@/app/utils/tradingViewSrcFiles";
 import { addTradingViewWidget } from "@/app/utils/utils";
 import { useEffect, useState } from "react";
 import { ToolDescription } from "../tool-description/ToolDescription";
+import Image from "next/image";
+import slideBarImage from '../../../../public/assets/img/images/sidebar_img06.jpg';
 
 
 export default function InvestmentReturnCalculator() {
@@ -128,24 +130,24 @@ export default function InvestmentReturnCalculator() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-    
+
         // Parse input values
         const principal = parseFloat(initialInvestment);
         const rate = parseFloat(annualReturnRate) / 100; // Convert percentage to decimal
         const years = parseInt(investmentYears, 10);
-    
+
         if (!principal || !rate || !years) {
             alert('Please enter valid inputs for all fields.');
             return;
         }
-    
+
         // Calculate Future Value using the compound interest formula
         const futureValue = principal * Math.pow(1 + rate, years);
-    
+
         // Set the result
         setFutureValue(futureValue.toFixed(2)); // Format to 2 decimal places
     };
-    
+
 
     const handleReset = () => {
         setInitialInvestment('');
@@ -247,7 +249,12 @@ export default function InvestmentReturnCalculator() {
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
                                     <a href="#">
-                                        <img src="../assets/img/images/sidebar_img06.jpg" alt="" />
+                                        <Image
+                                            src={slideBarImage}
+                                            alt="no image found"
+                                            className="w-full h-auto"
+                                            unoptimized
+                                        />
                                     </a>
                                 </div>
                             </div>

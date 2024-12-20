@@ -5,6 +5,8 @@ import { Heading } from "@/app/components/heading/Heading";
 import { srcFile } from "@/app/utils/tradingViewSrcFiles";
 import { addTradingViewWidget } from "@/app/utils/utils";
 import { useEffect } from "react";
+import Image from "next/image";
+import slideBarImage from '../../../../public/assets/img/images/sidebar_img06.jpg';
 
 export default function Cryptocurrency() {
 
@@ -14,14 +16,14 @@ export default function Cryptocurrency() {
         // Function to initialize a TradingView widget
         const initializeWidget = (containerId, config, callback) => {
             const widgetContainer = document.getElementById(containerId);
-    
+
             if (widgetContainer) {
                 widgetContainer.innerHTML = ''; // Clear the container to remove any duplicate widgets
             }
-    
+
             return addTradingViewWidget(containerId, config, callback);
         };
-    
+
         // Initialize widgets
         const cleanupCryptocurrency = initializeWidget('tradingview-widget-cryptocurrency', {
             "width": "100%",
@@ -60,7 +62,7 @@ export default function Cryptocurrency() {
             "isTransparent": true,
             "locale": "en"
         }, srcFile.getStocks);
-    
+
         const cleanupCryptocurrencyPairs = initializeWidget('tradingview-widget-cryptocurrency-pairs', {
             "width": "100%",
             "height": "100%",
@@ -99,7 +101,7 @@ export default function Cryptocurrency() {
             "isTransparent": true,
             "locale": "en"
         }, srcFile.getStocks);
-    
+
         const cleanupAllCryptoNews = initializeWidget('tradingview-widget-crypto-news', {
             "feedMode": "market",
             "market": "crypto",
@@ -110,7 +112,7 @@ export default function Cryptocurrency() {
             "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "locale": "en"
         }, srcFile.getTimeline);
-    
+
         const cleanupMarketStocksNews = initializeWidget('tradingview-widget-market-stocks-news', {
             "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "dateRange": "ALL",
@@ -133,7 +135,7 @@ export default function Cryptocurrency() {
             "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
             "largeChartUrl": `${process.env.baseURL}/symbols`
         }, srcFile.getNews);
-    
+
         const cleanupMarketStocksOverview = initializeWidget('tradingview-widget-market-stocks-overview', {
             "dateRange": "ALL",
             "showChart": true,
@@ -191,7 +193,7 @@ export default function Cryptocurrency() {
                 }
             ],
         }, srcFile.getMarketOverview);
-    
+
         // Cleanup function to remove all widgets before re-rendering
         return () => {
             cleanupCryptocurrency();
@@ -202,7 +204,7 @@ export default function Cryptocurrency() {
             // Call other cleanup functions if more widgets are added
         };
     }, [isDarkMode]);
-    
+
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
@@ -247,7 +249,12 @@ export default function Cryptocurrency() {
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
                                     <a href="#">
-                                        <img src="../assets/img/images/sidebar_img06.jpg" alt="" />
+                                        <Image
+                                            src={slideBarImage}
+                                            alt="no image found"
+                                            className="w-full h-auto"
+                                            unoptimized
+                                        />
                                     </a>
                                 </div>
                             </div>

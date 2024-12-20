@@ -2,19 +2,17 @@
 
 import { useDarkMode } from "@/app/components/dark-mode/DarkModeContext";
 import InputField from "@/app/components/fields/Input";
-import SelectionBox from "@/app/components/fields/Select";
 import { Heading } from "@/app/components/heading/Heading";
 import { srcFile } from "@/app/utils/tradingViewSrcFiles";
 import { addTradingViewWidget } from "@/app/utils/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Finance } from "financejs";
 import { useEffect, useState } from "react";
 import { ToolDescription } from "../../tools/tool-description/ToolDescription";
 import axios from "axios";
 import { mean, multiply, inv } from "mathjs";
-import Link from "next/link";
-import alpha from "alphavantage";
 import axiosInstance from "@/app/utils/axiosInstance";
+import Image from "next/image";
+import slideBarImage from '../../../../public/assets/img/images/sidebar_img06.jpg';
 
 export default function PortfolioOptimizerCalculator() {
 
@@ -294,7 +292,7 @@ export default function PortfolioOptimizerCalculator() {
 
         try {
             const response = await axiosInstance.post('/api/calculator/portfolio-optimizer', payload);
-            
+
             console.log(response, 'response')
 
             if (response.status === 200) {
@@ -589,7 +587,12 @@ export default function PortfolioOptimizerCalculator() {
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
                                     <a href="#">
-                                        <img src="../assets/img/images/sidebar_img06.jpg" alt="" />
+                                        <Image
+                                            src={slideBarImage}
+                                            alt="no image found"
+                                            className="w-full h-auto"
+                                            unoptimized
+                                        />
                                     </a>
                                 </div>
                             </div>

@@ -4,42 +4,49 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css'; // Import Swiper styles
 import 'swiper/css/autoplay'; // Import Swiper styles
 import Link from 'next/link';
+import Image from 'next/image';
+import trendingIcon from '../../../../public/assets/img/icon/trending_icon.svg';
 
 
 export const TrendingNews = () => {
-    
+
     const news = [
-        {newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#'},
-        {newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#'},
-        {newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#'},
-        {newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#'},
-        {newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#'},
-        {newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#'}
+        { newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#' },
+        { newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#' },
+        { newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#' },
+        { newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#' },
+        { newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#' },
+        { newsHeading: 'Here area brands and designers to look out for next year 2023', newsLink: '#' }
     ]
 
     return (
         <>
-            <div className="header-top-wrap-four"> 
+            <div className="header-top-wrap-four">
                 <div className="container">
                     <div className="row align-items-center">
                         <div className="col-lg-8">
                             <div className="header-top-left-four">
                                 <div className="trending-box">
                                     <div className="icon">
-                                        <img src="assets/img/icon/trending_icon.svg" alt="" />
+                                        <Image
+                                            src={trendingIcon}
+                                            alt="no icon found"
+                                            className="w-auto h-auto"
+                                            unoptimized
+                                        />
                                     </div>
                                     <span>Trending</span>
                                     <div className="shape">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 122 36"
-                                        preserveAspectRatio="none"
-                                        fill="none"
-                                    >
-                                        <path
-                                            d="M0 18C0 8.05888 8.05887 0 18 0H110L121.26 16.8906C121.708 17.5624 121.708 18.4376 121.26 19.1094L110 36H18C8.05888 36 0 27.9411 0 18Z"
-                                            fill="url(#trending_shape)"
-                                        />
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 122 36"
+                                            preserveAspectRatio="none"
+                                            fill="none"
+                                        >
+                                            <path
+                                                d="M0 18C0 8.05888 8.05887 0 18 0H110L121.26 16.8906C121.708 17.5624 121.708 18.4376 121.26 19.1094L110 36H18C8.05888 36 0 27.9411 0 18Z"
+                                                fill="url(#trending_shape)"
+                                            />
                                             <defs>
                                                 <linearGradient
                                                     id="trending_shape"
