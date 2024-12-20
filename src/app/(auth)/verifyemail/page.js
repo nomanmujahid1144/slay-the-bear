@@ -8,7 +8,6 @@ import axiosInstance from "@/app/utils/axiosInstance";
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
-import { Suspense } from "react";
 
 export default function VerifyEmail() {
     const searchParams = useSearchParams();
