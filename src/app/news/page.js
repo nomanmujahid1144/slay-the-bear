@@ -18,7 +18,7 @@ import { SmallPostTitle } from "../components/post-creation/post-title/SmallPost
 import { useDarkMode } from "../components/dark-mode/DarkModeContext";
 import { addTradingViewWidget } from "../utils/utils";
 import { srcFile } from "../utils/tradingViewSrcFiles";
-import slideBarImage from '../../../../public/assets/img/images/sidebar_img06.jpg';
+import slideBarImage from '../../../public/assets/img/images/sidebar_img06.jpg';
 
 export default function NewsPage() {
     const { isDarkMode } = useDarkMode();
