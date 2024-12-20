@@ -48,7 +48,7 @@ export default function VerifyEmail() {
     };
 
     return (
-        <Suspense>
+        <Suspense fallback={<div>Loading...</div>}>
             <AuthBackground>
                 <AuthHeading
                     title={'Verify Your Email Address'}

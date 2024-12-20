@@ -131,7 +131,7 @@ export default function Login() {
     };
 
     return (
-        <Suspense >
+        <Suspense fallback={<div>Loading...</div>}>
             {(token.length > 0 && userId.length > 0) ? (
                 <AuthBackground>
                     <AuthHeading

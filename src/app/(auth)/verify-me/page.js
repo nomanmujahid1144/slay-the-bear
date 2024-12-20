@@ -49,7 +49,7 @@ export default function VerifyMe() {
     };
 
     return (
-        <Suspense>
+        <Suspense fallback={<div>Loading...</div>}>
             <AuthBackground>
                 <AuthHeading
                     title={'Verify Your Identity to Proceed'}
