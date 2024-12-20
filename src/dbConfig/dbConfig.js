@@ -16,17 +16,22 @@ export async function connect() {
     console.error("MongoDB URI is not defined in the environment variables.");
     process.exit(1);
   }
+  console.log(mongoUri,' mongoUri')
 
   try {
     // Establish a new MongoDB connection
     const db = await mongoose.connect(mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      serverApi:
+      {
+        version: '1',
+        strict: true,
+        deprecationErrors: true
+      }
     });
-    
+
     // Set the connection state
     isConnected = db.connections[0].readyState === 1;
-    
+
     // Log connection success
     if (isConnected) {
       console.log("MongoDB is connected");
@@ -37,9 +42,9 @@ export async function connect() {
       console.error("MongoDB connection error:", error);
       process.exit(1); // Exit process on error
     });
-    
+
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
-    process.exit(1); // Exit process if connection fails
+    // process.exit(1); // Exit process if connection fails
   }
 }
