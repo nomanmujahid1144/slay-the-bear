@@ -7,14 +7,15 @@ import Link from "next/link";
 import { AuthBackground } from "@/app/components/Auths/AuthBackground";
 import { AuthHeading } from "@/app/components/Auths/AuthHeading";
 import { AuthSubHeading } from "@/app/components/Auths/AuthSubHeading";
-import { useRouter } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import axiosInstance from "@/app/utils/axiosInstance";
 import toast from "react-hot-toast";
-import { checkIsLoggedInUser } from "@/helpers/checkLoggedInUser";
 
 export default function Login() {
     const router = useRouter();
-
+    const searchParams = useSearchParams();
+    const redirect_url = searchParams.get("redirect_url");
+    
     const [credentials, setcredentials] = useState({
         email: "",
         password: ""
@@ -33,11 +34,17 @@ export default function Login() {
             setLoading(true);
 
             const response = await axiosInstance.post('/api/users/login', credentials);
-
+            console.log(response, 'response')
             if (response.status === 200) { // Use response.status for axios instead of response.ok
                 toast.success('Login successfully');
                 setLoading(false);
-                router.push('/');
+                if(redirect_url){
+                    setTimeout(() => {
+                        router.push(redirect_url + `?prefilled_email=${response.data?.data?.email}` );
+                    }, 1000);
+                }else{
+                    router.push('/');
+                }
             } else {
                 setLoading(false);
                 toast.error(response.data.message)

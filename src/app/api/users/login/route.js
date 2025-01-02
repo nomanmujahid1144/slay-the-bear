@@ -12,7 +12,7 @@ export async function POST(request) {
     const reqBody = await request.json();
 
     const { email, password } = reqBody;
-    
+
     // validation
     const objToVerifyDataFromZod = {
       email: email,
@@ -39,7 +39,7 @@ export async function POST(request) {
         }, { status: 400 })
       }
 
-      if(!user.isVerified){
+      if (!user.isVerified) {
         return NextResponse.json({
           message: "Please verify first, or signup again"
         }, { status: 400 })
@@ -53,9 +53,19 @@ export async function POST(request) {
 
       const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET, { expiresIn: '1d' });
 
+      const returnUser = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        isVerified: user.isVerified,
+        email: user.email,
+        plan: user.plan,
+        _id: user._id,
+      }
+
       const response = NextResponse.json({
         message: "Logged In Success",
-        success: true
+        success: true,
+        data: returnUser
       });
 
       response.cookies.set("token", token, {

@@ -92,12 +92,12 @@ export default function NewsPage() {
                                             <div className="sports-post">
                                                 {newsData.feed[0].banner_image !== '' && (
                                                     <div className="sports-post-thumb">
-                                                        <Link href={newsData.feed[0].url} target="_blank">
+                                                        {/* <Link href={newsData.feed[0].url} target="_blank">
                                                             <Image src={newsData.feed[0].banner_image} alt={newsData.feed[0].source + ' image'}
                                                                 className="w-full h-auto"
                                                                 unoptimized
                                                             />
-                                                        </Link>
+                                                        </Link> */}
                                                     </div>
                                                 )}
                                                 <div className="sports-post-content">
@@ -129,7 +129,7 @@ export default function NewsPage() {
                                                         <div className="horizontal-post-thumb-four">
                                                             {newsData.banner_image !== '' && (
                                                                 <div className="top-news-post-thumb">
-                                                                    <Link href={newsData.url} target="_blank">
+                                                                    {/* <Link href={newsData.url} target="_blank">
                                                                         <Image
                                                                             src={newsData.banner_image}
                                                                             className="!w-[100px] !h-[104px]"
@@ -137,7 +137,7 @@ export default function NewsPage() {
                                                                             style={{ width: '100px', height: '104px' }}
                                                                             layout="intrinsic"
                                                                         />
-                                                                    </Link>
+                                                                    </Link> */}
                                                                 </div>
                                                             )}
                                                         </div>
@@ -179,11 +179,11 @@ export default function NewsPage() {
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
                                     <a href="#">
-                                        <Image src={slideBarImage} alt="no image"
+                                        {/* <Image src={slideBarImage} alt="no image"
                                             style={{ width: 'auto', height: 'auto' }}
                                             className=" w-auto h-auto"
                                             layout="intrinsic"
-                                        />
+                                        /> */}
                                     </a>
                                 </div>
                             </div>

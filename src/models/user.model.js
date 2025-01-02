@@ -1,3 +1,4 @@
+import { Plan } from "@/constants/erums";
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
@@ -23,6 +24,23 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    forgotPasswordToken: String,
+    forgotPasswordTokenExpiry: Date,
+    verifyToken: String,
+    verifyTokenExpiry: Date,
+    plan: {
+        type: String,
+        enum: Object.values(Plan),
+        default: Plan.FREE,
+    },
+    customerId: { // String Customer ID, this will be important when we need to delete the subscription
+        type: String,
+        sparse: true,
+    },
+    subscription: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Subscription',
+    },
     // verifyCode:{
     //     type: String,
     //     required: [true, "Verify code is required"]
@@ -31,10 +49,6 @@ const userSchema = new mongoose.Schema({
     //     type: Date,
     //     required: [true, "Verify code Expiry is required"]
     // },
-    forgotPasswordToken: String,
-    forgotPasswordTokenExpiry: Date,
-    verifyToken: String,
-    verifyTokenExpiry: Date,
 })
 
 const User = mongoose.models.users || mongoose.model('users', userSchema);

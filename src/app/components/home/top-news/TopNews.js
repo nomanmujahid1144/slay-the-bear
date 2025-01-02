@@ -7,7 +7,6 @@ import { PostDescription } from "../../post-creation/post-description/Index"
 import { PostTag } from "../../post-creation/post-tag/Index"
 import { PostTitle } from "../../post-creation/post-title/Index"
 import { Market } from "../market/Index";
-import horizentalImage from '../../../../../public/assets/img/blog/cr_recent_post03.jpg';
 import { SmallPostTitle } from "../../post-creation/post-title/SmallPostTitle"
 import Link from "next/link"
 import { Goto } from "../../Buttons/Goto"
@@ -19,7 +18,6 @@ import { srcFileAlphaVantage } from "@/app/utils/alphaVantageSrcFile";
 import { useDarkMode } from "../../dark-mode/DarkModeContext"
 import { formatDate, formatTimeInMinutes } from "@/app/utils/extrasFunctions"
 import Image from "next/image"
-import slideBarImage from '../../../../../public/assets/img/images/sidebar_img06.jpg';
 
 export const TopNews = () => {
     const { isDarkMode } = useDarkMode();
@@ -99,20 +97,17 @@ export const TopNews = () => {
                                                 <div className="top-news-post-thumb">
                                                     <Link href={newsData.feed[0].url} target="_blank">
                                                         <Image
-                                                            src={newsData.feed[0].banner_image}
+                                                            src={newsData.feed[0]?.banner_image}
                                                             className="w-full h-auto"
                                                             width={1200}
                                                             height={800}
-                                                            alt={newsData.feed[0].source + ' image'}
+                                                            alt={newsData.feed[0]?.source + ' image'}
                                                             unoptimized
                                                         />
                                                     </Link>
                                                 </div>
                                             )}
                                             <div className="top-news-post-content">
-                                                {/* <PostTag
-                                                tagName={'Sports'}
-                                            /> */}
                                                 <PostTitle
                                                     extras={'bold-underline'}
                                                     heading={newsData.feed[0].title}
@@ -140,16 +135,16 @@ export const TopNews = () => {
                                                 <div className="horizontal-post-thumb-four">
                                                     {newsData.banner_image !== '' && (
                                                         <div className="top-news-post-thumb">
-                                                            <Link href={newsData.url} target="_blank">
+                                                            {/* <Link href={newsData.url} target="_blank">
                                                                 <Image
-                                                                    src={newsData.banner_image}
+                                                                    src={newsData?.banner_image}
                                                                     className="!w-[100px] !h-[104px]"
                                                                     alt={newsData.source + ' image'}
-                                                                    unoptimized
+                                                                    // unoptimized
                                                                     width={100}
                                                                     height={104}
                                                                 />
-                                                            </Link>
+                                                            </Link> */}
                                                         </div>
                                                     )}
                                                 </div>

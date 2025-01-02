@@ -63,12 +63,12 @@ const calculations = [
 
 
 const paidTools = [
-    {
-        calculatorName: 'Portfolio Optimizer',
-        calculatorDescription: 'The Portfolio Optimizer is a robust tool designed to help investors build diversified portfolios aligned with their financial goals and risk preferences. It leverages advanced models and market data to provide optimal asset allocation, ensuring weights total 100% and avoid over-concentration. Customization options include inputs for investment amount, risk-free rate, and target return, with flexibility for short- or long-term strategies. The tool analyzes risk versus return, highlights diversification opportunities, and simulates historical performance (5-year) to offer actionable insights for achieving maximum efficiency and minimizing volatility.',
-        gotoLink: '/premium-tools/portfolio-optimizer',
-        calculatorImage: calculatorImage
-    },
+    // {
+    //     calculatorName: 'Portfolio Optimizer',
+    //     calculatorDescription: 'The Portfolio Optimizer is a robust tool designed to help investors build diversified portfolios aligned with their financial goals and risk preferences. It leverages advanced models and market data to provide optimal asset allocation, ensuring weights total 100% and avoid over-concentration. Customization options include inputs for investment amount, risk-free rate, and target return, with flexibility for short- or long-term strategies. The tool analyzes risk versus return, highlights diversification opportunities, and simulates historical performance (5-year) to offer actionable insights for achieving maximum efficiency and minimizing volatility.',
+    //     gotoLink: '/premium-tools/portfolio-optimizer',
+    //     calculatorImage: calculatorImage
+    // },
     {
         calculatorName: 'Stock Analyzer',
         calculatorDescription: "A Stock Analyzer is a comprehensive tool designed to help investors evaluate and understand the performance and potential of a stock. It provides detailed insights into a company's financial health, market position, and future growth prospects by analyzing key metrics and trends. This tool is ideal for both novice and experienced investors looking to make informed decisions about buying, holding, or selling stocks.",
