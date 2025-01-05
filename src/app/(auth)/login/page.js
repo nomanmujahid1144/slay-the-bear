@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import InputField from "@/app/components/fields/Input";
 import { DefaultButton } from "@/app/components/Buttons/Default";
 import Link from "next/link";
@@ -11,7 +11,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import axiosInstance from "@/app/utils/axiosInstance";
 import toast from "react-hot-toast";
 
-export default function Login() {
+function LoginComponent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const redirect_url = searchParams.get("redirect_url");
@@ -34,7 +34,6 @@ export default function Login() {
             setLoading(true);
 
             const response = await axiosInstance.post('/api/users/login', credentials);
-            console.log(response, 'response')
             if (response.status === 200) { // Use response.status for axios instead of response.ok
                 toast.success('Login successfully');
                 setLoading(false);
@@ -62,7 +61,6 @@ export default function Login() {
             setDisabledButton(true)
         }
     }, [credentials])
-
 
     // Function to toggle password visibility
     const handlePasswordVisible = () => {
@@ -120,5 +118,13 @@ export default function Login() {
             </form>
             <p className="ajax-response mb-0" />
         </AuthBackground>
+    );
+}
+
+export default function Login() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <LoginComponent />
+        </Suspense>
     );
 }
