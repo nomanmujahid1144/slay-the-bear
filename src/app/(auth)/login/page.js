@@ -32,18 +32,19 @@ function LoginComponent() {
         e.preventDefault();
         try {
             setLoading(true);
-
             const response = await axiosInstance.post('/api/users/login', credentials);
             if (response.status === 200) { // Use response.status for axios instead of response.ok
-                toast.success('Login successfully');
                 setLoading(false);
-                if(redirect_url){
-                    setTimeout(() => {
-                        router.push(redirect_url + `?prefilled_email=${response.data?.data?.email}` );
-                    }, 1000);
-                }else{
-                    router.push('/');
-                }
+                router.push('/auth/callback');
+                // toast.success('Login successfully');
+                
+                // if(redirect_url){
+                //     setTimeout(() => {
+                //         router.push(redirect_url + `?prefilled_email=${response.data?.data?.email}` );
+                //     }, 1000);
+                // }else{
+                //     router.push('/');
+                // }
             } else {
                 setLoading(false);
                 toast.error(response.data.message)

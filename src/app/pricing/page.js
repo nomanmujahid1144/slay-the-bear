@@ -35,7 +35,8 @@ export default function Pricing() {
             discount: '',
             discountedPrice: '',
             href: '/login',
-            paymentLink: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PLAN_LINK,
+            // paymentLink: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PLAN_LINK,
+            paymentLink: 'monthly',
             features: [
                 "Gutenberg Integration",
                 "Gutenberg Integration",
@@ -49,7 +50,8 @@ export default function Pricing() {
             discount: '12% off',
             discountedPrice: '72',
             href: '/login',
-            paymentLink: process.env.NEXT_PUBLIC_STRIPE_YEARLY_PLAN_LINK,
+            // paymentLink: process.env.NEXT_PUBLIC_STRIPE_YEARLY_PLAN_LINK,
+            paymentLink: 'yearly',
             features: [
                 "Gutenberg Integration",
                 "Gutenberg Integration",
@@ -58,12 +60,15 @@ export default function Pricing() {
         },
     ]
 
-    const handlePricingNavigator = ({paymentLink}) => {
-        if(isLoggedInUser == null){
-            router.push(`/login?redirect_url=${encodeURIComponent(paymentLink)}`)
-        }else{
-            router.push(paymentLink + `?prefilled_email=${isLoggedInUser?.email}`)
-        }
+    const handlePricingNavigator = async ({ paymentLink }) => {
+        // Should be monthly or yearly
+        localStorage.setItem('generatePeriodForStripeLink', paymentLink)
+        router.push(`/auth/callback`)
+        // if (isLoggedInUser == null) {
+        //     router.push(`/login?redirect_url=${encodeURIComponent(paymentLink)}`)
+        // } else {
+        //     router.push(paymentLink + `?prefilled_email=${isLoggedInUser?.email}`)
+        // }
     }
 
     return (
@@ -71,7 +76,6 @@ export default function Pricing() {
             <main className="relative min-h-screen flex flex-col justify-center contact-area overflow-hidden">
                 <div className="w-full max-w-6xl mx-auto px-4 md:px-6 py-24">
                     {/* Pricing table component */}
-                    {console.log(isLoggedInUser, 'isLoggedInUser')}
                     <div>
                         {/* Pricing toggle */}
                         {/* <div className="flex justify-center max-w-[14rem] m-auto mb-8 lg:mb-16">

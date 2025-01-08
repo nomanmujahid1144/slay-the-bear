@@ -161,9 +161,12 @@ export const Navbar = () => {
     }
 
     const getUsersData = async () => {
-        const response = await checkIsLoggedInUser();
-        if (response.success) {
-            setIsLoggedInUser(response.data);
+        const { user, error } = await checkIsLoggedInUser();
+        if (error) {
+            setIsLoggedInUser(null)
+        }
+        if (user) {
+            setIsLoggedInUser(user);
         } else {
             setIsLoggedInUser(null)
         }
@@ -171,7 +174,7 @@ export const Navbar = () => {
 
     useEffect(() => {
         getUsersData();
-    }, [pathname])
+    }, [pathname, router])
 
 
     const toggleDropdown = () => {

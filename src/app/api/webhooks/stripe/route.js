@@ -10,40 +10,48 @@ export async function POST(req) {
     const sig = req.headers.get('stripe-signature');
     let event;
 
+    if (!sig) {
+        return new Response("Invalid Signature", { status: 400 });
+    }
+
+    // Verify the event by using the signature (Sig)
     try {
         event = stripe.webhooks.constructEvent(body, sig, WEBHOOK_SECRET);
-
     } catch (error) {
         console.log('Webhook signature verification failed,', error.message);
         return new Response(`Webhook Error: ${error.message}`, { status: 400 })
     }
 
+    const data = event.data;
+    const eventType = event.type;
+
     // Handle the event
     try {
-        switch (event.type) {
-            case "checkout.session.completed": 
+        switch (eventType) {
+            case "checkout.session.completed":
                 const session = await stripe.checkout.sessions.retrieve(
-                    event.data.object.id,
+                    data.object.id,
                     {
-                        expand: ['line_items']
+                        expand: ['line_items', 'invoice']
                     }
                 );
                 const customerId = session.customer;
-                const customer_details = session.customer_details;
+                const customerDetails = session.customer_details;
+                const lineItems = session.line_items?.data || [];
 
-                if (customer_details?.email) {
-                    const user = await User.findOne({ email: customer_details?.email })
+                if (customerDetails?.email) {
+                    const user = await User.findOne({ email: customerDetails?.email })
 
                     if (!user) {
                         throw new Error("User not found")
                     }
 
+                    // It will check rather it's first time purchase or 2nd or many times
                     if (!user.customerId) {
                         user.customerId = customerId;
                         await user.save();
                     }
 
-                    const lineItems = session.line_items?.data || [];
 
                     for (const item of lineItems) {
                         const priceId = item.price?.id;
@@ -59,21 +67,33 @@ export async function POST(req) {
                                 throw new Error('Invalid PriceId')
                             }
 
+                            const subscriptionEntry = {
+                                invoice_id: session.invoice.id, // Generate a user-friendly ID
+                                amount: (item.price?.unit_amount || 0) / 100, // Convert cents to dollars
+                                status: "Subscribed",
+                                startDate: new Date(),
+                                endDate: endDate,
+                                viewURL: session.invoice.hosted_invoice_url,
+                                downloadURL: session.invoice.invoice_pdf, // Example URL
+                            };
+
+                            // Update only the `subscriptionsList` using $push, leave the rest of the fields intact
                             await Subscription.findOneAndUpdate(
                                 { userId: user.id }, // Search criteria
                                 {
-                                    // Update or create fields
-                                    userId: user.id,
-                                    startDate: new Date(),
-                                    endDate: endDate,
-                                    plan: "premium",
-                                    period: priceId === process.env.STRIPE_YEARLY_PRICE_ID ? "yearly" : "monthly",
+                                    $set: {
+                                        plan: "premium",
+                                        period: priceId === process.env.STRIPE_YEARLY_PRICE_ID ? "yearly" : "monthly",
+                                        startDate: new Date(),
+                                        endDate: endDate
+                                    },
+                                    $push: { subscriptionsList: subscriptionEntry }, // Append the new subscription to the subscriptions list
                                 },
                                 {
                                     new: true, // Return the updated document
                                     upsert: true, // Create a new document if it doesn't exist
                                 }
-                            );
+                            )
 
                             // Update the user to change the plan to "premium"
                             await User.findOneAndUpdate(
@@ -92,8 +112,12 @@ export async function POST(req) {
                 break;
 
             case "customer.subscription.deleted": {
-                const subscription = await stripe.subscriptions.retrieve(event.data.object.id);
-                
+                // Retrieve the subscription object from Stripe
+                const subscription = await stripe.subscriptions.retrieve(data.object.id);
+
+                console.log(subscription, 'subscription')
+
+                // Find the user associated with this subscription using customerId
                 const user = await User.findOne({
                     customerId: subscription.customer
                 });
@@ -101,14 +125,35 @@ export async function POST(req) {
                 if (!user) {
                     console.error("User not found for the subscription deleted event.");
                     throw new Error("User not found for the subscription deleted event.");
-                }else{   
-                    // Update the user's plan to 'free'
+                } else {
+                    // Find the subscription document using userId (assuming userId exists in the Subscription model)
+                    const subscriptionDoc = await Subscription.findOne({
+                        userId: user._id
+                    });
+
+                    // The invoice ID for this canceled subscription
+                    const canceledInvoiceId = subscription.latest_invoice; // Use latest_invoice to get the associated invoice
+
+                    // Find the matching subscription entry in the subscriptionsList using the invoice_id
+                    const subscriptionEntry = subscriptionDoc.subscriptionsList.find(sub => sub.invoice_id === canceledInvoiceId);
+
+                    if (subscriptionEntry) {
+                        // Update the status of the subscription entry to 'canceled'
+                        subscriptionDoc.plan = "free"
+                        subscriptionEntry.status = 'Canceled';
+
+                        await subscriptionDoc.save();
+                        console.log(`Subscription with invoice ID ${canceledInvoiceId} has been updated to 'canceled'.`);
+                    }
+
+                    // Update the user's plan to 'free' (if applicable)
                     await User.findByIdAndUpdate(user._id, { plan: 'free' });
                     console.log(`User ${user._id} plan updated to free.`);
                 }
 
                 break;
             }
+
 
             default:
                 console.log(`Invalid event Type ${event.type}`);
@@ -123,7 +168,7 @@ export async function POST(req) {
     // const subscription = await stripe.subscriptions.update(subscriptionId, {
     //     cancel_at_period_end: true, // Stops recurring payments
     // });
-    
+
 
     return new Response("Webook received", { status: 200 })
 
