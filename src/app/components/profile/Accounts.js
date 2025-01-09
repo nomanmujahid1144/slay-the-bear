@@ -6,9 +6,7 @@ import InputField from "../../components/fields/Input";
 import { useRouter } from "next/navigation";
 import axiosInstance from "../../utils/axiosInstance";
 import toast from "react-hot-toast";
-import dynamic from 'next/dynamic';
-const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
-import LoadingAnimation from '../../../../public/assets/animation/loading.json';
+import { LoaderCircleIcon } from "../Loader/LoadingCircle";
 // import InputField from '../fields/Input';
 
 export const Accounts = () => {
@@ -166,8 +164,8 @@ export const Accounts = () => {
                     {loading ? (
                         <span className="flex justify-between gap-1 items-center">
                             Sending Email
-                            <div className="w-7 h-7">
-                                <Lottie animationData={LoadingAnimation} loop={true} />
+                            <div className="w-5 h-5 flex">
+                                <LoaderCircleIcon />
                             </div>
                         </span>
                     ) : ("Recover Password")}

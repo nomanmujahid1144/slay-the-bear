@@ -63,9 +63,9 @@ export default function Profile() {
                             <li
                                 key={tab.id}
                                 onClick={() => handleTabsChange(tab.id)}
-                                className={`mt-5 cursor-pointer border-l-2 px-2 py-2 font-semibold transition ${activeTab === tab.id
-                                    ? "border-l-secondary text-secondary"
-                                    : "border-l-primary text-primary"
+                                className={`mt-5 cursor-pointer border-l-2 border-l-primary px-2 py-2 !text-primary font-semibold transition ${activeTab === tab.id
+                                    ? "border-l-secondary !text-secondary font-semibold"
+                                    : ""
                                     } hover:border-l-secondary hover:text-secondary`}
                             >
                                 {tab.label}
@@ -84,7 +84,6 @@ export default function Profile() {
 
 
 const TabContent = ({ activeTab }) => {
-    console.log(activeTab, 'activeTab')
     switch (activeTab) {
         case "accounts":
             return (

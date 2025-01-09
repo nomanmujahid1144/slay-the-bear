@@ -113,6 +113,7 @@ export const Navbar = () => {
     const [isMobileVersion, setMobileVerion] = useState(false);
     const [suggestions, setSuggestions] = useState([]);
     const [isLoggedInUser, setIsLoggedInUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     // For LoggedIn User
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -161,20 +162,24 @@ export const Navbar = () => {
     }
 
     const getUsersData = async () => {
+        setIsLoading(true)
         const { user, error } = await checkIsLoggedInUser();
         if (error) {
+            setIsLoading(false)
             setIsLoggedInUser(null)
         }
         if (user) {
+            setIsLoading(false)
             setIsLoggedInUser(user);
         } else {
+            setIsLoading(false)
             setIsLoggedInUser(null)
         }
     }
 
     useEffect(() => {
         getUsersData();
-    }, [pathname, router])
+    }, [])
 
 
     const toggleDropdown = () => {
@@ -304,45 +309,57 @@ export const Navbar = () => {
                                     <nav className="menu-nav justify-content-lg-center">
                                         <div className="navbar-wrap main-menu d-none d-lg-flex">
                                             <ul className="navigation">
-                                                {menuItems.map((item, index) => (
-                                                    <li key={index} className={`${item.subMenu.length > 0 ? 'menu-item-has-children active' : ''}`}>
-                                                        <Link href={item.navLink}>
-                                                            {item.navbarName}
-                                                        </Link>
-                                                        {item.subMenu.length > 0 && (
-                                                            <ul className="sub-menu">
-                                                                {item.subMenu.map((subItem, subIndex) => (
-                                                                    <>
-                                                                        {subItem?.subMenu?.length > 0 ? (
+                                                {isLoading && isLoggedInUser !== null ? (
+                                                    <>
+                                                        {[...Array(5)].map((_, index) => (
+                                                            <div className="menu-item-has-children">
+                                                                <li key={index} className="my-3 animate-pulse mx-1 rounded-full bg-gray-300 dark:bg-gray-700 w-20 h-6"></li>
+                                                            </div>
+                                                        ))}
+                                                    </>
+                                                ) : (<>
+                                                    {menuItems
+                                                        .filter(item => !(item.navbarName === 'Subscriptions' && isLoggedInUser?.plan === 'premium'))
+                                                        .map((item, index) => (
+                                                            <li key={index} className={`${item.subMenu.length > 0 ? 'menu-item-has-children active' : ''}`}>
+                                                                <Link href={item.navLink}>
+                                                                    {item.navbarName}
+                                                                </Link>
+                                                                {item.subMenu.length > 0 && (
+                                                                    <ul className="sub-menu">
+                                                                        {item.subMenu.map((subItem, subIndex) => (
                                                                             <>
-                                                                                <li key={index} className={`${subItem.subMenu.length > 0 ? 'menu-item-has-children active' : ''}`}>
-                                                                                    <Link href={subItem.navLink}>
-                                                                                        {subItem.navbarName}
-                                                                                    </Link>
-                                                                                    <ul className="sub-menu">
-                                                                                        {subItem?.subMenu?.map((subItem, index) => (
-                                                                                            <li key={subIndex}>
-                                                                                                <Link href={subItem.navLink}>
-                                                                                                    {subItem.navbarName}
-                                                                                                </Link>
-                                                                                            </li>
-                                                                                        ))}
-                                                                                    </ul>
-                                                                                </li>
+                                                                                {subItem?.subMenu?.length > 0 ? (
+                                                                                    <>
+                                                                                        <li key={index} className={`${subItem.subMenu.length > 0 ? 'menu-item-has-children active' : ''}`}>
+                                                                                            <Link href={subItem.navLink}>
+                                                                                                {subItem.navbarName}
+                                                                                            </Link>
+                                                                                            <ul className="sub-menu">
+                                                                                                {subItem?.subMenu?.map((subItem, index) => (
+                                                                                                    <li key={subIndex}>
+                                                                                                        <Link href={subItem.navLink}>
+                                                                                                            {subItem.navbarName}
+                                                                                                        </Link>
+                                                                                                    </li>
+                                                                                                ))}
+                                                                                            </ul>
+                                                                                        </li>
+                                                                                    </>
+                                                                                ) : (
+                                                                                    <li key={subIndex}>
+                                                                                        <Link href={subItem.navLink}>
+                                                                                            {subItem.navbarName}
+                                                                                        </Link>
+                                                                                    </li>
+                                                                                )}
                                                                             </>
-                                                                        ) : (
-                                                                            <li key={subIndex}>
-                                                                                <Link href={subItem.navLink}>
-                                                                                    {subItem.navbarName}
-                                                                                </Link>
-                                                                            </li>
-                                                                        )}
-                                                                    </>
-                                                                ))}
-                                                            </ul >
-                                                        )}
-                                                    </li>
-                                                ))}
+                                                                        ))}
+                                                                    </ul >
+                                                                )}
+                                                            </li>
+                                                        ))}
+                                                </>)}
                                             </ul>
                                         </div>
                                         <div className="logo d-lg-none white-logo">

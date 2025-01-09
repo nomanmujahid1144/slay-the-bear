@@ -1,4 +1,5 @@
-Create billing page
-list all the subscriptions of user
+Create billing page 
+list all the subscriptions of user // Done
 Billing Portal for user
 Hide Subscription tab for premium user
+design the thanks page and cancle page

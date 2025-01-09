@@ -68,7 +68,7 @@ export async function POST(req) {
                             }
 
                             const subscriptionEntry = {
-                                invoice_id: session.invoice.id, // Generate a user-friendly ID
+                                invoice_id: session.invoice.number, // Generate a user-friendly ID
                                 amount: (item.price?.unit_amount || 0) / 100, // Convert cents to dollars
                                 status: "Subscribed",
                                 startDate: new Date(),
@@ -115,7 +115,48 @@ export async function POST(req) {
                 // Retrieve the subscription object from Stripe
                 const subscription = await stripe.subscriptions.retrieve(data.object.id);
 
-                console.log(subscription, 'subscription')
+                // Find the user associated with this subscription using customerId
+                const user = await User.findOne({
+                    customerId: subscription.customer
+                });
+
+                if (!user) {
+                    console.error("User not found for the subscription deleted event.");
+                    throw new Error("User not found for the subscription deleted event.");
+                } else {
+                    // Find the subscription document using userId (assuming userId exists in the Subscription model)
+                    const subscriptionDoc = await Subscription.findOne({
+                        userId: user._id
+                    });
+
+                    // Retrieve the latest invoice associated with this subscription
+                    const latestInvoice = await stripe.invoices.retrieve(subscription.latest_invoice);
+
+                    // The invoice ID for this canceled subscription
+                    const canceledInvoiceId = latestInvoice.number; // Use latest_invoice to get the associated invoice
+
+                    // Find the matching subscription entry in the subscriptionsList using the invoice_id
+                    const subscriptionEntry = subscriptionDoc.subscriptionsList.find(sub => sub.invoice_id === canceledInvoiceId);
+
+                    if (subscriptionEntry) {
+                        // Update the status of the subscription entry to 'canceled'
+                        subscriptionDoc.plan = "free"
+                        subscriptionEntry.status = 'Canceled';
+
+                        await subscriptionDoc.save();
+                        console.log(`Subscription with invoice ID ${canceledInvoiceId} has been updated to 'canceled'.`);
+                    }
+
+                    // Update the user's plan to 'free' (if applicable)
+                    await User.findByIdAndUpdate(user._id, { plan: 'free' });
+                    console.log(`User ${user._id} plan updated to free.`);
+                }
+
+                break;
+            }
+            case "customer.subscription.updated": {
+                // Retrieve the subscription object from Stripe
+                const subscription = await stripe.subscriptions.retrieve(data.object.id);
 
                 // Find the user associated with this subscription using customerId
                 const user = await User.findOne({
@@ -131,8 +172,11 @@ export async function POST(req) {
                         userId: user._id
                     });
 
+                    // Retrieve the latest invoice associated with this subscription
+                    const latestInvoice = await stripe.invoices.retrieve(subscription.latest_invoice);
+
                     // The invoice ID for this canceled subscription
-                    const canceledInvoiceId = subscription.latest_invoice; // Use latest_invoice to get the associated invoice
+                    const canceledInvoiceId = latestInvoice.number; // Use latest_invoice to get the associated invoice
 
                     // Find the matching subscription entry in the subscriptionsList using the invoice_id
                     const subscriptionEntry = subscriptionDoc.subscriptionsList.find(sub => sub.invoice_id === canceledInvoiceId);

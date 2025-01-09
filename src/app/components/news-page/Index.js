@@ -5,9 +5,7 @@ import { Heading } from "../heading/Heading";
 import { Banner } from "../ads/Banner";
 import { SinglePostDisplay } from "../post-creation/single-post-display/Index";
 import { fetchNews, formatDate, formatTimeInMinutes } from "@/app/utils/extrasFunctions";
-import dynamic from 'next/dynamic';
-const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
-import loadingAnimation from '../../../../public/assets/animation/loading.json';
+import { LottieLoader } from "../Loader/Index";
 
 export const NewsTabs = () => {
     const [activeTab, setActiveTab] = useState('stocks');
@@ -110,11 +108,7 @@ export const NewsTabs = () => {
                                             <div id="news-container" className="container !overflow-auto h-[500px]">
                                                 <div className="row over">
                                                     {isLoading ? (
-                                                        <div className="flex justify-center items-center h-screen w-full">
-                                                            <div className="w-20 h-20">
-                                                                <Lottie animationData={loadingAnimation} loop={true} />
-                                                            </div>
-                                                        </div>
+                                                        <LottieLoader />
                                                     ) : (
                                                         <>
                                                             {visibleNews?.map((news, index) => (

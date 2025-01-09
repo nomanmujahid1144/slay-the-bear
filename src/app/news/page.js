@@ -5,8 +5,6 @@ import { Heading } from "../components/heading/Heading";
 import { DateTime } from "../components/post-creation/post-date-time/Index";
 import { PostTag } from "../components/post-creation/post-tag/Index";
 import { PostTitle } from "../components/post-creation/post-title/Index";
-import Link from "next/link";
-import Image from "next/image";
 import { NewsTabs } from "../components/news-page/Index";
 import { useEffect, useState } from "react";
 import { srcFileAlphaVantage } from "@/app/utils/alphaVantageSrcFile";
@@ -18,7 +16,6 @@ import { SmallPostTitle } from "../components/post-creation/post-title/SmallPost
 import { useDarkMode } from "../components/dark-mode/DarkModeContext";
 import { addTradingViewWidget } from "../utils/utils";
 import { srcFile } from "../utils/tradingViewSrcFiles";
-import slideBarImage from '../../../public/assets/img/images/sidebar_img06.jpg';
 
 export default function NewsPage() {
     const { isDarkMode } = useDarkMode();

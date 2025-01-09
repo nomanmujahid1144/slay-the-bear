@@ -19,10 +19,10 @@ import { DarkMode } from "./components/dark-mode/Index";
 import React from "react";
 import { ScrollToTop } from "./components/scroll-to-top";
 
-// Import FontAwesomeIcons
 import "./components/fontawesomeIcons";
 import { DarkModeProvider, useDarkMode } from "./components/dark-mode/DarkModeContext";
 import { Toaster } from "react-hot-toast";
+import { usePathname } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,22 +35,30 @@ export default function RootLayout({ children }) {
 }
 
 function DarkModeLayout({ children }) {
-  // Use `useDarkMode` inside a child component of `DarkModeProvider`
   const { isDarkMode } = useDarkMode();
+  const pathname = usePathname();
+
+  // Define the routes where Navbar and Footer should not be displayed
+  const hiddenRoutes = ['/login', '/auth/callback'];
+  const hideNavbarFooter = hiddenRoutes.includes(pathname);
 
   return (
     <html lang="en" tg-theme={isDarkMode ? 'dark' : 'light'}>
       <body className={inter.className}>
         <DarkMode />
         <ScrollToTop />
-        <header>
-          <Navbar />
-        </header>
+        {!hideNavbarFooter && (
+          <header>
+            <Navbar />
+          </header>
+        )}
         <main>{React.cloneElement(children, { isDarkMode })}</main>
         <Toaster />
-        <footer>
-          <Footer />
-        </footer>
+        {!hideNavbarFooter && (
+          <footer>
+            <Footer />
+          </footer>
+        )}
       </body>
     </html>
   );
