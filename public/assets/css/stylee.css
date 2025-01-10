@@ -6189,7 +6189,7 @@ label {
     background: var(--tg-black);
 }
 [tg-theme=dark] p {
-    color: var(--tg-gray-three);
+    color: var(--tg-gray-three) !important;
 }
 [tg-theme=dark] .header-top-wrap {
     background: #182330;
@@ -6687,6 +6687,10 @@ label {
 }
 [tg-theme=dark] .table-striped>tbody>tr:nth-of-type(odd)>* {
     color: var(--tg-border-color);
+}
+[tg-theme=dark] .toggle-drop-down {
+    background: var(--tg-black-two) !important;
+    color: var(--tg-white) !important;
 }
 
 

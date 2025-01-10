@@ -78,7 +78,7 @@ export const sendEmail = async ({ email, emailType, userId, username }) => {
 
         const { data, error } = await resend.emails.send({
             from: process.env.RESEND_SENDDER_EMAIL,
-            to: 'hafizrehman.mujahid@gmail.com',
+            to: email,
             subject: subject,
             react: body
         });

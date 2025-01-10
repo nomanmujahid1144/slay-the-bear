@@ -257,7 +257,7 @@ export const Navbar = () => {
                                                 alt="User dropdown"
                                             />
                                             <div className="flex justify-between gap-2 items-center">
-                                                <p className="text-sm font-medium text-black">
+                                                <p className="text-sm font-medium profile-name">
                                                     {isLoggedInUser?.firstName + " " + isLoggedInUser?.lastName}
                                                 </p>
                                                 <FontAwesomeIcon size="xs" icon="fa-solid fa-chevron-down" />
@@ -267,28 +267,23 @@ export const Navbar = () => {
                                         {isMenuOpen && (
                                             <div
                                                 id="userDropdown"
-                                                className="absolute z-10 -ml-32 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+                                                className="absolute z-10 -ml-32 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 toggle-drop-down"
                                             >
-                                                <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                                <div className="px-4 py-3 text-sm ">
                                                     <div>{isLoggedInUser?.firstName + " " + isLoggedInUser?.lastName}</div>
                                                     <div className="font-medium truncate">{isLoggedInUser?.email}</div>
                                                 </div>
-                                                <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+                                                <ul className="py-2 text-sm ">
                                                     <li>
                                                         <Link onClick={toggleDropdown} href="/profile" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" >
                                                             Profile
-                                                        </Link>
-                                                    </li>
-                                                    <li>
-                                                        <Link onClick={toggleDropdown} href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" >
-                                                            Settings
                                                         </Link>
                                                     </li>
                                                 </ul>
                                                 <div className="py-1">
                                                     <p
                                                         onClick={handleLogout}
-                                                        className="block px-4 cursor-pointer py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                                                        className="block px-4 cursor-pointer py-2 text-sm hover:bg-gray-100 hover:!text-primary dark:hover:bg-gray-600 dark:hover:text-white"
                                                     >
                                                         Sign out
                                                     </p>
