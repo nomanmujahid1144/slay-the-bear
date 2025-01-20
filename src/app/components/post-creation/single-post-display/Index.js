@@ -10,9 +10,8 @@ export const SinglePostDisplay = ({ postTag, postHeading, postURL, postSource, p
     return (
         <div key={key} className="weekly-post-item-wrap">
             <div className="weekly-post-item weekly-post-four">
-                {console.log(postImage)}
                 <div className="weekly-post-thumb">
-                    {(postImage !== '' || postImage !== null) && (
+                    {postImage !== '' && (
                         <Link href={postURL} target="_blank">
                             <Image
                                 src={postImage}

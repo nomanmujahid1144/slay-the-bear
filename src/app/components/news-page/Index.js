@@ -120,7 +120,7 @@ export const NewsTabs = () => {
                                                                             ? `${news.title.substring(0, 60)}...`
                                                                             : news.title
                                                                     }
-                                                                    postImage={news.banner_image}
+                                                                    postImage={news.banner_image ? news.banner_image : ''}
                                                                     postDescription={
                                                                         news.summary.length > 140
                                                                             ? `${news.summary.substring(0, 140)}...`
