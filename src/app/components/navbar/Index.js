@@ -307,7 +307,7 @@ export const Navbar = () => {
                                                 {isLoading && isLoggedInUser !== null ? (
                                                     <>
                                                         {[...Array(5)].map((_, index) => (
-                                                            <div className="menu-item-has-children">
+                                                            <div key={index} className="menu-item-has-children">
                                                                 <li key={index} className="my-3 animate-pulse mx-1 rounded-full bg-gray-300 dark:bg-gray-700 w-20 h-6"></li>
                                                             </div>
                                                         ))}
