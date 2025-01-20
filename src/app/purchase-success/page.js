@@ -15,32 +15,29 @@ export default function ThankYou() {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {        
-        fetchSubscriptionDetails();
+        if (!sessionId) {
+            toast.error('Session ID not found. Please ensure the URL is correct and try again.');
+            setIsLoading(false); // Stop loading after 1 second
+            router.push('/'); // Redirect after error
+        } else {
+            fetchSubscriptionDetails();
+        }
     }, [sessionId]); // Dependency on sessionId and router
 
     const fetchSubscriptionDetails = async () => {
         setIsLoading(true);
-        if(sessionId){
-            try {
-                const response = await getSessionSubscriptoinDetails({ session_id: sessionId });
-    
-                if (!response.success) {
-                    toast.error(response.message)
-                    throw new Error(response.message);
-                } else {
-                    setSubscriptionDetails(response.data);
-                }
-            } catch (error) {
-                toast.error('An error occurred while retrieving your subscription details. Please try again later.');
-            } finally {
-                setIsLoading(false);
+        try {
+            const response = await getSessionSubscriptoinDetails({ session_id: sessionId });
+            if (!response.success) {
+                toast.error(response.message);
+                throw new Error(response.message);
+            } else {
+                setSubscriptionDetails(response.data);
             }
-        }else{
-            setTimeout(() => {
-                toast.error('Session ID not found. Please ensure the URL is correct and try again.');
-                setIsLoading(false); // Stop loading after 1 second
-                router.push('/'); // Redirect after error
-            }, 1000); // Delay for 1 second before redirection
+        } catch (error) {
+            toast.error('An error occurred while retrieving your subscription details. Please try again later.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
