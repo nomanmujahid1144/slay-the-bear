@@ -1,43 +1,47 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { getSessionSubscriptoinDetails } from './actions';
 import toast from 'react-hot-toast';
 import { LoadingRotating } from '../components/Loader/LoadingRotating';
 
-export default function ThankYou() {
+
+function ThankYouComponent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const sessionId = searchParams.get('session_id'); // Extract session_id from URL
     const [subscriptionDetails, setSubscriptionDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {        
-        if (!sessionId) {
-            toast.error('Session ID not found. Please ensure the URL is correct and try again.');
-            setIsLoading(false); // Stop loading after 1 second
-            router.push('/'); // Redirect after error
-        } else {
-            fetchSubscriptionDetails();
-        }
+    useEffect(() => {
+        fetchSubscriptionDetails();
     }, [sessionId]); // Dependency on sessionId and router
 
     const fetchSubscriptionDetails = async () => {
         setIsLoading(true);
-        try {
-            const response = await getSessionSubscriptoinDetails({ session_id: sessionId });
-            if (!response.success) {
-                toast.error(response.message);
-                throw new Error(response.message);
-            } else {
-                setSubscriptionDetails(response.data);
+        if (sessionId) {
+            try {
+                const response = await getSessionSubscriptoinDetails({ session_id: sessionId });
+
+                if (!response.success) {
+                    toast.error(response.message)
+                    throw new Error(response.message);
+                } else {
+                    setSubscriptionDetails(response.data);
+                }
+            } catch (error) {
+                toast.error('An error occurred while retrieving your subscription details. Please try again later.');
+            } finally {
+                setIsLoading(false);
             }
-        } catch (error) {
-            toast.error('An error occurred while retrieving your subscription details. Please try again later.');
-        } finally {
-            setIsLoading(false);
+        } else {
+            setTimeout(() => {
+                toast.error('Session ID not found. Please ensure the URL is correct and try again.');
+                setIsLoading(false); // Stop loading after 1 second
+                router.push('/'); // Redirect after error
+            }, 1000); // Delay for 1 second before redirection
         }
     };
 
@@ -109,5 +113,14 @@ export default function ThankYou() {
                 </>
             )}
         </section>
+    );
+}
+
+// Wrap SymbolComponent in Suspense
+export default function ThankYou() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ThankYouComponent />
+        </Suspense>
     );
 }
