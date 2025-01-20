@@ -98,10 +98,11 @@ export const TopNews = () => {
                                                     <Link href={newsData.feed[0].url} target="_blank">
                                                         <Image
                                                             src={newsData.feed[0]?.banner_image}
-                                                            className="w-full h-auto"
-                                                            width={1200}
-                                                            height={800}
                                                             alt={newsData.feed[0]?.source + ' image'}
+                                                            width={460} // Rendered width
+                                                            height={320} // Rendered height
+                                                            quality={85} // Adjust quality if needed
+                                                            priority // Optional for critical images
                                                             unoptimized
                                                         />
                                                     </Link>
@@ -134,18 +135,17 @@ export const TopNews = () => {
                                             <div className="horizontal-post-four">
                                                 <div className="horizontal-post-thumb-four">
                                                     {newsData.banner_image !== '' && (
-                                                        <div className="top-news-post-thumb">
-                                                            {/* <Link href={newsData.url} target="_blank">
-                                                                <Image
-                                                                    src={newsData?.banner_image}
-                                                                    className="!w-[100px] !h-[104px]"
-                                                                    alt={newsData.source + ' image'}
-                                                                    // unoptimized
-                                                                    width={100}
-                                                                    height={104}
-                                                                />
-                                                            </Link> */}
-                                                        </div>
+                                                        <Link href={newsData.url} target="_blank">
+                                                            <Image
+                                                                src={newsData.banner_image}
+                                                                alt={newsData.source + ' image'}
+                                                                width={100} // Rendered width
+                                                                height={100} // Rendered height
+                                                                qualityy={100} // Adjust quality if needed
+                                                                priority // Optional for critical images
+                                                                unoptimized
+                                                            />
+                                                        </Link>
                                                     )}
                                                 </div>
                                                 <div className="horizontal-post-content-four">

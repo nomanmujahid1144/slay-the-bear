@@ -3,64 +3,10 @@
 import { PostDescription } from "../components/post-creation/post-description/Index";
 import { PostTitle } from "../components/post-creation/post-title/Index";
 import calculatorImage from '../../../public/assets/img/blog/loan-calculator.jpg';
-import Link from "next/link";
-import Image from "next/image";
 
 // Import FontAwsomeIcons
 import "../components/fontawesomeIcons";
 import { Heading } from "../components/heading/Heading";
-
-const calculations = [
-    {
-        calculatorName: 'Loan calculations',
-        calculatorDescription: 'This tool allows you to receive pivot points in four different popular systems, by filling in the previous days’ high, low, and close. It is helpful for determining support, resistance entry and exit points.',
-        gotoLink: '#',
-        calculatorImage: calculatorImage
-    },
-    {
-        calculatorName: 'Investment growth',
-        calculatorDescription: 'This tool allows you to receive pivot points in four different popular systems, by filling in the previous days’ high, low, and close. It is helpful for determining support, resistance entry and exit points.',
-        gotoLink: '#',
-        calculatorImage: calculatorImage
-    },
-    {
-        calculatorName: 'Compound interest',
-        calculatorDescription: 'This tool allows you to receive pivot points in four different popular systems, by filling in the previous days’ high, low, and close. It is helpful for determining support, resistance entry and exit points.',
-        gotoLink: '#',
-        calculatorImage: calculatorImage
-    },
-    {
-        calculatorName: 'Amortization',
-        calculatorDescription: 'This tool allows you to receive pivot points in four different popular systems, by filling in the previous days’ high, low, and close. It is helpful for determining support, resistance entry and exit points.',
-        gotoLink: '#',
-        calculatorImage: calculatorImage
-    },
-    {
-        calculatorName: 'Bond price/yield',
-        calculatorDescription: 'This tool allows you to receive pivot points in four different popular systems, by filling in the previous days’ high, low, and close. It is helpful for determining support, resistance entry and exit points.',
-        gotoLink: '#',
-        calculatorImage: calculatorImage
-    },
-    {
-        calculatorName: 'IRR (Internal Rate of Return)',
-        calculatorDescription: 'This tool allows you to receive pivot points in four different popular systems, by filling in the previous days’ high, low, and close. It is helpful for determining support, resistance entry and exit points.',
-        gotoLink: '#',
-        calculatorImage: calculatorImage
-    },
-    {
-        calculatorName: 'NPV (Net Present Value)',
-        calculatorDescription: 'This tool allows you to receive pivot points in four different popular systems, by filling in the previous days’ high, low, and close. It is helpful for determining support, resistance entry and exit points.',
-        gotoLink: '#',
-        calculatorImage: calculatorImage
-    },
-    {
-        calculatorName: 'ROI (Return on Investment)',
-        calculatorDescription: 'This tool allows you to receive pivot points in four different popular systems, by filling in the previous days’ high, low, and close. It is helpful for determining support, resistance entry and exit points.',
-        gotoLink: '#',
-        calculatorImage: calculatorImage
-    },
-];
-
 
 const paidTools = [
     // {

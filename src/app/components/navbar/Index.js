@@ -210,7 +210,7 @@ export const Navbar = () => {
                                     <Image
                                         src={logoImage}
                                         alt="logo"
-                                        width={130}
+                                        width={80}
                                         height={70}
                                     />
                                     <p className="font-bold text-[#29BFF0]">Slay the Bear</p>
@@ -362,7 +362,7 @@ export const Navbar = () => {
                                                 <Image
                                                     src={logoImage}
                                                     alt="logo"
-                                                    width={100}
+                                                    width={80}
                                                     height={70}
                                                 />
                                                 <p className="font-bold text-[#29BFF0]">Slay the Bear</p>

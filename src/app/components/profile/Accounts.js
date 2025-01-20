@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { DefaultButton } from "../../components/Buttons/Default";
 import InputField from "../../components/fields/Input";
-import { useRouter } from "next/navigation";
 import axiosInstance from "../../utils/axiosInstance";
 import toast from "react-hot-toast";
 import { LoaderCircleIcon } from "../Loader/LoadingCircle";
@@ -11,7 +10,6 @@ import { LoaderCircleIcon } from "../Loader/LoadingCircle";
 
 export const Accounts = () => {
 
-    const router = useRouter();
     const [data, setData] = useState("nothing");
     const [loading, setLoading] = useState(false);
     const [credentials, setcredentials] = useState({

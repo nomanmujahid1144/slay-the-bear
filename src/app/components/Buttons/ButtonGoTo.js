@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 export const ButtonGoTo = ({ text, extras, href, paymentLink, onClick }) => {
     return (
         <button

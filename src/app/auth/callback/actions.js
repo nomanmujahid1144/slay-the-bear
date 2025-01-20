@@ -33,10 +33,10 @@ export async function createCheckoutSessionAction({ user, getStripePaymentLinkAc
             }
         ],
         metadata: {
-            customerId: customer
+            customerId: customer,
         },
         mode: 'subscription',
-        success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/purchase-success`,
+        success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/purchase-success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/pricing`,
         customer: customer,
         // Link expires after 30 mins

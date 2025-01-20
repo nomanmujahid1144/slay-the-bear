@@ -10,6 +10,7 @@ import { AuthSubHeading } from "@/app/components/Auths/AuthSubHeading";
 import axiosInstance from "@/app/utils/axiosInstance";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { TermAndConditionTxt } from "@/app/components/Auths/TermAndConditionTxt";
 
 export default function Register() {
 
@@ -178,6 +179,9 @@ export default function Register() {
                         Login
                     </Link>
                 </div>
+                <TermAndConditionTxt 
+                    text={'signing up'}
+                />
             </form>
             <p className="ajax-response mb-0" />
         </AuthBackground>

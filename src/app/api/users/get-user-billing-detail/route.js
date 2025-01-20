@@ -11,22 +11,25 @@ export async function GET(request) {
 
         if (!userId) {
             return NextResponse.json({
-                message: "Invalid User"
+                message: "Invalid User",
             }, { status: 400 });
         }
 
         const getInvoicesDetails = await Subscription.findOne({ userId: userId });
 
+        const reversedSubscriptions = getInvoicesDetails?.subscriptionsList?.length > 0
+            ? [...getInvoicesDetails.subscriptionsList].reverse()
+            : [];
+
         return NextResponse.json({
             message: "Invoice List",
             success: true,
-            data: getInvoicesDetails?.subscriptionsList.length > 0 ?
-                getInvoicesDetails?.subscriptionsList : []
+            data: reversedSubscriptions,
         });
 
     } catch (error) {
         return NextResponse.json({
-            error: error.message
-        }, { status: 500 })
+            error: error.message,
+        }, { status: 500 });
     }
 }

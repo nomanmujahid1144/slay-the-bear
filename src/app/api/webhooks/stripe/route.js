@@ -67,6 +67,8 @@ export async function POST(req) {
                                 throw new Error('Invalid PriceId')
                             }
 
+                            console.log(session, 'session')
+
                             const subscriptionEntry = {
                                 invoice_id: session.invoice.number, // Generate a user-friendly ID
                                 amount: (item.price?.unit_amount || 0) / 100, // Convert cents to dollars
@@ -129,11 +131,21 @@ export async function POST(req) {
                         userId: user._id
                     });
 
+                    console.log(subscription, 'subscription')
+
                     // Retrieve the latest invoice associated with this subscription
                     const latestInvoice = await stripe.invoices.retrieve(subscription.latest_invoice);
 
+                    console.log(latestInvoice, 'latestInvoice')
+                    console.log(latestInvoice.lines.data[0].proration_details.credited_items.invoice, 'latestInvoice')
+
+                    const deletedInvoiceId = latestInvoice.lines.data[0].proration_details.credited_items.invoice;
+
+                    // Retrieve the latest invoice associated with this subscription
+                    const deletedInvoice = await stripe.invoices.retrieve(deletedInvoiceId);
+
                     // The invoice ID for this canceled subscription
-                    const canceledInvoiceId = latestInvoice.number; // Use latest_invoice to get the associated invoice
+                    const canceledInvoiceId = deletedInvoice.number; // Use latest_invoice to get the associated invoice
 
                     // Find the matching subscription entry in the subscriptionsList using the invoice_id
                     const subscriptionEntry = subscriptionDoc.subscriptionsList.find(sub => sub.invoice_id === canceledInvoiceId);

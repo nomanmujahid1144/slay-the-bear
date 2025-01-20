@@ -34,8 +34,8 @@ export const Footer = () => {
                                             <Image
                                                 src={logo}
                                                 alt="footer logo"
-                                                width={170}
-                                                height={100}
+                                                width={100}
+                                                height={90}
                                             />
                                             <p className="font-bold text-[#29BFF0]">Slay the Bear</p>
                                         </Link>
@@ -52,8 +52,7 @@ export const Footer = () => {
                                     </div>
                                     <div class="footer-content">
                                         <p>
-                                            Footer description here
-
+                                            Providing the tools and knowledge to succeed.
                                         </p>
                                     </div>
                                 </div>

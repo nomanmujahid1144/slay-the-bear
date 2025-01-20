@@ -131,15 +131,27 @@ export const MobileVersion = ({ isMobileVersion, handleMobileVersion }) => {
           </div>
           <div className="nav-logo">
             <Link href="/" className="w-fit flex flex-col items-center justify-center">
-              <Image src={logo} alt="Logo" layout="intrinsic" className=" w-auto h-auto" style={{ width: 'auto', height: 'auto' }} />
-              <p className="font-bold text-[#29BFF0]">Slay the Bear</p>
+              <Image
+                src={logo}
+                alt="Logo"
+                layout="intrinsic"
+                width={65}
+                height={70}
+                className=" w-auto h-auto" />
+              <p className="font-bold !text-primary">Slay the Bear</p>
             </Link>
           </div>
           <div className="nav-logo d-none">
             <Link href="/" className="w-fit flex flex-col items-center justify-center">
-              <Image src={whiteLogo} alt="Logo" layout="intrinsic" className=" w-auto h-auto" style={{ width: 'auto', height: 'auto' }}
+              <Image
+                src={whiteLogo}
+                alt="Logo"
+                layout="intrinsic"
+                width={65}
+                height={70}
+                className=" w-auto h-auto"
               />
-              <p className="font-bold text-[#29BFF0]">Slay the Bear</p>
+              <p className="font-bold !text-primary">Slay the Bear</p>
             </Link>
           </div>
           <div className="mobile-search">

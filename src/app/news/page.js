@@ -16,6 +16,8 @@ import { SmallPostTitle } from "../components/post-creation/post-title/SmallPost
 import { useDarkMode } from "../components/dark-mode/DarkModeContext";
 import { addTradingViewWidget } from "../utils/utils";
 import { srcFile } from "../utils/tradingViewSrcFiles";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function NewsPage() {
     const { isDarkMode } = useDarkMode();
@@ -89,12 +91,17 @@ export default function NewsPage() {
                                             <div className="sports-post">
                                                 {newsData.feed[0].banner_image !== '' && (
                                                     <div className="sports-post-thumb">
-                                                        {/* <Link href={newsData.feed[0].url} target="_blank">
-                                                            <Image src={newsData.feed[0].banner_image} alt={newsData.feed[0].source + ' image'}
-                                                                className="w-full h-auto"
+                                                        <Link href={newsData.feed[0].url} target="_blank">
+                                                            <Image
+                                                                src={newsData.feed[0]?.banner_image}
+                                                                alt={newsData.feed[0]?.source + ' image'}
+                                                                width={460} // Rendered width
+                                                                height={320} // Rendered height
+                                                                quality={85} // Adjust quality if needed
+                                                                priority // Optional for critical images
                                                                 unoptimized
                                                             />
-                                                        </Link> */}
+                                                        </Link>
                                                     </div>
                                                 )}
                                                 <div className="sports-post-content">
@@ -125,17 +132,17 @@ export default function NewsPage() {
                                                     <div key={index} className="horizontal-post-four horizontal-post-five">
                                                         <div className="horizontal-post-thumb-four">
                                                             {newsData.banner_image !== '' && (
-                                                                <div className="top-news-post-thumb">
-                                                                    {/* <Link href={newsData.url} target="_blank">
-                                                                        <Image
-                                                                            src={newsData.banner_image}
-                                                                            className="!w-[100px] !h-[104px]"
-                                                                            alt={newsData.source + ' image'}
-                                                                            style={{ width: '100px', height: '104px' }}
-                                                                            layout="intrinsic"
-                                                                        />
-                                                                    </Link> */}
-                                                                </div>
+                                                                <Link href={newsData.url} target="_blank">
+                                                                    <Image
+                                                                        src={newsData.banner_image}
+                                                                        alt={newsData.source + ' image'}
+                                                                        width={100} // Rendered width
+                                                                        height={100} // Rendered height
+                                                                        quality={85} // Adjust quality if needed
+                                                                        priority // Optional for critical images
+                                                                        unoptimized
+                                                                    />
+                                                                </Link>
                                                             )}
                                                         </div>
                                                         <div className="horizontal-post-content-four">

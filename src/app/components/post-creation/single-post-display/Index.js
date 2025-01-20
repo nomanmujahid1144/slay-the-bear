@@ -17,7 +17,10 @@ export const SinglePostDisplay = ({ postTag, postHeading, postURL, postSource, p
                             <Image
                                 src={postImage}
                                 alt={postSource + ' image'}
-                                className="w-full h-auto"
+                                width={440}
+                                height={300}
+                                quality={85} // Adjust quality if needed
+                                priority // Optional for critical images
                                 unoptimized
                             />
                         </Link>
