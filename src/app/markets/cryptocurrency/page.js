@@ -28,7 +28,7 @@ export default function Cryptocurrency() {
         const cleanupCryptocurrency = initializeWidget('tradingview-widget-cryptocurrency', {
             "width": "100%",
             "height": "100%",
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
             "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "symbolsGroups": [
                 {
@@ -66,7 +66,7 @@ export default function Cryptocurrency() {
         const cleanupCryptocurrencyPairs = initializeWidget('tradingview-widget-cryptocurrency-pairs', {
             "width": "100%",
             "height": "100%",
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
             "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "symbolsGroups": [
                 {
@@ -133,7 +133,7 @@ export default function Cryptocurrency() {
             "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
             "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
             "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
-            "largeChartUrl": `${process.env.baseURL}/symbols`
+            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`
         }, srcFile.getNews);
 
         const cleanupMarketStocksOverview = initializeWidget('tradingview-widget-market-stocks-overview', {
@@ -142,7 +142,7 @@ export default function Cryptocurrency() {
             "locale": "en",
             "width": "100%",
             "height": "100%",
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
             "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "isTransparent": true,
             "showSymbolLogo": false,

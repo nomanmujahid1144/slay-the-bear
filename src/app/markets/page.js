@@ -29,7 +29,7 @@ export default function Markets() {
         const cleanupStocks = initializeWidget('tradingview-widget-stocks', {
             width: '100%',
             height: '100%',
-            largeChartUrl: `${process.env.baseURL}/symbols`,
+            largeChartUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
             colorTheme: isDarkMode ? 'dark' : 'light',
             symbolsGroups: [
                 {
@@ -57,7 +57,7 @@ export default function Markets() {
         const cleanupCrypto = initializeWidget('tradingview-widget-cryptocurrency', {
             width: '100%',
             height: '100%',
-            largeChartUrl: `${process.env.baseURL}/symbols`,
+            largeChartUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
             colorTheme: isDarkMode ? 'dark' : 'light',
             symbolsGroups: [
                 {
@@ -84,7 +84,7 @@ export default function Markets() {
         const cleanupForex = initializeWidget('tradingview-widget-forex', {
             width: '100%',
             height: '100%',
-            largeChartUrl: `${process.env.baseURL}/symbols`,
+            largeChartUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
             colorTheme: isDarkMode ? 'dark' : 'light',
             symbolsGroups: [
                 {
@@ -112,7 +112,7 @@ export default function Markets() {
         const cleanupEtfs = initializeWidget('tradingview-widget-etfs', {
             width: '100%',
             height: '100%',
-            largeChartUrl: `${process.env.baseURL}/symbols`,
+            largeChartUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
             colorTheme: isDarkMode ? 'dark' : 'light',
             symbolsGroups: [
                 {
@@ -140,7 +140,7 @@ export default function Markets() {
         const cleanupMutualFunds = initializeWidget('tradingview-widget-mutual-funds', {
             width: '100%',
             height: '100%',
-            largeChartUrl: `${process.env.baseURL}/symbols`,
+            largeChartUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
             colorTheme: isDarkMode ? 'dark' : 'light',
             symbolsGroups: [
                 {

@@ -61,7 +61,7 @@ export default function PortfolioOptimizerCalculator() {
             "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
             "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
             "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
             "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
         }, srcFile.getNews);
 
@@ -121,7 +121,7 @@ export default function PortfolioOptimizerCalculator() {
                     ]
                 }
             ],
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
             "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
         }, srcFile.getMarketOverview);
 

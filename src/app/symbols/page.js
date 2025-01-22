@@ -33,7 +33,7 @@ function SymbolComponent() {
 
         // Initialize widgets
         const symbolDetails = initializeWidget('tradingSymbol-widget-container', {
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
             "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "symbol": symbol,
             "width": '100%',

@@ -25,7 +25,7 @@ export const FinentialNewsMarquee = () => {
 
         // Initialize widgets
         const tickerTape = initializeWidget('tradingview-widget-container', {
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
             "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "symbols": [
                 {

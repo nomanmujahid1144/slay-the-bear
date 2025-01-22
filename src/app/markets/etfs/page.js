@@ -33,7 +33,7 @@ export default function ETFs() {
             "blockColor": "change",
             "grouping": "asset_class",
             "locale": "en",
-            "symbolUrl": `${process.env.baseURL}/symbols`,
+            "symbolUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
             "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
             "hasTopBar": true,
             "isDataSetEnabled": true,
@@ -73,7 +73,7 @@ export default function ETFs() {
             "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
             "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
             "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
-            "largeChartUrl": `${process.env.baseURL}/symbols`
+            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`
         }, srcFile.getNews);
 
         const cleanupMarketStocksOverview = initializeWidget('tradingview-widget-market-stocks-overview', {
@@ -83,7 +83,7 @@ export default function ETFs() {
             "locale": "en",
             "width": "100%",
             "height": "100%",
-            "largeChartUrl": `${process.env.baseURL}/symbols`,
+            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
             "isTransparent": true,
             "showSymbolLogo": false,
             "showFloatingTooltip": true,
@@ -132,7 +132,7 @@ export default function ETFs() {
                     ]
                 }
             ],
-            "largeChartUrl": `${process.env.baseURL}/symbols`
+            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`
         }, srcFile.getMarketOverview);
 
         // Cleanup function to remove all widgets before re-rendering
