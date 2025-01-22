@@ -220,7 +220,7 @@ export const Market = () => {
                             <Heading
                                 textHeading={'ETFs'}
                                 showBtn={true}
-                                goTo={'/markets/etf'}
+                                goTo={'/markets/etfs'}
                             />
                             <div className="sidebar-wrap">
                                 <div className="!h-[26rem]" id="tradingview-widget-etfs">
