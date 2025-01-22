@@ -36,15 +36,6 @@ function LoginComponent() {
             if (response.status === 200) { // Use response.status for axios instead of response.ok
                 setLoading(false);
                 router.push('/auth/callback');
-                // toast.success('Login successfully');
-                
-                // if(redirect_url){
-                //     setTimeout(() => {
-                //         router.push(redirect_url + `?prefilled_email=${response.data?.data?.email}` );
-                //     }, 1000);
-                // }else{
-                //     router.push('/');
-                // }
             } else {
                 setLoading(false);
                 toast.error(response.data.message)
