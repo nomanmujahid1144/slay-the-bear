@@ -136,7 +136,7 @@ export const Footer = () => {
                             </div>
                             <div class="col-md-6">
                                 <div class="copyright-text">
-                                    <p>© 2024 All Rights Reserved</p>
+                                    <p>© {new Date().getFullYear()} All Rights Reserved</p>
                                 </div>
                             </div>
                         </div>

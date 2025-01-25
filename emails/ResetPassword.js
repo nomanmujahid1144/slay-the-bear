@@ -25,7 +25,7 @@ export const ResetPassword = ({ username, hashedToken }) => {
       <Body style={main}>
         <Container style={container}>
           <Img
-            src={`${baseUrl}/static/dropbox-logo.png`}
+            src={`${process.env.DOMAIN}/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.72b4bc1d.png&w=256&q=75`}
             width="40"
             height="33"
             alt="slaythebear"

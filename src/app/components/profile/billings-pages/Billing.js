@@ -9,9 +9,10 @@ export const Billing = () => {
                 <div className="flex justify-between">
                     <h1 className="py-2 text-2xl font-semibold">Billings</h1>
                     <div className="w-auto">
+                        {console.log(process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL, 'process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL_DEV')}
                         <Goto
                             buttonText={'Billing Dashboard'}
-                            goTo={process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL_DEV}
+                            goTo={process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL}
                         />
                     </div>
                 </div>
