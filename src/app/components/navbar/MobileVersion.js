@@ -9,63 +9,92 @@ import whiteLogo from '../../../../public/assets/img/logo/w_logo.png';
 
 const menuItems = [
   {
-    navbarName: 'Home',
-    subMenu: [],
-    navLink: '/'
+      navbarName: 'Home',
+      subMenu: [],
+      navLink: '/'
   },
   {
-    navbarName: 'Markets',
-    subMenu: [
-      {
-        navbarName: 'Stocks',
-        subMenu: [],
-        navLink: '/market/stocks'
-      },
-      {
-        navbarName: 'Cryptocurrency',
-        subMenu: [],
-        navLink: '/market/cryptocurrency'
-      },
-      {
-        navbarName: 'Forex',
-        subMenu: [],
-        navLink: '/market/forex'
-      },
-      {
-        navbarName: 'ETFs',
-        subMenu: [],
-        navLink: '/market/etf'
-      },
-      {
-        navbarName: 'Mutual Funds',
-        subMenu: [],
-        navLink: '/market/mutual-funds'
-      },
-    ],
-    navLink: '/home'
+      navbarName: 'Markets',
+      subMenu: [
+          {
+              navbarName: 'Stocks',
+              subMenu: [],
+              navLink: '/markets/stocks'
+          },
+          {
+              navbarName: 'Cryptocurrency',
+              subMenu: [],
+              navLink: '/markets/cryptocurrency'
+          },
+          {
+              navbarName: 'Forex',
+              subMenu: [],
+              navLink: '/markets/forex'
+          },
+          {
+              navbarName: 'ETFs',
+              subMenu: [],
+              navLink: '/markets/etfs'
+          },
+          {
+              navbarName: 'Mutual Funds',
+              subMenu: [],
+              navLink: '/markets/mutual-funds'
+          },
+      ],
+      navLink: '/markets'
   },
   {
-    navbarName: 'Tool Section',
-    subMenu: [],
-    navLink: '/tool-section'
+      navbarName: 'Tool Section',
+      subMenu: [
+          {
+              navbarName: 'Free Tools',
+              subMenu: [
+                  {
+                      navbarName: 'Loan Amortization Calculator',
+                      navLink: '/tools/loan-amortization'
+                  },
+                  {
+                      navbarName: 'Mortgage Calculator',
+                      navLink: '/tools/mortgage-calculator'
+                  },
+                  {
+                      navbarName: 'Retirement Calculator',
+                      navLink: '/tools/retirement-calculator'
+                  },
+                  {
+                      navbarName: 'Investment Return Calculator',
+                      navLink: '/tools/investment-return-calculator'
+                  },
+                  {
+                      navbarName: 'Compound Interest Calculator',
+                      navLink: '/tools/compound-interest-calculator'
+                  },
+                  {
+                      navbarName: 'More In Calculators',
+                      navLink: '/tools'
+                  },
+              ],
+              navLink: '/tools'
+          },
+          {
+              navbarName: 'Premium Tools',
+              navLink: '/premium-tools'
+          },
+      ],
+      navLink: '/tools'
   },
   {
-    navbarName: 'News Page',
-    subMenu: [],
-    navLink: '/news-page'
+      navbarName: 'News Page',
+      subMenu: [],
+      navLink: '/news'
   },
   {
-    navbarName: 'Paid Tools',
-    subMenu: [],
-    navLink: '/paid-tools'
-  },
-  {
-    navbarName: 'Ads Free Version',
-    subMenu: [],
-    navLink: '/ads-free'
-  },
+      navbarName: 'Subscriptions',
+      subMenu: [],
+      navLink: '/pricing'
+  }
 ];
-
 export const MobileVersion = ({ isMobileVersion, handleMobileVersion }) => {
 
   const [dropdowns, setDropdowns] = useState({});
