@@ -128,13 +128,13 @@ export default function Pricing() {
                                                     {priceItem.discount.length > 0 && (
                                                         <>
                                                             <h3 className="title-two font-semibold !text-base line-through">
-                                                                {priceItem.discountedPrice}
+                                                                ${parseFloat(priceItem.discountedPrice).toFixed(2)}
                                                                 <span className="text-slate-500 lowercase text-base !font-thin">/mo</span>
                                                             </h3>
                                                         </>
                                                     )}
                                                     <h3 className="title-two font-bold text-4xl">
-                                                        {priceItem.price}
+                                                        ${priceItem.price.toFixed(2)}
                                                         <span className="text-slate-500 lowercase text-base !font-thin">/mo</span>
                                                     </h3>
                                                 </div>

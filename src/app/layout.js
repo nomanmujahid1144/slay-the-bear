@@ -44,6 +44,9 @@ function DarkModeLayout({ children }) {
 
   return (
     <html lang="en" tg-theme={isDarkMode ? 'dark' : 'light'}>
+      <head>
+        <meta name="google-adsense-account" content="ca-pub-1022088719923118" />
+      </head>
       <body className={inter.className}>
         <DarkMode />
         <ScrollToTop />
