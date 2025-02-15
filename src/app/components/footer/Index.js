@@ -7,7 +7,7 @@ const companyPages = [
     { name: 'About Us', link: '#' },
     { name: 'News Page', link: '/news' },
     { name: 'Tool Section', link: '/tools' },
-    { name: 'Paid Tool', link: '/paid-tools' },
+    { name: 'Premium Tools', link: '/premium-tools' },
     { name: 'Ads Free Version', link: '/pricing' },
     { name: 'Support', link: '/support' },
 ];
