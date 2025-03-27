@@ -23,6 +23,7 @@ import "./components/fontawesomeIcons";
 import { DarkModeProvider, useDarkMode } from "./components/dark-mode/DarkModeContext";
 import { Toaster } from "react-hot-toast";
 import { usePathname } from "next/navigation";
+import AdSense from "./components/ads/AdSense";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,7 +46,8 @@ function DarkModeLayout({ children }) {
   return (
     <html lang="en" tg-theme={isDarkMode ? 'dark' : 'light'}>
       <head>
-        <meta name="google-adsense-account" content="ca-pub-1022088719923118" />
+        {/* <meta name="google-adsense-account" content="ca-pub-1022088719923118" /> */}
+        <AdSense pId={`ca-pub-8108715818808220`}/>
       </head>
       <body className={inter.className}>
         <DarkMode />
