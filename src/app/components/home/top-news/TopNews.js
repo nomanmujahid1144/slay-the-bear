@@ -61,20 +61,20 @@ export const TopNews = () => {
         };
     }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
 
-    // useEffect(() => {
-    //     const url = `${srcFileAlphaVantage.latestNews}${process.env.alphaVantageStockApi}`;
+    useEffect(() => {
+        const url = `${srcFileAlphaVantage.latestNews}${process.env.alphaVantageStockApi}`;
 
-    //     // Fetch data using axios
-    //     axios
-    //         .get(url)
-    //         .then((response) => {
-    //             setNewsData(response.data);
-    //         })
-    //         .catch((err) => {
-    //             setNewsData([])
-    //             console.error('Error:', err);
-    //         });
-    // }, []);
+        // Fetch data using axios
+        axios
+            .get(url)
+            .then((response) => {
+                setNewsData(response.data);
+            })
+            .catch((err) => {
+                setNewsData([])
+                console.error('Error:', err);
+            });
+    }, []);
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
@@ -89,7 +89,7 @@ export const TopNews = () => {
                             </div>
                         </div>
                         <div className="row">
-                            {/* {newsData.feed?.length > 0 && (
+                            {newsData.feed?.length > 0 && (
                                 <>
                                     <div className="col-12">
                                         <div className="top-news-post">
@@ -169,13 +169,13 @@ export const TopNews = () => {
                                         </div>
                                     ))}
                                 </>
-                            )} */}
+                            )}
                         </div>
-                        {/* <Banner /> */}
+                        <Banner />
                         <Market
                             market="Markets"
                         />
-                        {/* <Banner /> */}
+                        <Banner />
                     </div>
                     <div className="col-xl-3 col-lg-12">
                         <div className="sidebar-wrap-three">
@@ -186,14 +186,14 @@ export const TopNews = () => {
                             </div>
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
-                                    {/* <a href="#">
+                                    <a href="#">
                                         <Image
                                             src={slideBarImage}
                                             alt="no image found"
                                             className="w-full h-auto"
                                             unoptimized
                                         />
-                                    </a> */}
+                                    </a>
                                 </div>
                             </div>
                         </div>
