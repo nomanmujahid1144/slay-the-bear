@@ -134,7 +134,7 @@ export const TopNews = () => {
                                         <div className="col-lg-4" key={index}>
                                             <div className="horizontal-post-four">
                                                 <div className="horizontal-post-thumb-four">
-                                                    {newsData.banner_image !== '' && (
+                                                    {/* {newsData.banner_image !== '' && (
                                                         <Link href={newsData.url} target="_blank">
                                                             <Image
                                                                 src={newsData.banner_image}
@@ -146,7 +146,7 @@ export const TopNews = () => {
                                                                 unoptimized
                                                             />
                                                         </Link>
-                                                    )}
+                                                    )} */}
                                                 </div>
                                                 <div className="horizontal-post-content-four">
                                                     <PostTag
