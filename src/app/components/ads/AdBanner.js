@@ -15,11 +15,16 @@ const AdBanner = ({ dataAdSlot, dataAdFormat, dataFullWidthResponsive }) => {
     return (
         <ins
             className="adsbygoogle w-full h-auto"
-            style={{ display: "block" }}
+            style="display:block"
             data-ad-client="ca-pub-8108715818808220"
-            data-ad-slot={dataAdSlot}
-            data-ad-format={dataAdFormat}
-            data-full-width-responsive={dataFullWidthResponsive.toString()}
+            data-ad-slot="7915411789"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+        // style={{ display: "block" }}
+        // data-ad-client="ca-pub-8108715818808220"
+        // data-ad-slot={dataAdSlot}
+        // data-ad-format={dataAdFormat}
+        // data-full-width-responsive={dataFullWidthResponsive.toString()}
         ></ins>
     );
 };
