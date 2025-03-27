@@ -16,11 +16,11 @@ const AdBanner = ({ dataAdSlot, dataAdFormat, dataFullWidthResponsive }) => {
 
     return (
         <>
-            <Head>
-                <Script>
+            <head>
+                <script>
                     (adsbygoogle = window.adsbygoogle || []).push({ });
-                </Script>
-            </Head>
+                </script>
+            </head>
             <ins
                 className="adsbygoogle w-full h-auto"
                 style={{ display: "block" }}
