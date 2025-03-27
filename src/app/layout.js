@@ -24,7 +24,6 @@ import { DarkModeProvider, useDarkMode } from "./components/dark-mode/DarkModeCo
 import { Toaster } from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import AdSense from "./components/ads/AdSense";
-import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,12 +47,11 @@ function DarkModeLayout({ children }) {
     <html lang="en" tg-theme={isDarkMode ? 'dark' : 'light'}>
       <head>
         {/* <meta name="google-adsense-account" content="ca-pub-1022088719923118" /> */}
-        {/* <AdSense pId={`ca-pub-8108715818808220`}/> */}
-        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8108715818808220"
-     crossOrigin="anonymous"></Script>
+        <AdSense
+          pId={`ca-pub-8108715818808220`}
+        />
       </head>
       <body className={inter.className}>
-        {/* <AdSense pId="ca-pub-8108715818808220" /> */}
         <DarkMode />
         <ScrollToTop />
         {!hideNavbarFooter && (
