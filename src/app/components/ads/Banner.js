@@ -11,7 +11,7 @@ export const Banner = () => {
                     <AdBanner 
                         dataAdFormat={'auto'} 
                         dataFullWidthResponsive={true}
-                        dataAdSlot={7915411789}
+                        dataAdSlot={'7915411789'}
                     />
                     {/* <Link href="#">
                         <Image
