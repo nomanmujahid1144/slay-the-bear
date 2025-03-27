@@ -61,20 +61,20 @@ export const TopNews = () => {
         };
     }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
 
-    useEffect(() => {
-        const url = `${srcFileAlphaVantage.latestNews}${process.env.alphaVantageStockApi}`;
+    // useEffect(() => {
+    //     const url = `${srcFileAlphaVantage.latestNews}${process.env.alphaVantageStockApi}`;
 
-        // Fetch data using axios
-        axios
-            .get(url)
-            .then((response) => {
-                setNewsData(response.data);
-            })
-            .catch((err) => {
-                setNewsData([])
-                console.error('Error:', err);
-            });
-    }, []);
+    //     // Fetch data using axios
+    //     axios
+    //         .get(url)
+    //         .then((response) => {
+    //             setNewsData(response.data);
+    //         })
+    //         .catch((err) => {
+    //             setNewsData([])
+    //             console.error('Error:', err);
+    //         });
+    // }, []);
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
