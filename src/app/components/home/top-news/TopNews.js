@@ -175,7 +175,7 @@ export const TopNews = () => {
                         <Market
                             market="Markets"
                         />
-                        {/* <Banner /> */}
+                        <Banner />
                     </div>
                     <div className="col-xl-3 col-lg-12">
                         <div className="sidebar-wrap-three">
