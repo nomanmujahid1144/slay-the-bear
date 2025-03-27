@@ -6,21 +6,16 @@ import React, { useEffect } from "react";
 
 const AdBanner = ({ dataAdSlot, dataAdFormat, dataFullWidthResponsive }) => {
 
-    // useEffect(() => {
-    //     try {
-    //         (window.adsbygoogle = window.adsbygoogle || []).push({});
-    //     } catch (err) {
-    //         console.error(err);
-    //     }
-    // }, []);
+    useEffect(() => {
+        try {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+        } catch (err) {
+            console.error(err);
+        }
+    }, []);
 
     return (
         <>
-            <head>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({ });
-                </script>
-            </head>
             <ins
                 className="adsbygoogle"
                 style={{ display: "block" }}
