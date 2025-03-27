@@ -22,7 +22,7 @@ const AdBanner = ({ dataAdSlot, dataAdFormat, dataFullWidthResponsive }) => {
                 </script>
             </head>
             <ins
-                className="adsbygoogle w-full h-auto"
+                className="adsbygoogle"
                 style={{ display: "block" }}
                 data-ad-client="ca-pub-8108715818808220"
                 data-ad-slot={dataAdSlot}
