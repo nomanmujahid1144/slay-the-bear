@@ -93,7 +93,7 @@ export const TopNews = () => {
                                 <>
                                     <div className="col-12">
                                         <div className="top-news-post">
-                                            {newsData.feed[0].banner_image !== '' && (
+                                            {/* {newsData.feed[0].banner_image !== '' && (
                                                 <div className="top-news-post-thumb">
                                                     <Link href={newsData.feed[0].url} target="_blank">
                                                         <Image
@@ -107,7 +107,7 @@ export const TopNews = () => {
                                                         />
                                                     </Link>
                                                 </div>
-                                            )}
+                                            )} */}
                                             <div className="top-news-post-content">
                                                 <PostTitle
                                                     extras={'bold-underline'}
@@ -171,11 +171,11 @@ export const TopNews = () => {
                                 </>
                             )}
                         </div>
-                        <Banner />
+                        {/* <Banner /> */}
                         <Market
                             market="Markets"
                         />
-                        <Banner />
+                        {/* <Banner /> */}
                     </div>
                     <div className="col-xl-3 col-lg-12">
                         <div className="sidebar-wrap-three">
