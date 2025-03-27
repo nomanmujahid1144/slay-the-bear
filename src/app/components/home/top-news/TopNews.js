@@ -84,7 +84,7 @@ export const TopNews = () => {
                         <div className="row">
                             <div className="col-lg-12">
                                 <Heading
-                                    textHeading={'World Top News - Slaythebear'}
+                                    textHeading={'World Top News'}
                                 />
                             </div>
                         </div>
