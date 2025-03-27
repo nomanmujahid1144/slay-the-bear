@@ -171,7 +171,7 @@ export const TopNews = () => {
                                 </>
                             )}
                         </div>
-                        {/* <Banner /> */}
+                        <Banner />
                         <Market
                             market="Markets"
                         />

@@ -1,6 +1,6 @@
-import Image from "next/image"
-import Link from "next/link"
-import advImage from '../../../../public/assets/img/images/advertisement11.jpg';
+// import Image from "next/image"
+// import Link from "next/link"
+// import advImage from '../../../../public/assets/img/images/advertisement11.jpg';
 import AdBanner from "./AdBanner";
 
 export const Banner = () => {
