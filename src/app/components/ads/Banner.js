@@ -8,11 +8,11 @@ export const Banner = () => {
         <div className="ad-banner-area pt-70 pb-70">
             <div className="container">
                 <div className="ad-banner-img bg-black">
-                    <AdBanner 
+                    {/* <AdBanner 
                         dataAdFormat={'auto'} 
                         dataFullWidthResponsive={true}
                         dataAdSlot={7915411789}
-                    />
+                    /> */}
                     {/* <Link href="#">
                         <Image
                             src={advImage}
