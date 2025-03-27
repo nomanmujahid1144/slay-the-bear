@@ -3,11 +3,18 @@ import React from 'react';
 
 const AdSense = ({ pId }) => {
     return (
-        <Script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8108715818808220"
-            crossOrigin="anonymous">
-        </Script>
+        <>
+            <Script
+                src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${pId}`}
+                crossOrigin='anonymous'
+                strategy='afterInteractive'
+            />
+            {/* <Script
+                async
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8108715818808220"
+                crossOrigin="anonymous">
+            </Script> */}
+        </>
     )
 }
 
