@@ -46,10 +46,10 @@ function DarkModeLayout({ children }) {
   return (
     <html lang="en" tg-theme={isDarkMode ? 'dark' : 'light'}>
       <head>
-        <meta name="google-adsense-account" content="ca-pub-8108715818808220" />
-        {/* <AdSense
+        {/* <meta name="google-adsense-account" content="ca-pub-1022088719923118" /> */}
+        <AdSense
           pId={`ca-pub-8108715818808220`}
-        /> */}
+        />
       </head>
       <body className={inter.className}>
         <DarkMode />
