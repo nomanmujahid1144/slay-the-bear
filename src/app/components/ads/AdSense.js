@@ -5,17 +5,16 @@ const AdSense = ({ pId }) => {
     return (
         <>
             <Script
+                id="adsbygoogle-init"
+                strategy="afterInteractive"
                 src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${pId}`}
-                crossOrigin='anonymous'
-                strategy='afterInteractive'
+                crossOrigin="anonymous"
+                onError={(e) => {
+                    console.error('AdSense script failed to load', e);
+                }}
             />
-            {/* <Script
-                async
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8108715818808220"
-                crossOrigin="anonymous">
-            </Script> */}
         </>
-    )
-}
+    );
+};
 
 export default AdSense;
