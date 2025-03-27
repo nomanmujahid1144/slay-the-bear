@@ -7,6 +7,7 @@ export const Banner = () => {
     return (
         <div className="ad-banner-area pt-70 pb-70">
             <div className="container">
+                <div>Slaythebear</div>
                 <div className="ad-banner-img bg-black">
                     <AdBanner 
                         dataAdFormat={'auto'} 
