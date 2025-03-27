@@ -9,7 +9,7 @@ export const Banner = () => {
             <div className="container">
                 <div className="ad-banner-img bg-black">
                     <AdBanner 
-                        dataAdFormat={'auto'}
+                        dataAdFormat={'auto'} 
                         dataFullWidthResponsive={true}
                         dataAdSlot={7915411789}
                     />
