@@ -7,6 +7,7 @@ import { addTradingViewWidget } from "@/app/utils/utils";
 import { useEffect } from "react";
 import Image from "next/image";
 import slideBarImage from '../../../../public/assets/img/images/sidebar_img06.jpg';
+import { Banner } from "@/app/components/ads/Banner";
 
 export default function Cryptocurrency() {
 
@@ -219,6 +220,11 @@ export default function Cryptocurrency() {
                             <div className="!h-[49rem]" id="tradingview-widget-cryptocurrency">
                                 <div className="tradingview-widget-cryptocurrency"></div>
                             </div>
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
+                            </div>
                             <hr className="my-3" />
                             <Heading
                                 textHeading="More Active Cryptocurrency Pairs"
@@ -226,6 +232,11 @@ export default function Cryptocurrency() {
                             />
                             <div className="!h-[51rem]" id="tradingview-widget-cryptocurrency-pairs">
                                 <div className="tradingview-widget-cryptocurrency-pairs"></div>
+                            </div>
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
                             </div>
                             <hr className="my-3" />
                             <Heading
@@ -235,6 +246,11 @@ export default function Cryptocurrency() {
                             <div className="!h-[51rem]" id="tradingview-widget-crypto-news">
                                 <div className="tradingview-widget-crypto-news"></div>
                             </div>
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
+                            </div>
                         </div>
                         {/*                         
                         <div className="sidebar-wrap">
@@ -242,27 +258,29 @@ export default function Cryptocurrency() {
                     </div>
                     <div className="col-xl-3 col-lg-8">
                         <div className="sidebar-wrap-three">
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
+                            </div>
                             <div className="!h-[36rem]" id="tradingview-widget-market-stocks-overview">
                                 <div className="tradingview-widget-market-stocks-overview"></div>
                             </div>
                             <hr className="my-3" />
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
-                                    <a href="#">
-                                        <Image
-                                            src={slideBarImage}
-                                            alt="no image found"
-                                            className="w-full h-auto"
-                                            unoptimized
-                                        />
-                                    </a>
+                                    <Banner />
                                 </div>
                             </div>
                             <hr className="my-3" />
                             <div className="!h-[34rem]" id="tradingview-widget-market-stocks-news">
                                 <div className="tradingview-widget-market-stocks-news"></div>
                             </div>
-
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

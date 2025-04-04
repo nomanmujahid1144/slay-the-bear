@@ -7,6 +7,7 @@ import { addTradingViewWidget } from "@/app/utils/utils";
 import { useEffect } from "react";
 import Image from "next/image";
 import slideBarImage from '../../../../public/assets/img/images/sidebar_img06.jpg';
+import { Banner } from "@/app/components/ads/Banner";
 
 export default function Forex() {
 
@@ -181,6 +182,11 @@ export default function Forex() {
                             <div className="!h-[49rem]" id="tradingview-widget-forex-cross-rates">
                                 <div className="tradingview-widget-forex-cross-rates"></div>
                             </div>
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
+                            </div>
                             <hr className="my-3" />
                             <Heading
                                 textHeading="Forex Heatmap"
@@ -189,6 +195,11 @@ export default function Forex() {
                             <div className="!h-[49rem]" id="tradingview-widget-forex-heatmaps">
                                 <div className="tradingview-widget-forex-heatmaps"></div>
                             </div>
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
+                            </div>
                             <hr className="my-3" />
                             <Heading
                                 textHeading="Forex Screener"
@@ -196,6 +207,11 @@ export default function Forex() {
                             />
                             <div className="!h-[49rem]" id="tradingview-widget-forex-Screener">
                                 <div className="tradingview-widget-forex-Screener"></div>
+                            </div>
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
                             </div>
                             <hr className="my-3" />
                             <Heading
@@ -212,20 +228,23 @@ export default function Forex() {
                     </div>
                     <div className="col-xl-3 col-lg-8">
                         <div className="sidebar-wrap-three">
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
+                            </div>
                             <div className="!h-[36rem]" id="tradingview-widget-market-stocks-overview">
                                 <div className="tradingview-widget-market-stocks-overview"></div>
+                            </div>
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
                             </div>
                             <hr className="my-3" />
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
-                                    <a href="#">
-                                        <Image
-                                            src={slideBarImage}
-                                            alt="no image found"
-                                            className="w-full h-auto"
-                                            unoptimized
-                                        />
-                                    </a>
+                                    <Banner />
                                 </div>
                             </div>
                             <hr className="my-3" />

@@ -5,6 +5,7 @@ import { useDarkMode } from "../components/dark-mode/DarkModeContext";
 import { Heading } from "../components/heading/Heading";
 import { addTradingViewWidget } from "../utils/utils";
 import { srcFile } from "../utils/tradingViewSrcFiles";
+import { Banner } from "../components/ads/Banner";
 
 export default function Markets() {
 
@@ -216,6 +217,12 @@ export default function Markets() {
                                     </div>
                                 </div>
                             </div>
+
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
+                            </div>
                             <div className="col-lg-12 my-3">
                                 <Heading
                                     textHeading={'Forex'}
@@ -240,6 +247,12 @@ export default function Markets() {
                                     </div>
                                 </div>
                             </div>
+
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
+                            </div>
                             <div className="col-lg-12 my-3">
                                 <Heading
                                     textHeading={'Mutual Funds'}
@@ -256,9 +269,22 @@ export default function Markets() {
                     </div>
                     <div className="col-xl-3 col-lg-8">
                         <div className="sidebar-wrap-three">
+
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
+                            </div>
                             <div className="sidebar-widget-three">
                                 <div className="!h-[64rem]" id="topnews-widget-container">
                                     <div className="tradingview-widget-container__widget"></div>
+                                </div>
+                            </div>
+
+
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
                                 </div>
                             </div>
                         </div>

@@ -7,6 +7,7 @@ import { addTradingViewWidget } from "@/app/utils/utils";
 import { useEffect } from "react";
 import Image from "next/image";
 import slideBarImage from '../../../../public/assets/img/images/sidebar_img06.jpg';
+import { Banner } from "@/app/components/ads/Banner";
 
 export default function Stocks() {
 
@@ -193,6 +194,11 @@ export default function Stocks() {
                             <div className="!h-[71rem]" id="tradingview-widget-markets-stocks">
                                 <div className="tradingview-widget-markets-stocks"></div>
                             </div>
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
+                            </div>
                             <Heading
                                 textHeading="News"
                                 showBtn={false}
@@ -204,27 +210,29 @@ export default function Stocks() {
                     </div>
                     <div className="col-xl-3 col-lg-8">
                         <div className="sidebar-wrap-three">
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
+                            </div>
                             <div className="!h-[36rem]" id="tradingview-widget-market-stocks-overview">
                                 <div className="tradingview-widget-market-stocks-overview"></div>
                             </div>
-                            <hr className="my-3" />
+                            <hr className="my-1" />
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
-                                    <a href="#">
-                                        <Image
-                                            src={slideBarImage}
-                                            alt="no image found"
-                                            className="w-full h-auto"
-                                            unoptimized
-                                        />
-                                    </a>
+                                    <Banner />
                                 </div>
                             </div>
-                            <hr className="my-3" />
+                            <hr className="my-1" />
                             <div className="!h-[34rem]" id="tradingview-widget-market-stocks-news">
                                 <div className="tradingview-widget-market-stocks-news"></div>
                             </div>
-
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

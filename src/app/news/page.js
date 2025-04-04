@@ -175,20 +175,20 @@ export default function NewsPage() {
                     </div>
                     <div className="col-xl-3 col-lg-8">
                         <div className="sidebar-wrap-three">
+                            <div className="sidebar-widget sidebar-widget-two">
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
+                            </div>
                             <div className="sidebar-widget-three">
                                 <div className="!h-[64rem]" id="topnews-widget-container">
                                     <div className="tradingview-widget-container__widget"></div>
                                 </div>
                             </div>
+
                             <div className="sidebar-widget sidebar-widget-two">
                                 <div className="sidebar-img">
-                                    <a href="#">
-                                        {/* <Image src={slideBarImage} alt="no image"
-                                            style={{ width: 'auto', height: 'auto' }}
-                                            className=" w-auto h-auto"
-                                            layout="intrinsic"
-                                        /> */}
-                                    </a>
+                                    <Banner />
                                 </div>
                             </div>
                         </div>
