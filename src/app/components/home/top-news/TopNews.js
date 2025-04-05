@@ -61,11 +61,11 @@ export const TopNews = () => {
         };
     }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
 
-    useEffect(() => {
+    useEffect(async () => {
         const url = `${srcFileAlphaVantage.latestNews}${process.env.alphaVantageStockApi}`;
 
         // Fetch data using axios
-        axios
+        await axios
             .get(url)
             .then((response) => {
                 setNewsData(response.data);
@@ -89,11 +89,12 @@ export const TopNews = () => {
                             </div>
                         </div>
                         <div className="row">
+                            {console.log(newsData, 'newsData')}
                             {newsData.feed?.length > 0 && (
                                 <>
                                     <div className="col-12">
                                         <div className="top-news-post">
-                                            {newsData.feed[0].banner_image !== '' && (
+                                            {newsData.feed[0].banner_image && (
                                                 <div className="top-news-post-thumb">
                                                     <Link href={newsData.feed[0].url} target="_blank">
                                                         <Image
@@ -134,18 +135,20 @@ export const TopNews = () => {
                                         <div className="col-lg-4" key={index}>
                                             <div className="horizontal-post-four">
                                                 <div className="horizontal-post-thumb-four">
-                                                    {newsData.banner_image !== '' && (
-                                                        <Link href={newsData.url} target="_blank">
-                                                            <Image
-                                                                src={newsData.banner_image}
-                                                                alt={newsData.source + ' image'}
-                                                                width={100} // Rendered width
-                                                                height={100} // Rendered height
-                                                                qualityy={100} // Adjust quality if needed
-                                                                priority // Optional for critical images
-                                                                unoptimized
-                                                            />
-                                                        </Link>
+                                                    {newsData.banner_image && (
+                                                        <>
+                                                            <Link href={newsData.url} target="_blank">
+                                                                <Image
+                                                                    src={newsData.banner_image}
+                                                                    alt={newsData.source + ' image'}
+                                                                    width={100} // Rendered width
+                                                                    height={100} // Rendered height
+                                                                    qualityy={100} // Adjust quality if needed
+                                                                    priority // Optional for critical images
+                                                                    unoptimized
+                                                                />
+                                                            </Link>
+                                                        </>
                                                     )}
                                                 </div>
                                                 <div className="horizontal-post-content-four">

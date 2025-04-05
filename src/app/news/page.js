@@ -23,11 +23,11 @@ export default function NewsPage() {
     const { isDarkMode } = useDarkMode();
     const [newsData, setNewsData] = useState([]);
 
-    useEffect(() => {
+    useEffect(async () => {
         const url = `${srcFileAlphaVantage.latestNews}${process.env.alphaVantageStockApi}`;
 
         // Fetch data using axios
-        axios
+        await axios
             .get(url)
             .then((response) => {
                 setNewsData(response.data);
@@ -89,7 +89,7 @@ export default function NewsPage() {
                                     <>
                                         <div className="col-lg-8">
                                             <div className="sports-post">
-                                                {newsData.feed[0].banner_image !== '' && (
+                                                {newsData.feed[0].banner_image && (
                                                     <div className="sports-post-thumb">
                                                         <Link href={newsData.feed[0].url} target="_blank">
                                                             <Image
@@ -131,7 +131,7 @@ export default function NewsPage() {
                                                 {newsData?.feed?.slice(1, 4).map((newsData, index) => (
                                                     <div key={index} className="horizontal-post-four horizontal-post-five">
                                                         <div className="horizontal-post-thumb-four">
-                                                            {newsData.banner_image !== '' && (
+                                                            {newsData.banner_image  && (
                                                                 <Link href={newsData.url} target="_blank">
                                                                     <Image
                                                                         src={newsData.banner_image}
