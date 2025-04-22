@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken';
 import { logInSchema } from "@/schemas/logInSchema";
+import serverPosthog from "@/lib/posthog-server";
 
 connect();
 
@@ -40,6 +41,20 @@ export async function POST(request) {
       }
 
       if (!user.isVerified) {
+        try {
+          serverPosthog.capture({
+            distinctId: email,
+            event: 'login_failed',
+            properties: {
+              reason: 'not_verified',
+              userId: user._id.toString(),
+              email: email
+            }
+          });
+        } catch (trackingError) {
+          console.error("Error tracking failed login:", trackingError);
+        }
+
         return NextResponse.json({
           message: "Please verify first, or signup again"
         }, { status: 400 })
@@ -62,6 +77,19 @@ export async function POST(request) {
         plan: user.plan,
         _id: user._id,
       }
+
+      serverPosthog.capture({
+        distinctId: returnUser.email,
+        event: 'user_login',
+        properties: {
+          userId: returnUser._id.toString(),
+          email: returnUser.email,
+          firstName: returnUser.firstName,
+          lastName: returnUser.lastName,
+          plan: returnUser.plan,
+          loginTime: new Date().toISOString()
+        }
+      });
 
       const response = NextResponse.json({
         message: "Logged In Success",

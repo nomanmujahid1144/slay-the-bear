@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from 'bcryptjs'
 import { sendEmail } from "@/helpers/mailer";
 import { signUpSchema } from "@/schemas/signUpSchema";
+import serverPosthog from "@/lib/posthog-server";
 
 connect();
 
@@ -39,7 +40,21 @@ export async function POST(request) {
 
                 const savedUser = await user.save();
 
-                await sendEmail({ email, emailType: "VERIFY", userId: savedUser._id, username: savedUser.firstName  });
+                // PostHog tracking for existing user updating credentials
+                serverPosthog.capture({
+                    distinctId: email,
+                    event: 'user_signup_retry',
+                    properties: {
+                        userId: savedUser._id.toString(),
+                        email: email,
+                        firstName: firstName,
+                        lastName: lastName
+                    }
+                });
+
+                
+
+                await sendEmail({ email, emailType: "VERIFY", userId: savedUser._id, username: savedUser.firstName });
 
                 return NextResponse.json({
                     message: 'User registered successfully, verfication code is send to your email',
@@ -59,6 +74,18 @@ export async function POST(request) {
             })
 
             const savedUser = await newUser.save();
+
+            // PostHog tracking for new user signup
+            serverPosthog.capture({
+                distinctId: email,
+                event: 'user_signup',
+                properties: {
+                    userId: savedUser._id.toString(),
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName
+                }
+            });
 
             // Send Verification Email
             await sendEmail({ email, emailType: "VERIFY", userId: savedUser._id, username: savedUser.firstName });

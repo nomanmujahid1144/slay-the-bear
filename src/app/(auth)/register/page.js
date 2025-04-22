@@ -71,6 +71,7 @@ export default function Register() {
             }
         } catch (error) {
             setLoading(false);
+            console.log(error, 'error')
             toast.error(error.response.data.message)
         }
     };
