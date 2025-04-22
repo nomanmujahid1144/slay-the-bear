@@ -24,6 +24,7 @@ import { DarkModeProvider, useDarkMode } from "./components/dark-mode/DarkModeCo
 import { Toaster } from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import AdSense from "./components/ads/AdSense";
+import { PostHogProvider } from "@/providers/ph-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -55,18 +56,20 @@ function DarkModeLayout({ children }) {
       <body className={inter.className}>
         <DarkMode />
         <ScrollToTop />
-        {!hideNavbarFooter && (
-          <header>
-            <Navbar />
-          </header>
-        )}
-        <main>{React.cloneElement(children, { isDarkMode })}</main>
-        <Toaster />
-        {!hideNavbarFooter && (
-          <footer>
-            <Footer />
-          </footer>
-        )}
+        <PostHogProvider>
+          {!hideNavbarFooter && (
+            <header>
+              <Navbar />
+            </header>
+          )}
+          <main>{React.cloneElement(children, { isDarkMode })}</main>
+          <Toaster />
+          {!hideNavbarFooter && (
+            <footer>
+              <Footer />
+            </footer>
+          )}
+        </PostHogProvider>
       </body>
     </html>
   );
