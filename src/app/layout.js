@@ -1,6 +1,7 @@
 'use client';
 
 import { Inter } from "next/font/google";
+import { useAuthStore } from '@/stores/useAuthStore';
 // CSS imports
 import "../../public/assets/css/bootstrap.min.css";
 import "../../public/assets/css/animate.min.css";
@@ -16,14 +17,13 @@ import "./globals.css";
 import { Footer } from "./components/footer/Index";
 import { Navbar } from "./components/navbar/Index";
 import { DarkMode } from "./components/dark-mode/Index";
-import React from "react";
+import React, { useEffect } from "react";
 import { ScrollToTop } from "./components/scroll-to-top";
 
 import "./components/fontawesomeIcons";
 import { DarkModeProvider, useDarkMode } from "./components/dark-mode/DarkModeContext";
 import { Toaster } from "react-hot-toast";
 import { usePathname } from "next/navigation";
-import AdSense from "./components/ads/AdSense";
 import { PostHogProvider } from "@/providers/ph-provider";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -39,6 +39,12 @@ export default function RootLayout({ children }) {
 function DarkModeLayout({ children }) {
   const { isDarkMode } = useDarkMode();
   const pathname = usePathname();
+  const initialize = useAuthStore((state) => state.initialize);
+
+  // Initialize auth on mount
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
 
   // Define the routes where Navbar and Footer should not be displayed
   const hiddenRoutes = ['/login', '/auth/callback'];
@@ -47,10 +53,6 @@ function DarkModeLayout({ children }) {
   return (
     <html lang="en" tg-theme={isDarkMode ? 'dark' : 'light'}>
       <head>
-        {/* <meta name="google-adsense-account" content="ca-pub-1022088719923118" /> */}
-        {/* <AdSense
-          pId={`ca-pub-8108715818808220`}
-        /> */}
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8108715818808220" crossOrigin="anonymous"></script>
       </head>
       <body className={inter.className}>

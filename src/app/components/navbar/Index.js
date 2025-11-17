@@ -8,9 +8,8 @@ import { MobileVersion } from "./MobileVersion";
 import { useEffect, useState } from "react";
 import { FinentialNewsMarquee } from "../finential-news-marquee/Index";
 import axios from "axios";
-import { checkIsLoggedInUser } from "@/helpers/checkLoggedInUser";
+import { useAuthStore } from '@/stores/useAuthStore';
 import defaultProfileImage from '../../../../public/assets/img/default/defaultUserMaleTmp.png';
-import axiosInstance from "@/app/utils/axiosInstance";
 import toast from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -110,10 +109,12 @@ export const Navbar = () => {
     const router = useRouter();
     const pathname = usePathname();
 
+    // USE ZUSTAND STORE INSTEAD
+    const { user, isAuthenticated, isLoading, logout } = useAuthStore();
+
     const [isMobileVersion, setMobileVerion] = useState(false);
     const [suggestions, setSuggestions] = useState([]);
     const [isLoggedInUser, setIsLoggedInUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
 
     // For LoggedIn User
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -122,38 +123,39 @@ export const Navbar = () => {
         setMobileVerion(!isMobileVersion)
     }
 
+    const closeMobileVersion = () => {
+        setMobileVerion(false);
+    };
+
 
     const handleSearchKeyword = (event) => {
         const keyword = event.target.value;
 
-        // Check if input has more than one character
         if (keyword.length > 1) {
-            const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${keyword}&apikey=${process.env.alphaVantageStockApi}`;
+            const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${keyword}&apikey=${process.env.NEXT_PUBLIC_ALPHA_VANTAGE_API_KEY}`;
 
-            // Using axios to make a GET request
             axios.get(url, {
                 headers: {
-                    'User-Agent': 'axios'  // Optionally set User-Agent header
+                    'User-Agent': 'axios'
                 }
             })
                 .then(response => {
-                    // Check if the request was successful
                     if (response.status === 200) {
-                        const data = response.data['bestMatches'];  // Extracting the 'bestMatches' key from response data
+                        const data = response.data['bestMatches'];
                         const symbols = data.map(item => ({
                             symbol: item["1. symbol"],
                             name: item["2. name"]
                         }));
-                        setSuggestions(symbols);  // Set the state with fetched symbols
+                        setSuggestions(symbols);
                     } else {
-                        setSuggestions([]);  // Clear suggestions if API call fails
+                        setSuggestions([]);
                     }
                 })
                 .catch(error => {
-                    setSuggestions([]);  // Clear suggestions on error
+                    setSuggestions([]);
                 });
         } else {
-            setSuggestions([]);  // Clear suggestions if input is less than 2 characters
+            setSuggestions([]);
         }
     };
 
@@ -161,38 +163,19 @@ export const Navbar = () => {
         setSuggestions([]);
     }
 
-    const getUsersData = async () => {
-        setIsLoading(true)
-        const { user, error } = await checkIsLoggedInUser();
-        if (error) {
-            setIsLoading(false)
-            setIsLoggedInUser(null)
-        }
-        if (user) {
-            setIsLoading(false)
-            setIsLoggedInUser(user);
-        } else {
-            setIsLoading(false)
-            setIsLoggedInUser(null)
-        }
-    }
-
-    useEffect(() => {
-        getUsersData();
-    }, [])
-
-
     const toggleDropdown = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
+
     const handleLogout = async () => {
-        const response = await axiosInstance.get('/api/users/logout');
-        if (response.data.success) {
-            setIsMenuOpen(!isMenuOpen);
-            toast("Logout successfully")
-            setIsLoggedInUser(null)
-            router.push('/')
+        try {
+            await logout();
+            setIsMenuOpen(false);
+            toast.success("Logged out successfully");
+            router.push('/');
+        } catch (error) {
+            toast.success("Logged out successfully");
         }
     }
 
@@ -237,8 +220,9 @@ export const Navbar = () => {
                                     </form>
                                 </div>
                             </div>
+                            {console.log(isAuthenticated, 'isAuthenticated')}
                             <div className="col-lg-3 flex justify-center">
-                                {isLoggedInUser == null ? (
+                                {!isAuthenticated ? (
                                     <div className="hl-right-side-four">
                                         <div className="subscribe-btn">
                                             <Link href="/login" className="btn btn-two">
@@ -248,7 +232,6 @@ export const Navbar = () => {
                                     </div>
                                 ) : (
                                     <div className="relative inline-block text-left">
-                                        {/* Avatar Button */}
                                         <div onClick={toggleDropdown} className="flex justify-center items-center gap-2 cursor-pointer">
                                             <Image
                                                 id="avatarButton"
@@ -258,24 +241,27 @@ export const Navbar = () => {
                                             />
                                             <div className="flex justify-between gap-2 items-center">
                                                 <p className="text-sm font-medium profile-name">
-                                                    {isLoggedInUser?.firstName + " " + isLoggedInUser?.lastName}
+                                                    {user?.firstName + " " + user?.lastName}
                                                 </p>
                                                 <FontAwesomeIcon size="xs" icon="fa-solid fa-chevron-down" />
                                             </div>
                                         </div>
-                                        {/* Dropdown menu */}
                                         {isMenuOpen && (
                                             <div
                                                 id="userDropdown"
                                                 className="absolute z-10 -ml-32 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 toggle-drop-down"
                                             >
-                                                <div className="px-4 py-3 text-sm ">
-                                                    <div>{isLoggedInUser?.firstName + " " + isLoggedInUser?.lastName}</div>
-                                                    <div className="font-medium truncate">{isLoggedInUser?.email}</div>
+                                                <div className="px-4 py-3 text-sm">
+                                                    <div>{user?.firstName + " " + user?.lastName}</div>
+                                                    <div className="font-medium truncate">{user?.email}</div>
                                                 </div>
-                                                <ul className="py-2 text-sm ">
+                                                <ul className="py-2 text-sm">
                                                     <li>
-                                                        <Link onClick={toggleDropdown} href="/profile" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" >
+                                                        <Link
+                                                            onClick={toggleDropdown}
+                                                            href="/profile"
+                                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                                        >
                                                             Profile
                                                         </Link>
                                                     </li>
@@ -304,7 +290,7 @@ export const Navbar = () => {
                                     <nav className="menu-nav justify-content-lg-center">
                                         <div className="navbar-wrap main-menu d-none d-lg-flex">
                                             <ul className="navigation">
-                                                {isLoading && isLoggedInUser !== null ? (
+                                                {isLoading ? (
                                                     <>
                                                         {[...Array(5)].map((_, index) => (
                                                             <div key={index} className="menu-item-has-children">
