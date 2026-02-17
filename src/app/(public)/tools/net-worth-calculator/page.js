@@ -1,153 +1,43 @@
 'use client'
 
-import { useDarkMode } from "@/app/components/dark-mode/DarkModeContext";
 import InputField from "@/app/components/fields/Input";
 import { Heading } from "@/app/components/heading/Heading";
-import { srcFile } from "@/app/utils/tradingViewSrcFiles";
-import { addTradingViewWidget } from "@/app/utils/utils";
-import { Finance } from "financejs";
-import { useEffect, useState } from "react";
+import { calculatorService } from "@/services/calculator.service";
+import { CalculatorSidebar } from "@/app/components/calculator/CalculatorSidebar";
+import { useState } from "react";
 import { ToolDescription } from "../tool-description/ToolDescription";
-import Image from "next/image";
-import slideBarImage from '../../../../../public/assets/img/images/sidebar_img06.jpg';
-
+import { LoaderCircleIcon } from "@/app/components/Loader/LoadingCircle";
 
 export default function NetWorthCalculator() {
 
-    const { isDarkMode } = useDarkMode();
-    const finance = new Finance();
-
     const [assets, setAssets] = useState('');
     const [liabilities, setLiabilities] = useState('');
-    const [netWorth, setNetWorth] = useState(null);
+    const [result, setResult] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        // Function to initialize a TradingView widget
-        const initializeWidget = (containerId, config, callback) => {
-            const widgetContainer = document.getElementById(containerId);
-
-            if (widgetContainer) {
-                // Clear the existing widget content
-                widgetContainer.innerHTML = ''; // Clear the container to remove any duplicate widgets
-            }
-
-            // Initialize the TradingView widget
-            return addTradingViewWidget(containerId, config, callback);
-        };
-
-        const cleanupMarketStocksNews = initializeWidget('tradingview-widget-market-stocks-news', {
-            "colorTheme": "light",
-            "dateRange": "ALL",
-            "exchange": "US",
-            "showChart": true,
-            "locale": "en",
-            "width": "100%",
-            "height": "100%",
-            "isTransparent": true,
-            "showSymbolLogo": false,
-            "showFloatingTooltip": true,
-            "plotLineColorGrowing": "rgb(41,191,240, 1)",
-            "plotLineColorFalling": "rgb(15,96,139, 1)",
-            "gridLineColor": "rgba(240, 243, 250, 0)",
-            "scaleFontColor": "rgba(19, 23, 34, 1)",
-            "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
-            "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
-            "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
-            "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
-            "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
-            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
-            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
-        }, srcFile.getNews);
-
-        const cleanupMarketStocksOverview = initializeWidget('tradingview-widget-market-stocks-overview', {
-            "colorTheme": "light",
-            "dateRange": "ALL",
-            "showChart": true,
-            "locale": "en",
-            "width": "100%",
-            "height": "100%",
-            "largeChartUrl": "",
-            "isTransparent": true,
-            "showSymbolLogo": false,
-            "showFloatingTooltip": true,
-            "plotLineColorGrowing": "rgb(41,191,240, 1)",
-            "plotLineColorFalling": "rgb(15,96,139, 1)",
-            "gridLineColor": "rgba(240, 243, 250, 0)",
-            "scaleFontColor": "rgba(19, 23, 34, 1)",
-            "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
-            "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
-            "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
-            "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
-            "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
-            "tabs": [
-                {
-                    "title": "Forex",
-                    "symbols": [
-                        { "s": "FX:EURUSD", "d": "EUR to USD" },
-                        { "s": "FX:GBPUSD", "d": "GBP to USD" },
-                        { "s": "FX:USDJPY", "d": "USD to JPY" },
-                        { "s": "FX:USDCHF", "d": "USD to CHF" },
-                        { "s": "FX:AUDUSD", "d": "AUD to USD" },
-                        { "s": "FX:USDCAD", "d": "USD to CAD" }
-                    ],
-                    "originalTitle": "Forex"
-                },
-                {
-                    "title": "ETFs",
-                    "symbols": [
-                        { "s": "AMEX:SPY" },
-                        { "s": "NASDAQ:QQQ" },
-                        { "s": "AMEX:IWM" },
-                        { "s": "NASDAQ:TLT" },
-                        { "s": "AMEX:SOXL" },
-                        { "s": "NASDAQ:TQQQ" }
-                    ]
-                },
-                {
-                    "title": "Mutual Funds",
-                    "symbols": [
-                        { "s": "AMEX:PHYS" },
-                        { "s": "AMEX:PSLV" },
-                        { "s": "OTC:LTCN" },
-                        { "s": "NYSE:PTY" },
-                        { "s": "OTC:SRUUF" },
-                        { "s": "NYSE:DXYZ" }
-                    ]
-                }
-            ],
-            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
-            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
-        }, srcFile.getMarketOverview);
-
-        // Cleanup function to remove all widgets before re-rendering
-        return () => {
-            cleanupMarketStocksNews(); // Clean up market stocks news widget
-            cleanupMarketStocksOverview(); // Clean up market stocks overview widget
-        };
-    }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
-        const totalAssets = parseFloat(assets);
-        const totalLiabilities = parseFloat(liabilities);
+        try {
+            const { data } = await calculatorService.netWorth({
+                assets: parseFloat(assets),
+                liabilities: parseFloat(liabilities),
+            });
 
-        if (!isNaN(totalAssets) && !isNaN(totalLiabilities)) {
-            // Using financejs for consistency, even though it's a simple subtraction
-            const calculatedNetWorth = finance.NPV(0, [totalAssets - totalLiabilities]);
-            setNetWorth(calculatedNetWorth);
-        } else {
-            alert('Please enter valid numbers for both assets and liabilities.');
+            setResult(data.data);
+        } catch (error) {
+            // Error handled by errorHandler
+        } finally {
+            setLoading(false);
         }
     };
 
     const handleReset = () => {
         setAssets('');
         setLiabilities('');
-        setNetWorth(null);
-    }
-
-
+        setResult(null);
+    };
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
@@ -162,52 +52,73 @@ export default function NetWorthCalculator() {
                             <div className="contact-form pb-3">
                                 <form onSubmit={handleSubmit}>
                                     <div className="row">
-                                        <div className="col-md-4">
+                                        <div className="col-md-6">
                                             <InputField
                                                 isFontAwsome={true}
                                                 fontAwsomeIcon="fa-dollar-sign"
-                                                label="Total Assets ($):"
-                                                placeholder="Enter the value of your assets"
+                                                label="Total Assets:"
+                                                placeholder="Enter Total Assets"
                                                 required={true}
                                                 id="assets"
                                                 type="number"
+                                                step="0.01"
                                                 value={assets}
                                                 onChange={(e) => setAssets(e.target.value)}
                                             />
                                         </div>
-                                        <div className="col-md-4">
+                                        <div className="col-md-6">
                                             <InputField
                                                 isFontAwsome={true}
                                                 fontAwsomeIcon="fa-dollar-sign"
-                                                label="Total Liabilities ($):"
-                                                placeholder="Enter the value of your liabilities"
+                                                label="Total Liabilities:"
+                                                placeholder="Enter Total Liabilities"
                                                 required={true}
                                                 id="liabilities"
                                                 type="number"
+                                                step="0.01"
                                                 value={liabilities}
                                                 onChange={(e) => setLiabilities(e.target.value)}
                                             />
                                         </div>
                                     </div>
                                     <div className="flex justify-center gap-4 pt-4">
-                                        <button onClick={handleReset} type="reset" className="btn btn-two">
+                                        <button onClick={handleReset} type="button" className="btn btn-two">
                                             Reset
                                         </button>
-                                        <button type="submit" className="btn btn-two">
-                                            Calculate Net Worth
+                                        <button type="submit" disabled={loading} className="btn btn-two">
+                                            {loading ? 'Calculating...' : 'Calculate Net Worth'}
                                         </button>
                                     </div>
                                 </form>
-                                <div className=" pt-10">
-                                    {/* Display the result */}
-                                    {netWorth !== null && (
-                                        <h3>Your Net Worth: ${netWorth.toFixed(2)}</h3>
+
+                                <div className="pt-10">
+                                    {loading && <LoaderCircleIcon />}
+                                    
+                                    {result && !loading && (
+                                        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 space-y-4">
+                                            <h3 className="text-2xl font-bold text-primary">
+                                                {result.message}
+                                            </h3>
+                                            <p className="text-lg">{result.status}</p>
+                                            
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                                <div className="p-4 bg-white dark:bg-gray-700 rounded">
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400">Total Assets</p>
+                                                    <p className="text-lg font-semibold text-green-600">${result.breakdown.totalAssets}</p>
+                                                </div>
+                                                <div className="p-4 bg-white dark:bg-gray-700 rounded">
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400">Total Liabilities</p>
+                                                    <p className="text-lg font-semibold text-red-600">${result.breakdown.totalLiabilities}</p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
                             </div>
+                            
                             <ToolDescription
                                 title={'Summary'}
-                                details={"Calculates your net worth by subtracting liabilities from assets."}
+                                details={'Calculate your net worth by subtracting liabilities from assets.'}
                             />
                             <ToolDescription
                                 title={'Example'}
@@ -219,33 +130,10 @@ export default function NetWorthCalculator() {
                             />
                         </div>
                     </div>
-                    <div className="col-xl-3 col-lg-8">
-                        <div className="sidebar-wrap-three">
-                            <div className="!h-[36rem]" id="tradingview-widget-market-stocks-overview">
-                                <div className="tradingview-widget-market-stocks-overview"></div>
-                            </div>
-                            <hr className="my-3" />
-                            <div className="sidebar-widget sidebar-widget-two">
-                                <div className="sidebar-img">
-                                    <a href="#">
-                                        <Image
-                                            src={slideBarImage}
-                                            alt="no image found"
-                                            className="w-full h-auto"
-                                            unoptimized
-                                        />
-                                    </a>
-                                </div>
-                            </div>
-                            <hr className="my-3" />
-                            <div className="!h-[34rem]" id="tradingview-widget-market-stocks-news">
-                                <div className="tradingview-widget-market-stocks-news"></div>
-                            </div>
-
-                        </div>
-                    </div>
+                    
+                    <CalculatorSidebar />
                 </div>
             </div>
         </section>
-    )
+    );
 }

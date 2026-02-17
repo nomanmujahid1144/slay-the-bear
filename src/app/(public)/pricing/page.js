@@ -5,27 +5,16 @@ import { ButtonGoTo } from "../../components/Buttons/ButtonGoTo";
 import { useDarkMode } from "../../components/dark-mode/DarkModeContext";
 // import { checkIsLoggedInUser } from "@/helpers/checkLoggedInUser";
 import { useEffect, useState } from "react";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { stripeService } from "@/services/stripe.service";
 
 
 export default function Pricing() {
 
     const { isDarkMode } = useDarkMode();
-    const pathname = usePathname();
     const router = useRouter();
-    const [isLoggedInUser, setIsLoggedInUser] = useState(null);
-
-    // const getUsersData = async () => {
-    //     const response = await checkIsLoggedInUser();
-    //     if (response.success) {
-    //         setIsLoggedInUser(response.data);
-    //     } else {
-    //         setIsLoggedInUser(null)
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     getUsersData();
-    // }, [pathname])
+    const { isAuthenticated } = useAuthStore();
+    const [loading, setLoading] = useState(null);
 
     const pricingsList = [
         {
@@ -60,16 +49,20 @@ export default function Pricing() {
         },
     ]
 
-    const handlePricingNavigator = async ({ paymentLink }) => {
-        // Should be monthly or yearly
-        localStorage.setItem('generatePeriodForStripeLink', paymentLink)
-        router.push(`/auth/callback`)
-        // if (isLoggedInUser == null) {
-        //     router.push(`/login?redirect_url=${encodeURIComponent(paymentLink)}`)
-        // } else {
-        //     router.push(paymentLink + `?prefilled_email=${isLoggedInUser?.email}`)
-        // }
-    }
+    const handlePricingNavigator = async (period) => {
+        if (!isAuthenticated) {
+            router.push(`/login?redirect_url=/pricing`);
+            return;
+        }
+        setLoading(period);
+        
+        try {
+            const { data } = await stripeService.createCheckout({ period: period.paymentLink });
+            window.location.href = data.data.url;
+        } catch (error) {
+            setLoading(null);
+        }
+    };
 
     return (
         <div className="relative font-inter antialiased">

@@ -1,174 +1,282 @@
+// src/app/components/profile/Accounts.js - UPDATE
+
 'use client'
 
 import { useEffect, useState } from "react";
-import { DefaultButton } from "../../components/Buttons/Default";
-import InputField from "../../components/fields/Input";
-import axiosInstance from "../../utils/axiosInstance";
+import { DefaultButton } from "../Buttons/Default";
+import InputField from "@/app/components/fields/Input";
+import { userService } from "@/services/user.service";
+import { authService } from "@/services/auth.service";
+import { stripeService } from "@/services/stripe.service";
+import { useAuthStore } from "@/stores/useAuthStore";
 import toast from "react-hot-toast";
 import { LoaderCircleIcon } from "../Loader/LoadingCircle";
-// import InputField from '../fields/Input';
 
 export const Accounts = () => {
-
-    const [data, setData] = useState("nothing");
+    const { user, setUser } = useAuthStore();
     const [loading, setLoading] = useState(false);
-    const [credentials, setcredentials] = useState({
+    const [cancelLoading, setCancelLoading] = useState(false);
+    const [reactivateLoading, setReactivateLoading] = useState(false);
+    const [passwordLoading, setPasswordLoading] = useState(false);
+    const [subscription, setSubscription] = useState(null);
+    const [credentials, setCredentials] = useState({
         firstName: "",
         lastName: "",
         email: "",
     });
-    const [showPassword, setShowPassword] = useState(false);
 
     const handleUpdateUserDetails = async (e) => {
         e.preventDefault();
+        setLoading(true);
+
         try {
-            const response = await axiosInstance.post('/api/users/update-user', credentials);
-            if (response.status == 200) {
-                toast.success('Updated Successfully')
-                window.location.reload();
-            } else {
-                toast.error(response.data.message)
-            }
+            await userService.updateProfile({
+                firstName: credentials.firstName,
+                lastName: credentials.lastName,
+            });
+
+            toast.success('Profile updated successfully!');
+            setUser({ ...user, ...credentials });
         } catch (error) {
+            // Error handled by errorHandler
+        } finally {
             setLoading(false);
-            toast.error(error.response.data.message)
         }
-    }
+    };
 
     const getUserData = async () => {
-        const response = await axiosInstance.post('/api/users/profile');
-        if (response.data.success) {
-            setData(response.data.data)
-            setcredentials({
-                firstName: response.data.data.firstName,
-                lastName: response.data.data.lastName,
-                email: response.data.data.email,
-            })
-        } else {
-            setData("nothing")
-            setcredentials({
+        try {
+            const { data } = await userService.getProfile();
+            const userData = data.data;
+
+            setCredentials({
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                email: userData.email,
+            });
+        } catch (error) {
+            setCredentials({
                 firstName: "",
                 lastName: "",
                 email: ""
-            })
+            });
         }
-    }
+    };
+
+    const getSubscriptionData = async () => {
+        try {
+            const { data } = await userService.getSubscription();
+            setSubscription(data.data);
+        } catch (error) {
+            setSubscription(null);
+        }
+    };
 
     useEffect(() => {
         getUserData();
-    }, [])
-
+        getSubscriptionData();
+    }, []);
 
     const onChange = (e) => {
-        setcredentials({ ...credentials, [e.target.name]: e.target.value });
-    };
-
-    // Function to toggle password visibility
-    const handlePasswordVisible = () => {
-        setShowPassword((prevShowPassword) => !prevShowPassword);
+        setCredentials({ ...credentials, [e.target.name]: e.target.value });
     };
 
     const handleRecoverPassword = async (e) => {
         e.preventDefault();
+        setPasswordLoading(true);
+
         try {
-            setLoading(true);
-            if (data) {
-                const response = await axiosInstance.post('/api/users/forget-password', { email: data.email });
-                if (response.data.success) {
-                    setLoading(false);
-                    toast.success(response.data.message)
-                }
-            }
+            await authService.forgotPassword({ email: credentials.email });
+            toast.success('Password reset link sent to your email!');
         } catch (error) {
-            setLoading(false);
-            toast.error(error.message)
+            // Error handled by errorHandler
+        } finally {
+            setPasswordLoading(false);
         }
+    };
+
+    const handleCancelSubscription = async () => {
+        console.log('Clicke')
+        if (!confirm('Are you sure you want to cancel your subscription? You will still have access until the end of your billing period.')) return;
+
+        setCancelLoading(true);
+        try {
+            await stripeService.cancelSubscription();
+            toast.success('Subscription will be canceled at the end of billing period');
+            getSubscriptionData();
+        } catch (error) {
+            // Error handled by errorHandler
+        } finally {
+            setCancelLoading(false);
+        }
+    };
+
+    const handleReactivateSubscription = async () => {
+        setReactivateLoading(true);
+        try {
+            await stripeService.reactivateSubscription();
+            toast.success('Subscription reactivated successfully!');
+            getSubscriptionData();
+        } catch (error) {
+            // Error handled by errorHandler
+        } finally {
+            setReactivateLoading(false);
+        }
+    };
+
+    if (!user) {
+        return (
+            <div className="flex justify-center items-center py-20">
+                <LoaderCircleIcon />
+            </div>
+        );
     }
 
     return (
         <>
             <div className="pt-4">
-                <h1 className="py-2 text-2xl font-semibold">Profile settings</h1>
-                {/* <p class="font- text-slate-600">Lorem ipsum dolor, sit amet consectetur adipisicing elit.</p> */}
-            </div>
-            <hr className="mt-4 mb-8" />
-            <p className="py-2 text-xl font-semibold">Email Address</p>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-gray-600">
-                    Your email address is <strong className="lowercase">{data === 'nothing' ? "" : data.email}</strong>
+                <h1 className="py-2 text-2xl font-semibold">Account Settings</h1>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Manage your profile information and subscription
                 </p>
             </div>
             <hr className="mt-4 mb-8" />
-            <p className="py-2 text-xl font-semibold">Edit personal details</p>
-            <div className="space-y-2 sm:flex-row sm:space-y-0 sm:space-x-3">
-                <form onSubmit={handleUpdateUserDetails}>
-                    <div className="row !flex w-full">
-                        <div className="w-2/4 py-1">
-                            <InputField
-                                extra="position-relative w-full !rounded !border !border-[#D6D6D6] !bg-white !text-sm !font-medium !text-secondary !py-3 !px-4 !h-12 !block"
-                                required={true}
-                                label="First Name"
-                                id="firstName"
-                                type="text"
-                                value={credentials.firstName}
-                                onChange={onChange}
-                                placeholder="First Name"
-                                isVisible={false}
-                            />
-                        </div>
-                        <div className="w-2/4 py-1">
-                            <InputField
-                                extra="position-relative w-full !rounded !border !border-[#D6D6D6] !bg-white !text-sm !font-medium !text-secondary !py-3 !px-4 !h-12 !block"
-                                required={true}
-                                label="Last Name"
-                                id="lastName"
-                                type="text"
-                                value={credentials.lastName}
-                                onChange={onChange}
-                                placeholder="Last Name"
-                                isVisible={false}
-                            />
-                        </div>
-                        <div className="w-2/4 py-1">
-                            <InputField
-                                extra="position-relative w-full !rounded !border !border-[#D6D6D6] !bg-white !text-sm !font-medium !text-secondary !py-3 !px-4 !h-12 !block"
-                                required={true}
-                                label="Email"
-                                id="email"
-                                type="email"
-                                value={credentials.email}
-                                onChange={onChange}
-                                placeholder="Email address"
-                                isVisible={false}
-                            />
-                        </div>
+
+            {/* Profile Information */}
+            <p className="py-2 text-xl font-semibold">Profile Information</p>
+            <form onSubmit={handleUpdateUserDetails}>
+                <div className="row">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <InputField
+                            required={true}
+                            label="First Name"
+                            id="firstName"
+                            type="text"
+                            value={credentials.firstName}
+                            onChange={onChange}
+                            placeholder="First Name"
+                        />
+                        <InputField
+                            label="Last Name"
+                            required={true}
+                            id="lastName"
+                            type="text"
+                            value={credentials.lastName}
+                            onChange={onChange}
+                            placeholder="Last Name"
+                        />
+                        <InputField
+                            label="Email"
+                            required={true}
+                            id="email"
+                            type="email"
+                            value={credentials.email}
+                            onChange={onChange}
+                            placeholder="Email"
+                            disabled={true}
+                        />
                     </div>
-                    <div className="w-full mt-4 flex justify-center">
-                        <div className="w-1/4">
-                            <DefaultButton
-                                type={'submit'}
-                                text={'Update Details'}
-                            />
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <p className="pt-7 ">
-                Can&apos;t remember your current password.{" "}
-                <span
+                </div>
+                <div className="mt-3">
+                    <DefaultButton
+                        type="submit"
+                        text="Update Profile"
+                        loadingText="Updating..."
+                        loading={loading}
+                        disabled={loading}
+                    />
+                </div>
+            </form>
+
+            <hr className="mt-8 mb-8" />
+
+            {/* Password Recovery */}
+            <div className="mb-10">
+                <p className="py-2 text-xl font-semibold">Password Recovery</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Click the button below to receive a password reset link via email.
+                </p>
+                <DefaultButton
+                    type="button"
+                    text="Send Password Reset Link"
+                    loadingText="Sending..."
+                    loading={passwordLoading}
+                    disabled={passwordLoading}
                     onClick={handleRecoverPassword}
-                    className="text-sm inline-block font-semibold !text-primary hover:!text-secondary cursor-pointer underline decoration-2"
-                >
-                    {loading ? (
-                        <span className="flex justify-between gap-1 items-center">
-                            Sending Email
-                            <div className="w-5 h-5 flex">
-                                <LoaderCircleIcon />
+                />
+            </div>
+
+            {/* Subscription Management */}
+            {subscription && subscription.plan === 'premium' && (
+                <>
+                    <hr className="mt-8 mb-8" />
+                    <div className="mb-10">
+                        <p className="py-2 text-xl font-semibold">Subscription Management</p>
+                        <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 border border-gray-200 dark:border-gray-700">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div>
+                                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1">
+                                        Plan
+                                    </p>
+                                    <p className="text-lg font-bold text-gray-900 dark:text-white">
+                                        {subscription.plan}
+                                    </p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 capitalize">
+                                        {subscription.period}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1">
+                                        Start Date
+                                    </p>
+                                    <p className="text-sm text-gray-900 dark:text-white font-medium">
+                                        {new Date(subscription.startDate).toLocaleDateString('en-US', {
+                                            month: 'short',
+                                            day: 'numeric',
+                                            year: 'numeric'
+                                        })}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1">
+                                        End Date
+                                    </p>
+                                    <p className="text-sm text-gray-900 dark:text-white font-medium">
+                                        {new Date(subscription.endDate).toLocaleDateString('en-US', {
+                                            month: 'short',
+                                            day: 'numeric',
+                                            year: 'numeric'
+                                        })}
+                                    </p>
+                                </div>
                             </div>
-                        </span>
-                    ) : ("Recover Password")}
-                </span>
-            </p>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <DefaultButton
+                                type="button"
+                                text="Cancel Subscription"
+                                loadingText="Canceling..."
+                                loading={cancelLoading}
+                                disabled={cancelLoading}
+                                onClick={handleCancelSubscription}
+                            />
+
+                            <DefaultButton
+                                type="button"
+                                text="Reactivate Subscription"
+                                loadingText="Reactivating..."
+                                loading={reactivateLoading}
+                                disabled={reactivateLoading}
+                                onClick={handleReactivateSubscription}
+                            />
+                        </div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
+                            * Canceling will maintain your access until the end of your current billing period
+                        </p>
+                    </div>
+                </>
+            )}
         </>
-    )
-}
+    );
+};

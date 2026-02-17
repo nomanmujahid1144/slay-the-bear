@@ -1,186 +1,40 @@
 'use client'
 
-import { useDarkMode } from "@/app/components/dark-mode/DarkModeContext";
 import InputField from "@/app/components/fields/Input";
 import { Heading } from "@/app/components/heading/Heading";
-import { srcFile } from "@/app/utils/tradingViewSrcFiles";
-import { addTradingViewWidget } from "@/app/utils/utils";
-import { Finance } from "financejs";
-import { useEffect, useState } from "react";
+import { calculatorService } from "@/services/calculator.service";
+import { CalculatorSidebar } from "@/app/components/calculator/CalculatorSidebar";
+import { useState } from "react";
 import { ToolDescription } from "../tool-description/ToolDescription";
-import Image from "next/image";
-import slideBarImage from '../../../../../public/assets/img/images/sidebar_img06.jpg';
+import { LoaderCircleIcon } from "@/app/components/Loader/LoadingCircle";
 
+export default function BondYTMCalculator() {
 
-export default function BondYieldToMaturityCalculator() {
-
-    const { isDarkMode } = useDarkMode();
-    const finance = new Finance();
-
-    // State for inputs
     const [bondPrice, setBondPrice] = useState('');
     const [faceValue, setFaceValue] = useState('');
     const [couponRate, setCouponRate] = useState('');
     const [periodsToMaturity, setPeriodsToMaturity] = useState('');
-    const [ytm, setYtm] = useState(null);
-    const [error, setError] = useState('');
+    const [result, setResult] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        // Function to initialize a TradingView widget
-        const initializeWidget = (containerId, config, callback) => {
-            const widgetContainer = document.getElementById(containerId);
-
-            if (widgetContainer) {
-                // Clear the existing widget content
-                widgetContainer.innerHTML = ''; // Clear the container to remove any duplicate widgets
-            }
-
-            // Initialize the TradingView widget
-            return addTradingViewWidget(containerId, config, callback);
-        };
-
-        const cleanupMarketStocksNews = initializeWidget('tradingview-widget-market-stocks-news', {
-            "colorTheme": "light",
-            "dateRange": "ALL",
-            "exchange": "US",
-            "showChart": true,
-            "locale": "en",
-            "width": "100%",
-            "height": "100%",
-            "isTransparent": true,
-            "showSymbolLogo": false,
-            "showFloatingTooltip": true,
-            "plotLineColorGrowing": "rgb(41,191,240, 1)",
-            "plotLineColorFalling": "rgb(15,96,139, 1)",
-            "gridLineColor": "rgba(240, 243, 250, 0)",
-            "scaleFontColor": "rgba(19, 23, 34, 1)",
-            "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
-            "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
-            "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
-            "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
-            "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
-            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
-            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
-        }, srcFile.getNews);
-
-        const cleanupMarketStocksOverview = initializeWidget('tradingview-widget-market-stocks-overview', {
-            "colorTheme": "light",
-            "dateRange": "ALL",
-            "showChart": true,
-            "locale": "en",
-            "width": "100%",
-            "height": "100%",
-            "largeChartUrl": "",
-            "isTransparent": true,
-            "showSymbolLogo": false,
-            "showFloatingTooltip": true,
-            "plotLineColorGrowing": "rgb(41,191,240, 1)",
-            "plotLineColorFalling": "rgb(15,96,139, 1)",
-            "gridLineColor": "rgba(240, 243, 250, 0)",
-            "scaleFontColor": "rgba(19, 23, 34, 1)",
-            "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
-            "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
-            "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
-            "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
-            "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
-            "tabs": [
-                {
-                    "title": "Forex",
-                    "symbols": [
-                        { "s": "FX:EURUSD", "d": "EUR to USD" },
-                        { "s": "FX:GBPUSD", "d": "GBP to USD" },
-                        { "s": "FX:USDJPY", "d": "USD to JPY" },
-                        { "s": "FX:USDCHF", "d": "USD to CHF" },
-                        { "s": "FX:AUDUSD", "d": "AUD to USD" },
-                        { "s": "FX:USDCAD", "d": "USD to CAD" }
-                    ],
-                    "originalTitle": "Forex"
-                },
-                {
-                    "title": "ETFs",
-                    "symbols": [
-                        { "s": "AMEX:SPY" },
-                        { "s": "NASDAQ:QQQ" },
-                        { "s": "AMEX:IWM" },
-                        { "s": "NASDAQ:TLT" },
-                        { "s": "AMEX:SOXL" },
-                        { "s": "NASDAQ:TQQQ" }
-                    ]
-                },
-                {
-                    "title": "Mutual Funds",
-                    "symbols": [
-                        { "s": "AMEX:PHYS" },
-                        { "s": "AMEX:PSLV" },
-                        { "s": "OTC:LTCN" },
-                        { "s": "NYSE:PTY" },
-                        { "s": "OTC:SRUUF" },
-                        { "s": "NYSE:DXYZ" }
-                    ]
-                }
-            ],
-            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
-            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
-        }, srcFile.getMarketOverview);
-
-        // Cleanup function to remove all widgets before re-rendering
-        return () => {
-            cleanupMarketStocksNews(); // Clean up market stocks news widget
-            cleanupMarketStocksOverview(); // Clean up market stocks overview widget
-        };
-    }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
+        setLoading(true);
 
-        // Validate inputs
-        if (
-            bondPrice === '' ||
-            faceValue === '' ||
-            couponRate === '' ||
-            periodsToMaturity === ''
-        ) {
-            setError('Please fill out all fields.');
-            return;
+        try {
+            const { data } = await calculatorService.bondYTM({
+                bondPrice: parseFloat(bondPrice),
+                faceValue: parseFloat(faceValue),
+                couponRate: parseFloat(couponRate),
+                periodsToMaturity: parseInt(periodsToMaturity),
+            });
+
+            setResult(data.data);
+        } catch (error) {
+            // Error handled by errorHandler
+        } finally {
+            setLoading(false);
         }
-
-        // Convert inputs to numerical values
-        const bondDetails = {
-            price: parseFloat(bondPrice),
-            faceValue: parseFloat(faceValue),
-            couponRate: parseFloat(couponRate) / 100, // Convert to decimal
-            periodsToMaturity: parseInt(periodsToMaturity),
-        };
-
-        // Check for negative or zero values
-        if (
-            bondDetails.price <= 0 ||
-            bondDetails.faceValue <= 0 ||
-            bondDetails.couponRate < 0 ||
-            bondDetails.periodsToMaturity <= 0
-        ) {
-            setError('All inputs must be positive values.');
-            return;
-        }
-
-        // Calculate YTM
-        const ytmValue = calculateYTM(bondDetails);
-        setYtm(ytmValue);
-    };
-
-    const calculateYTM = (bondDetails) => {
-        const { price, faceValue, couponRate, periodsToMaturity } = bondDetails;
-
-        // Coupon Payment
-        const couponPayment = couponRate * faceValue;
-
-        // Approximation Formula for YTM
-        const annualYield =
-            (couponPayment + (faceValue - price) / periodsToMaturity) /
-            ((price + faceValue) / 2);
-
-        return annualYield * 100; // Convert to percentage
     };
 
     const handleReset = () => {
@@ -188,10 +42,8 @@ export default function BondYieldToMaturityCalculator() {
         setFaceValue('');
         setCouponRate('');
         setPeriodsToMaturity('');
-        setYtm(null);
-        setError('');
+        setResult(null);
     };
-
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
@@ -211,10 +63,11 @@ export default function BondYieldToMaturityCalculator() {
                                                 isFontAwsome={true}
                                                 fontAwsomeIcon="fa-dollar-sign"
                                                 label="Bond Price:"
-                                                placeholder="Enter bond price"
+                                                placeholder="Enter Bond Price"
                                                 required={true}
                                                 id="bond-price"
                                                 type="number"
+                                                step="0.01"
                                                 value={bondPrice}
                                                 onChange={(e) => setBondPrice(e.target.value)}
                                             />
@@ -224,25 +77,25 @@ export default function BondYieldToMaturityCalculator() {
                                                 isFontAwsome={true}
                                                 fontAwsomeIcon="fa-dollar-sign"
                                                 label="Face Value:"
-                                                placeholder="Enter face value"
+                                                placeholder="Enter Face Value"
                                                 required={true}
                                                 id="face-value"
                                                 type="number"
+                                                step="0.01"
                                                 value={faceValue}
                                                 onChange={(e) => setFaceValue(e.target.value)}
                                             />
                                         </div>
-                                    </div>
-                                    <div className="row pt-4">
                                         <div className="col-md-6">
                                             <InputField
                                                 isFontAwsome={true}
-                                                fontAwsomeIcon="fa-percent"
+                                                fontAwsomeIcon="fa-percentage"
                                                 label="Coupon Rate (%):"
-                                                placeholder="Enter coupon rate"
+                                                placeholder="Enter Coupon Rate"
                                                 required={true}
                                                 id="coupon-rate"
                                                 type="number"
+                                                step="0.01"
                                                 value={couponRate}
                                                 onChange={(e) => setCouponRate(e.target.value)}
                                             />
@@ -250,11 +103,11 @@ export default function BondYieldToMaturityCalculator() {
                                         <div className="col-md-6">
                                             <InputField
                                                 isFontAwsome={true}
-                                                fontAwsomeIcon="fa-calendar-day"
+                                                fontAwsomeIcon="fa-calendar"
                                                 label="Periods to Maturity:"
-                                                placeholder="Enter periods to maturity"
+                                                placeholder="Enter Periods"
                                                 required={true}
-                                                id="periods-to-maturity"
+                                                id="periods"
                                                 type="number"
                                                 value={periodsToMaturity}
                                                 onChange={(e) => setPeriodsToMaturity(e.target.value)}
@@ -262,27 +115,47 @@ export default function BondYieldToMaturityCalculator() {
                                         </div>
                                     </div>
                                     <div className="flex justify-center gap-4 pt-4">
-                                        <button onClick={handleReset} type="reset" className="btn btn-two">
+                                        <button onClick={handleReset} type="button" className="btn btn-two">
                                             Reset
                                         </button>
-                                        <button type="submit" className="btn btn-two">
-                                            Calculate YTM
+                                        <button type="submit" disabled={loading} className="btn btn-two">
+                                            {loading ? 'Calculating...' : 'Calculate YTM'}
                                         </button>
                                     </div>
                                 </form>
+
                                 <div className="pt-10">
-                                    {error && <p style={{ color: 'red' }}>{error}</p>}
-                                    {ytm !== null && (
-                                        <div>
-                                            <h3>Yield to Maturity (YTM): {ytm.toFixed(2)}%</h3>
-                                            <p>
-                                                The YTM represents the annualized return you can expect to earn if you hold the bond to maturity. In this case, it is {ytm.toFixed(2)}%.
-                                            </p>
+                                    {loading && <LoaderCircleIcon />}
+                                    
+                                    {result && !loading && (
+                                        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 space-y-4">
+                                            <h3 className="text-2xl font-bold text-primary">
+                                                {result.message}
+                                            </h3>
+                                            
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                                <div className="p-4 bg-white dark:bg-gray-700 rounded">
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400">YTM</p>
+                                                    <p className="text-lg font-semibold text-primary">{result.ytm}%</p>
+                                                </div>
+                                                <div className="p-4 bg-white dark:bg-gray-700 rounded">
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400">Coupon Payment</p>
+                                                    <p className="text-lg font-semibold">${result.breakdown.couponPayment}</p>
+                                                </div>
+                                                <div className="p-4 bg-white dark:bg-gray-700 rounded">
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400">Capital Gain/Period</p>
+                                                    <p className="text-lg font-semibold">${result.breakdown.capitalGainPerPeriod}</p>
+                                                </div>
+                                                <div className="p-4 bg-white dark:bg-gray-700 rounded">
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400">Average Price</p>
+                                                    <p className="text-lg font-semibold">${result.breakdown.averagePrice}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     )}
                                 </div>
-
                             </div>
+                            
                             <ToolDescription
                                 title={'Summary'}
                                 details={"Estimates the total return if you hold a bond until maturity."}
@@ -297,33 +170,10 @@ export default function BondYieldToMaturityCalculator() {
                             />
                         </div>
                     </div>
-                    <div className="col-xl-3 col-lg-8">
-                        <div className="sidebar-wrap-three">
-                            <div className="!h-[36rem]" id="tradingview-widget-market-stocks-overview">
-                                <div className="tradingview-widget-market-stocks-overview"></div>
-                            </div>
-                            <hr className="my-3" />
-                            <div className="sidebar-widget sidebar-widget-two">
-                                <div className="sidebar-img">
-                                    <a href="#">
-                                        <Image
-                                            src={slideBarImage}
-                                            alt="no image found"
-                                            className="w-full h-auto"
-                                            unoptimized
-                                        />
-                                    </a>
-                                </div>
-                            </div>
-                            <hr className="my-3" />
-                            <div className="!h-[34rem]" id="tradingview-widget-market-stocks-news">
-                                <div className="tradingview-widget-market-stocks-news"></div>
-                            </div>
-
-                        </div>
-                    </div>
+                    
+                    <CalculatorSidebar />
                 </div>
             </div>
         </section>
-    )
+    );
 }

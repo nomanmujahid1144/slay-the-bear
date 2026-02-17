@@ -28,8 +28,10 @@ export const API_CONFIG = {
       CUSTOMER_PORTAL: '/api/stripe/customer-portal',
     },
     CALCULATORS: {
+      // Premium
       STOCK_ANALYZER: '/api/calculators/stock-analyzer',
       PORTFOLIO_OPTIMIZER: '/api/calculators/portfolio-optimizer',
+      // Free
       BOND_PRICE: '/api/calculators/bond-price',
       BOND_YTM: '/api/calculators/bond-ytm',
       BREAK_EVEN: '/api/calculators/break-even',

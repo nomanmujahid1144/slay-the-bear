@@ -41,13 +41,38 @@ function DarkModeLayout({ children }) {
   const pathname = usePathname();
   const initialize = useAuthStore((state) => state.initialize);
 
-  // Initialize auth on mount
-  useEffect(() => {
-    initialize();
-  }, [initialize]);
+  // Public routes where auth check is NOT needed
+  const publicRoutes = [
+    '/login',
+    '/register',
+    '/forget-password',
+    '/verify-me',
+    '/verifyemail',
+    '/edit-password',
+    '/auth/callback',
+    '/pricing',
+    '/purchase-success',
+    '/news',
+    '/support',
+    '/terms-and-conditions',
+    '/',
+  ];
 
-  // Define the routes where Navbar and Footer should not be displayed
-  const hiddenRoutes = ['/login', '/auth/callback'];
+  // Check if current path is public or starts with /tools/
+  const isPublicRoute = publicRoutes.includes(pathname) || pathname.startsWith('/tools/') || pathname.startsWith('/tools');
+
+  // Initialize auth ONLY on protected routes
+  useEffect(() => {
+    if (!isPublicRoute) {
+      initialize();
+    }
+  }, [initialize, isPublicRoute]);
+
+  // Define routes where Navbar/Footer hidden
+  const hiddenRoutes = [
+    '/login',
+    '/register',
+  ];
   const hideNavbarFooter = hiddenRoutes.includes(pathname);
 
   return (

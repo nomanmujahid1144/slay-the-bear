@@ -7,14 +7,18 @@ import { addTradingViewWidget } from "@/app/utils/utils";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import axiosInstance from "@/app/utils/axiosInstance";
+import { calculatorService } from "@/services/calculator.service";
+import { CalculatorSidebar } from "@/app/components/calculator/CalculatorSidebar";
+import { LoaderCircleIcon } from "@/app/components/Loader/LoadingCircle";
 
 export default function PortfolioOptimizerCalculator() {
 
-    const { isDarkMode } = useDarkMode();
     const [suggestions, setSuggestions] = useState([]);
     const [selectedSymbols, setSelectedSymbols] = useState([]); // Store added symbols
     const [searchKeyword, setSearchKeyword] = useState(""); // For input field
-    const [loanTermType, setLoanTermType] = useState('Short Term'); // 0 for years, 1 for months
+    const [loanTermType, setLoanTermType] = useState('Short Term'); // 0 for years, 1 for 
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const [result, setResult] = useState({
         companyName: '',
         symbol: '',
@@ -24,111 +28,6 @@ export default function PortfolioOptimizerCalculator() {
         valuationStatus: '',
         explanation: '',
     });
-
-    useEffect(() => {
-        // Function to initialize a TradingView widget
-        const initializeWidget = (containerId, config, callback) => {
-            const widgetContainer = document.getElementById(containerId);
-
-            if (widgetContainer) {
-                // Clear the existing widget content
-                widgetContainer.innerHTML = ''; // Clear the container to remove any duplicate widgets
-            }
-
-            // Initialize the TradingView widget
-            return addTradingViewWidget(containerId, config, callback);
-        };
-
-        const cleanupMarketStocksNews = initializeWidget('tradingview-widget-market-stocks-news', {
-            "colorTheme": "light",
-            "dateRange": "ALL",
-            "exchange": "US",
-            "showChart": true,
-            "locale": "en",
-            "width": "100%",
-            "height": "100%",
-            "isTransparent": true,
-            "showSymbolLogo": false,
-            "showFloatingTooltip": true,
-            "plotLineColorGrowing": "rgb(41,191,240, 1)",
-            "plotLineColorFalling": "rgb(15,96,139, 1)",
-            "gridLineColor": "rgba(240, 243, 250, 0)",
-            "scaleFontColor": "rgba(19, 23, 34, 1)",
-            "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
-            "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
-            "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
-            "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
-            "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
-            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
-            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
-        }, srcFile.getNews);
-
-        const cleanupMarketStocksOverview = initializeWidget('tradingview-widget-market-stocks-overview', {
-            "colorTheme": "light",
-            "dateRange": "ALL",
-            "showChart": true,
-            "locale": "en",
-            "width": "100%",
-            "height": "100%",
-            "largeChartUrl": "",
-            "isTransparent": true,
-            "showSymbolLogo": false,
-            "showFloatingTooltip": true,
-            "plotLineColorGrowing": "rgb(41,191,240, 1)",
-            "plotLineColorFalling": "rgb(15,96,139, 1)",
-            "gridLineColor": "rgba(240, 243, 250, 0)",
-            "scaleFontColor": "rgba(19, 23, 34, 1)",
-            "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
-            "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
-            "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
-            "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
-            "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
-            "tabs": [
-                {
-                    "title": "Forex",
-                    "symbols": [
-                        { "s": "FX:EURUSD", "d": "EUR to USD" },
-                        { "s": "FX:GBPUSD", "d": "GBP to USD" },
-                        { "s": "FX:USDJPY", "d": "USD to JPY" },
-                        { "s": "FX:USDCHF", "d": "USD to CHF" },
-                        { "s": "FX:AUDUSD", "d": "AUD to USD" },
-                        { "s": "FX:USDCAD", "d": "USD to CAD" }
-                    ],
-                    "originalTitle": "Forex"
-                },
-                {
-                    "title": "ETFs",
-                    "symbols": [
-                        { "s": "AMEX:SPY" },
-                        { "s": "NASDAQ:QQQ" },
-                        { "s": "AMEX:IWM" },
-                        { "s": "NASDAQ:TLT" },
-                        { "s": "AMEX:SOXL" },
-                        { "s": "NASDAQ:TQQQ" }
-                    ]
-                },
-                {
-                    "title": "Mutual Funds",
-                    "symbols": [
-                        { "s": "AMEX:PHYS" },
-                        { "s": "AMEX:PSLV" },
-                        { "s": "OTC:LTCN" },
-                        { "s": "NYSE:PTY" },
-                        { "s": "OTC:SRUUF" },
-                        { "s": "NYSE:DXYZ" }
-                    ]
-                }
-            ],
-            "largeChartUrl": `${process.env.NEXT_PUBLIC_BASE_URL}/symbols`,
-            "colorTheme": `${isDarkMode ? 'dark' : 'light'}`,
-        }, srcFile.getMarketOverview);
-
-        // Cleanup function to remove all widgets before re-rendering
-        return () => {
-            cleanupMarketStocksNews(); // Clean up market stocks news widget
-            cleanupMarketStocksOverview(); // Clean up market stocks overview widget
-        };
-    }, [isDarkMode]); // Re-run the effect when `isDarkMode` changes
 
 
     // For Symbol Search
@@ -168,8 +67,49 @@ export default function PortfolioOptimizerCalculator() {
         //     setSelectedSymbols((prev) => [...prev, symbolObj]);
         // }
         setSelectedSymbols([symbolObj]);
-        // setSearchKeyword(""); // Clear input field
-        setSuggestions([]); // Clear suggestions
+        setSuggestions([]);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+        setResult({
+            companyName: '',
+            symbol: '',
+            intrinsicStockValue: '',
+            currentStockPrice: '',
+            stockTrend: '',
+            valuationStatus: '',
+            explanation: '',
+        });
+
+        if (selectedSymbols.length === 0) {
+            setError('Please select a stock symbol');
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const { data } = await calculatorService.stockAnalyzer({
+                symbol: selectedSymbols[0].symbol,
+                term: loanTermType
+            });
+
+            setResult({
+                companyName: data.companyName,
+                symbol: data.data.symbol,
+                intrinsicStockValue: data.data.intrinsicStockValue,
+                currentStockPrice: data.data.currentStockPrice,
+                stockTrend: data.data.stockTrend,
+                valuationStatus: data.data.valuationStatus,
+                explanation: data.data.explanation,
+            });
+        } catch (err) {
+            setError(err.response?.data?.message || 'Analysis failed');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleReset = () => {
@@ -188,40 +128,7 @@ export default function PortfolioOptimizerCalculator() {
         })
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
 
-        if (selectedSymbols.length > 0) {
-            const payload = {
-                symbol: selectedSymbols[0].symbol,
-                term: loanTermType
-            };
-
-            try {
-                const response = await axiosInstance.post('/api/calculator/stock-analyzer', payload);
-
-                if (response.status === 200) {
-                    console.log('API Response:', response.data);
-
-                    setResult({
-                        companyName: response.data.companyName,
-                        symbol: response.data.symbol,
-                        intrinsicStockValue: response.data.intrinsicStockValue,
-                        currentStockPrice: response.data.currentStockPrice,
-                        stockTrend: response.data.stockTrend,
-                        valuationStatus: response.data.valuationStatus,
-                        explanation: response.data.explanation,
-                    });
-
-                } else {
-                    console.error('Error:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Axios Error:', error.message);
-            }
-        }
-
-    };
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
@@ -286,7 +193,61 @@ export default function PortfolioOptimizerCalculator() {
                                         </button>
                                     </div>
                                 </form>
-                                <div className="relative overflow-x-auto pt-10">
+                                <div className="pt-10">
+                                    {loading && <LoaderCircleIcon />}
+
+                                    {error && (
+                                        <div className="p-4 bg-red-100 dark:bg-red-900 rounded-lg">
+                                            <p className="text-red-700 dark:text-red-200">{error}</p>
+                                        </div>
+                                    )}
+
+                                    {console.log(result, 'result')}
+
+                                    {result && !loading && (
+                                        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 space-y-4">
+                                            <div className="text-center mb-4">
+                                                <h3 className={`text-2xl font-bold ${result.valuationStatus === 'Strong Buy' || result.valuationStatus === 'Buy'
+                                                    ? 'text-green-600'
+                                                    : result.valuationStatus === 'Sell' || result.valuationStatus === 'Strong Sell'
+                                                        ? 'text-red-600'
+                                                        : 'text-yellow-600'
+                                                    }`}>
+                                                    {result.valuationStatus}
+                                                </h3>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                                <div className="p-4 bg-white dark:bg-gray-700 rounded">
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400">Company Name</p>
+                                                    <p className="text-lg font-semibold">{result.companyName} ({result.symbol})</p>
+                                                </div>
+                                                <div className="p-4 bg-white dark:bg-gray-700 rounded">
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400">Intrinsic Value</p>
+                                                    <p className="text-lg font-semibold text-blue-600">{result.intrinsicStockValue}</p>
+                                                </div>
+                                                <div className="p-4 bg-white dark:bg-gray-700 rounded">
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400">Current Price</p>
+                                                    <p className="text-lg font-semibold">{result.currentStockPrice}</p>
+                                                </div>
+                                                <div className="p-4 bg-white dark:bg-gray-700 rounded">
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400">Stock Trend</p>
+                                                    <p className="text-lg font-semibold">{result.stockTrend}</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="p-4 bg-white dark:bg-gray-700 rounded mt-4">
+                                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Analysis</p>
+                                                <p className="text-base">{result.explanation}</p>
+                                            </div>
+
+                                            <p className="text-sm text-gray-500 dark:text-gray-400 italic mt-4">
+                                                Disclaimer: This analysis is for educational purposes only and does not constitute financial advice.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                                {/* <div className="relative overflow-x-auto pt-10">
                                     <div className="text-center">
                                         <p className="!font-bold title text-green-500">{result.valuationStatus}</p>
                                     </div>
@@ -300,30 +261,12 @@ export default function PortfolioOptimizerCalculator() {
                                             <h2 className="pt-10">Disclaimer: This analysis is for educational purposes only and does not constitute financial advice. Please consult a financial professional before making any investment decisions.</h2>
                                         </div>
                                     )}
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
-                    <div className="col-xl-3 col-lg-8">
-                        <div className="sidebar-wrap-three">
-                            <div className="!h-[36rem]" id="tradingview-widget-market-stocks-overview">
-                                <div className="tradingview-widget-market-stocks-overview"></div>
-                            </div>
-                            <hr className="my-3" />
-                            <div className="sidebar-widget sidebar-widget-two">
-                                <div className="sidebar-img">
-                                    <a href="#">
-                                        <img src="../assets/img/images/sidebar_img06.jpg" alt="" />
-                                    </a>
-                                </div>
-                            </div>
-                            <hr className="my-3" />
-                            <div className="!h-[34rem]" id="tradingview-widget-market-stocks-news">
-                                <div className="tradingview-widget-market-stocks-news"></div>
-                            </div>
 
-                        </div>
-                    </div>
+                    <CalculatorSidebar />
                 </div>
             </div>
         </section>
