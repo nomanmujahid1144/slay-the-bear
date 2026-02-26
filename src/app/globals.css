@@ -31,3 +31,10 @@
 iframe html body .js-copyright-label .label__link-dzbd7lyV{
   display: none !important;
 }
+
+
+/* Calculators */
+@keyframes calcPulse {
+    0%, 100% { opacity: 0.35; }
+    50%       { opacity: 0.65; }
+}

@@ -1,0 +1,255 @@
+'use client'
+
+import { useEffect, useState } from "react";
+import { DefaultButton } from "../buttons/Default";
+import InputField from "@/app/components/fields/Input";
+import { userService } from "@/services/user.service";
+import { authService } from "@/services/auth.service";
+import { stripeService } from "@/services/stripe.service";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { toast } from '@/utils/toast';
+import { LoaderCircleIcon } from "../loader/LoadingCircle";
+import type { ChangeEvent, FormEvent } from "react";
+import type { UserSubscription } from "@/types";
+
+interface Credentials {
+    firstName: string;
+    lastName: string;
+    email: string;
+}
+
+export const Accounts = () => {
+    const { user, setUser } = useAuthStore();
+    const [loading, setLoading] = useState(false);
+    const [cancelLoading, setCancelLoading] = useState(false);
+    const [reactivateLoading, setReactivateLoading] = useState(false);
+    const [passwordLoading, setPasswordLoading] = useState(false);
+    const [subscription, setSubscription] = useState<UserSubscription | null>(null);
+    const [credentials, setCredentials] = useState<Credentials>({
+        firstName: "",
+        lastName: "",
+        email: "",
+    });
+
+    const getUserData = async () => {
+        try {
+            const { data } = await userService.getProfile();
+            const userData = data.data;
+            setCredentials({
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                email: userData.email,
+            });
+        } catch {
+            setCredentials({ firstName: "", lastName: "", email: "" });
+        }
+    };
+
+    const getSubscriptionData = async () => {
+        try {
+            const { data } = await userService.getSubscription();
+            setSubscription(data.data);
+        } catch {
+            setSubscription(null);
+        }
+    };
+
+    useEffect(() => {
+        getUserData();
+        getSubscriptionData();
+    }, []);
+
+    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setCredentials(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    };
+
+    const handleUpdateUserDetails = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            await userService.updateProfile({
+                firstName: credentials.firstName,
+                lastName: credentials.lastName,
+            });
+            toast.success('Profile updated successfully!');
+            if (user) setUser({ ...user, ...credentials });
+        } catch {
+            // Error handled by errorHandler
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleRecoverPassword = async (e: FormEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setPasswordLoading(true);
+        try {
+            await authService.forgotPassword({ email: credentials.email });
+            toast.success('Password reset link sent to your email!');
+        } catch {
+            // Error handled by errorHandler
+        } finally {
+            setPasswordLoading(false);
+        }
+    };
+
+    const handleCancelSubscription = async () => {
+        if (!confirm('Are you sure you want to cancel your subscription? You will still have access until the end of your billing period.')) return;
+        setCancelLoading(true);
+        try {
+            await stripeService.cancelSubscription();
+            toast.success('Subscription will be canceled at the end of billing period');
+            getSubscriptionData();
+        } catch {
+            // Error handled by errorHandler
+        } finally {
+            setCancelLoading(false);
+        }
+    };
+
+    const handleReactivateSubscription = async () => {
+        setReactivateLoading(true);
+        try {
+            await stripeService.reactivateSubscription();
+            toast.success('Subscription reactivated successfully!');
+            getSubscriptionData();
+        } catch {
+            // Error handled by errorHandler
+        } finally {
+            setReactivateLoading(false);
+        }
+    };
+
+    if (!user) {
+        return (
+            <div className="flex justify-center items-center py-20">
+                <LoaderCircleIcon />
+            </div>
+        );
+    }
+
+    return (
+        <>
+            <div className="pt-4">
+                <h1 className="py-2 text-2xl font-semibold">Account Settings</h1>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Manage your profile information and subscription
+                </p>
+            </div>
+            <hr className="mt-4 mb-8" />
+
+            <p className="py-2 text-xl font-semibold">Profile Information</p>
+            <form onSubmit={handleUpdateUserDetails}>
+                <div className="row">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <InputField
+                            required={true}
+                            label="First Name"
+                            id="firstName"
+                            type="text"
+                            value={credentials.firstName}
+                            onChange={onChange}
+                            placeholder="First Name"
+                        />
+                        <InputField
+                            required={true}
+                            label="Last Name"
+                            id="lastName"
+                            type="text"
+                            value={credentials.lastName}
+                            onChange={onChange}
+                            placeholder="Last Name"
+                        />
+                        <InputField
+                            required={true}
+                            label="Email"
+                            id="email"
+                            type="email"
+                            value={credentials.email}
+                            onChange={onChange}
+                            placeholder="Email"
+                            disabled={true}
+                        />
+                    </div>
+                </div>
+                <div className="mt-3">
+                    <DefaultButton
+                        type="submit"
+                        text="Update Profile"
+                        loadingText="Updating..."
+                        loading={loading}
+                        disabled={loading}
+                    />
+                </div>
+            </form>
+
+            <hr className="mt-8 mb-8" />
+
+            <div className="mb-10">
+                <p className="py-2 text-xl font-semibold">Password Recovery</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Click the button below to receive a password reset link via email.
+                </p>
+                <DefaultButton
+                    type="button"
+                    text="Send Password Reset Link"
+                    loadingText="Sending..."
+                    loading={passwordLoading}
+                    disabled={passwordLoading}
+                    onClick={handleRecoverPassword}
+                />
+            </div>
+
+            {subscription && subscription.plan === 'premium' && (
+                <>
+                    <hr className="mt-8 mb-8" />
+                    <div className="mb-10">
+                        <p className="py-2 text-xl font-semibold">Subscription Management</p>
+                        <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 border border-gray-200 dark:border-gray-700">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div>
+                                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1">Plan</p>
+                                    <p className="text-lg font-bold text-gray-900 dark:text-white">{subscription.plan}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 capitalize">{subscription.period}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1">Start Date</p>
+                                    <p className="text-sm text-gray-900 dark:text-white font-medium">
+                                        {new Date(subscription.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1">End Date</p>
+                                    <p className="text-sm text-gray-900 dark:text-white font-medium">
+                                        {new Date(subscription.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <DefaultButton
+                                type="button"
+                                text="Cancel Subscription"
+                                loadingText="Canceling..."
+                                loading={cancelLoading}
+                                disabled={cancelLoading}
+                                onClick={handleCancelSubscription}
+                            />
+                            <DefaultButton
+                                type="button"
+                                text="Reactivate Subscription"
+                                loadingText="Reactivating..."
+                                loading={reactivateLoading}
+                                disabled={reactivateLoading}
+                                onClick={handleReactivateSubscription}
+                            />
+                        </div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
+                            * Canceling will maintain your access until the end of your current billing period
+                        </p>
+                    </div>
+                </>
+            )}
+        </>
+    );
+};
