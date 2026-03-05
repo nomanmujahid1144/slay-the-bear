@@ -15,9 +15,9 @@ interface UserDropdownProps {
 }
 
 const MENU_ITEMS = [
-    { label: 'Profile',      href: '/profile', icon: 'user'        },
-    { label: 'Billing',      href: '/profile', icon: 'credit-card' },
-    { label: 'Subscription', href: '/pricing', icon: 'crown'       },
+    { label: 'Profile', href: '/profile', icon: 'user' },
+    { label: 'Billing', href: '/profile', icon: 'credit-card' },
+    { label: 'Subscription', href: '/pricing', icon: 'crown' },
 ] as const;
 
 export function UserDropdown({ user, onLogout }: UserDropdownProps) {
@@ -59,6 +59,8 @@ export function UserDropdown({ user, onLogout }: UserDropdownProps) {
                     className="user-dropdown-avatar"
                     src={user.picture || defaultProfileImage}
                     alt={`${user.firstName} ${user.lastName}`}
+                    width={36}
+                    height={36}
                 />
                 <span className="user-dropdown-name profile-name">
                     {user.firstName}
@@ -81,6 +83,8 @@ export function UserDropdown({ user, onLogout }: UserDropdownProps) {
                                 className="user-dropdown-header-avatar"
                                 src={user.picture || defaultProfileImage}
                                 alt={`${user.firstName} ${user.lastName}`}
+                                width={36}
+                                height={36}
                             />
                             <div className="user-dropdown-header-info">
                                 <p className="user-dropdown-fullname">

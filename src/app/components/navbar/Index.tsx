@@ -8,6 +8,7 @@ import { Fragment, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { TrendingNews } from '../trending-news-slider/Index';
+import { FinentialNewsMarquee } from '../finential-news-marquee/Index';
 import { MobileVersion } from './MobileVersion';
 import { SymbolSearchResults } from './SymbolSearchResults';
 import { NavbarAuthSkeleton } from '@/app/components/skeletons';
@@ -45,7 +46,9 @@ export const Navbar = () => {
     return (
         <header className="header-style-six">
             <div id="header-fixed-height" />
+            <FinentialNewsMarquee />
             <TrendingNews />
+
 
             {/* Logo + Search + Auth */}
             <div className="header-logo-area-four">

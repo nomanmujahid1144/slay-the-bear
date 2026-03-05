@@ -67,3 +67,22 @@ export interface UpdateProfileRequest {
     firstName?: string;
     lastName?: string;
 }
+
+export interface PendingDowngrade {
+    plan: string;
+    period: string;
+    effectiveDate: string;
+}
+
+export interface UserSubscription {
+    id: string;
+    userId: string;
+    plan: SubscriptionPlan;
+    period: BillingInterval;
+    startDate: string;
+    endDate: string;
+    createdAt: string;
+    updatedAt: string;
+    pendingDowngrade: PendingDowngrade | null;
+    cancelAtPeriodEnd: boolean;
+}

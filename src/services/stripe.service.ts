@@ -3,14 +3,23 @@
 import axiosInstance from '@/utils/axiosInstance';
 import { API_CONFIG } from '@/config/api.config';
 import type { ApiResponse } from '@/types';
+import type { CreateCheckoutRequest, CheckoutResponse } from '@/types';
 
-import type {
-  CreateCheckoutRequest,
-  CheckoutResponse,
-  CustomerPortal,
-} from '@/types';
+export interface ChangePlanRequest {
+    planType: 'basic' | 'premium';
+    period:   'monthly' | 'yearly';
+}
+
+export interface ChangePlanResponse {
+    message:       string;
+    changeType:    'upgrade' | 'downgrade';
+    effectiveDate: string;
+    newPlan:       string;
+    newPeriod:     string;
+}
 
 export const stripeService = {
+
     createCheckout: (data: CreateCheckoutRequest) =>
         axiosInstance.post<ApiResponse<CheckoutResponse>>(
             API_CONFIG.ENDPOINTS.STRIPE.CREATE_CHECKOUT,
@@ -32,8 +41,9 @@ export const stripeService = {
             API_CONFIG.ENDPOINTS.STRIPE.REACTIVATE_SUBSCRIPTION
         ),
 
-    getCustomerPortal: () =>
-        axiosInstance.get<ApiResponse<CustomerPortal>>(
-            API_CONFIG.ENDPOINTS.STRIPE.CUSTOMER_PORTAL
+    changePlan: (data: ChangePlanRequest) =>
+        axiosInstance.post<ApiResponse<ChangePlanResponse>>(
+            API_CONFIG.ENDPOINTS.STRIPE.CHANGE_PLAN,
+            data
         ),
 };

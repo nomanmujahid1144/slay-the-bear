@@ -1,145 +1,271 @@
 'use client'
 
 import { useRouter } from "next/navigation";
-import { ButtonGoTo } from "../../components/buttons/ButtonGoTo";
 import { useDarkMode } from "../../components/dark-mode/DarkModeContext";
 import { useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { stripeService } from "@/services/stripe.service";
 
-type BillingPeriod = 'monthly' | 'yearly';
+// ── Types ─────────────────────────────────────────────────────────────────────
 
-interface PricingItem {
-    title: string;
-    description: string;
-    price: number;
-    discount: string;
-    discountedPrice: string;
-    href: string;
-    paymentLink: BillingPeriod;
-    features: string[];
+type BillingPeriod = 'monthly' | 'yearly';
+type PlanTier = 'basic' | 'premium';
+type LoadingKey = `${PlanTier}-${BillingPeriod}` | null;
+
+interface PlanFeature {
+    text: string;
+    included: boolean;
 }
 
-const pricingsList: PricingItem[] = [
+interface PricingPlan {
+    tier: PlanTier;
+    period: BillingPeriod;
+    title: string;
+    subtitle: string;
+    monthlyPrice: number;
+    originalPrice?: number;
+    yearlyTotal?: number;
+    discount?: string;
+    badge?: string;
+    features: PlanFeature[];
+}
+
+// ── Plan data ─────────────────────────────────────────────────────────────────
+
+const BASIC_FEATURES: PlanFeature[] = [
+    { text: 'Access to all free calculators',    included: true  },
+    { text: 'Ad-free experience',                included: true  },
+    { text: 'Save & view calculation history',   included: true  },
+    { text: 'Basic financial reports',           included: true  },
+    { text: 'Email support',                     included: true  },
+    { text: 'Portfolio Optimizer',               included: false },
+    { text: 'Stock Analyzer',                    included: false },
+    { text: 'Priority support',                  included: false },
+];
+
+const PREMIUM_FEATURES: PlanFeature[] = [
+    { text: 'Access to all free calculators',    included: true  },
+    { text: 'Ad-free experience',                included: true  },
+    { text: 'Save & view calculation history',   included: true  },
+    { text: 'Advanced financial reports',        included: true  },
+    { text: 'Portfolio Optimizer',               included: true  },
+    { text: 'Stock Analyzer',                    included: true  },
+    { text: 'Priority support',                  included: true  },
+    { text: 'Early access to new tools',         included: true  },
+];
+
+const PLANS: PricingPlan[] = [
     {
-        title: 'Monthly',
-        description: 'There are many variations available, but the majority have suffered.',
-        price: 6,
-        discount: '',
-        discountedPrice: '',
-        href: '/login',
-        paymentLink: 'monthly',
-        features: [
-            "Gutenberg Integration",
-            "Gutenberg Integration",
-            "Gutenberg Integration",
-        ],
+        tier: 'basic',
+        period: 'monthly',
+        title: 'Basic',
+        subtitle: 'Ad-Free',
+        monthlyPrice: 2.99,
+        features: BASIC_FEATURES,
     },
     {
-        title: 'Yearly',
-        description: 'There are many variations available, but the majority have suffered.',
-        price: 60,
-        discount: '12% off',
-        discountedPrice: '72',
-        href: '/login',
-        paymentLink: 'yearly',
-        features: [
-            "Gutenberg Integration",
-            "Gutenberg Integration",
-            "Gutenberg Integration",
-        ],
+        tier: 'basic',
+        period: 'yearly',
+        title: 'Basic',
+        subtitle: 'Ad-Free',
+        monthlyPrice: 2.00,           // $24.00 / 12
+        originalPrice: 2.99,
+        discount: '33% off',
+        badge: 'Best Value',
+        yearlyTotal: 24.00,
+        features: BASIC_FEATURES,
+    },
+    {
+        tier: 'premium',
+        period: 'monthly',
+        title: 'Premium',
+        subtitle: 'Ad-Free + Pro Tools',
+        monthlyPrice: 6.99,
+        features: PREMIUM_FEATURES,
+    },
+    {
+        tier: 'premium',
+        period: 'yearly',
+        title: 'Premium',
+        subtitle: 'Ad-Free + Pro Tools',
+        monthlyPrice: 5.00,           // $60.00 / 12
+        originalPrice: 6.99,
+        discount: '28% off',
+        badge: 'Most Popular',
+        yearlyTotal: 60.00,
+        features: PREMIUM_FEATURES,
     },
 ];
+
+// ── Component ─────────────────────────────────────────────────────────────────
 
 export default function Pricing() {
     const { isDarkMode } = useDarkMode();
     const router = useRouter();
     const { isAuthenticated } = useAuthStore();
-    const [loading, setLoading] = useState<BillingPeriod | null>(null);
 
-    const handlePricingNavigator = async ({ paymentLink }: { paymentLink?: string }) => {
+    const [activeTier, setActiveTier] = useState<PlanTier>('premium');
+    const [loadingKey, setLoadingKey] = useState<LoadingKey>(null);
+
+    // Only show the 2 cards for the active tier
+    const visiblePlans = PLANS.filter(p => p.tier === activeTier);
+
+    const handlePurchase = async (plan: PricingPlan) => {
         if (!isAuthenticated) {
             router.push('/login?redirect_url=/pricing');
             return;
         }
-
-        if (!paymentLink) return;
-        const period = paymentLink as BillingPeriod;
-        setLoading(period);
-
+        const key: LoadingKey = `${plan.tier}-${plan.period}`;
+        setLoadingKey(key);
         try {
             const { data } = await stripeService.createCheckout({
-                period,
-                planType: 'premium',
+                period: plan.period,
+                planType: plan.tier,
             });
             window.location.href = data.data.url;
         } catch {
-            setLoading(null);
+            setLoadingKey(null);
         }
     };
 
     return (
-        <div className="relative font-inter antialiased">
-            <main className="relative min-h-screen flex flex-col justify-center contact-area overflow-hidden">
-                <div className="w-full max-w-6xl mx-auto px-4 md:px-6 py-24">
-                    <div>
-                        <div className="max-w-sm mx-auto lg:flex gap-6 justify-center items-start lg:max-w-none pt-10">
-                            {pricingsList.map((priceItem, index) => (
-                                <div key={index} className="h-full lg:!max-w-sm text-start">
-                                    <div className={`relative contact-form flex flex-col h-full p-6 rounded-2xl border ${isDarkMode ? '!border-slate-800' : 'border-slate-200'} shadow shadow-slate-950/5`}>
-                                        <div className="blog-details-inner-content">
-                                            <div className="mb-5">
-                                                <div className="flex justify-between">
-                                                    <h1 className="title-two font-semibold mb-1">
-                                                        {priceItem.title}
-                                                        <sup className="ml-2">
-                                                            {priceItem.discount.length > 0 && (
-                                                                <span className={`inline-flex items-center rounded-full ${isDarkMode ? 'bg-black-300' : 'bg-indigo-100'} px-2 text-xs font-medium !text-primary ring-1 ring-inset ring-primary`}>
-                                                                    {priceItem.discount}
-                                                                </span>
-                                                            )}
-                                                        </sup>
-                                                    </h1>
-                                                    {priceItem.discount.length > 0 && (
-                                                        <span className={`inline-flex items-center rounded-md ${isDarkMode ? 'bg-slate-700' : 'bg-indigo-100'} px-2 py-1 text-xs font-bold !text-primary ring-1 ring-inset ring-primary`}>
-                                                            Most Popular
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                <div className="inline-flex items-baseline mb-2 gap-1">
-                                                    {priceItem.discount.length > 0 && priceItem.discountedPrice && (
-                                                        <h3 className="title-two font-semibold !text-base line-through">
-                                                            ${parseFloat(priceItem.discountedPrice).toFixed(2)}
-                                                            <span className="text-slate-500 lowercase text-base !font-thin">/mo</span>
-                                                        </h3>
-                                                    )}
-                                                    <h3 className="title-two font-bold text-4xl">
-                                                        ${priceItem.price.toFixed(2)}
-                                                        <span className="text-slate-500 lowercase text-base !font-thin">/mo</span>
-                                                    </h3>
-                                                </div>
-                                                <p>{priceItem.description}</p>
-                                                <ButtonGoTo
-                                                    href={priceItem.href}
-                                                    onClick={handlePricingNavigator}
-                                                    paymentLink={priceItem.paymentLink}
-                                                    text={loading === priceItem.paymentLink ? 'Loading...' : 'Purchase Plan'}
-                                                />
-                                            </div>
-                                            <ul className="list-wrap">
-                                                {priceItem.features.map((feature, i) => (
-                                                    <li key={i}>
-                                                        <i className="fas fa-check" />
-                                                        {feature}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+        <div className="contact-area pricing-page">
+            <main>
+                <div className="pricing-container">
+
+                    {/* ── Page header ─────────────────────────────────────── */}
+                    <div className="pricing-header">
+                        <h1 className="title-two pricing-title">Choose Your Plan</h1>
+                        <p className="pricing-subtitle">
+                            Unlock powerful financial tools and enjoy a fully ad-free experience.
+                            Cancel anytime.
+                        </p>
+                    </div>
+
+                    {/* ── Tier toggle ──────────────────────────────────────── */}
+                    <div className="pricing-toggle-wrap">
+                        <div className="pricing-toggle">
+                            <button
+                                type="button"
+                                onClick={() => setActiveTier('basic')}
+                                className={`pricing-toggle-btn ${activeTier === 'basic' ? 'active' : ''}`}
+                            >
+                                Ads Free
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setActiveTier('premium')}
+                                className={`pricing-toggle-btn ${activeTier === 'premium' ? 'active' : ''}`}
+                            >
+                                Premium
+                            </button>
                         </div>
                     </div>
+
+                    {/* ── Tier description ─────────────────────────────────── */}
+                    <p className="pricing-tier-desc">
+                        {activeTier === 'basic'
+                            ? 'All free calculators with zero ads, clean, fast and distraction free.'
+                            : 'Everything in Ads Free, plus Portfolio Optimizer, Stock Analyzer and priority support.'}
+                    </p>
+
+                    {/* ── Plan cards ───────────────────────────────────────── */}
+                    <div className="pricing-cards">
+                        {visiblePlans.map((plan) => {
+                            const key: LoadingKey = `${plan.tier}-${plan.period}`;
+                            const isLoading = loadingKey === key;
+                            const isHighlighted = !!plan.badge;
+
+                            return (
+                                <div
+                                    key={key}
+                                    className={`pricing-card contact-form ${isHighlighted ? 'pricing-card--highlighted' : ''}`}
+                                >
+                                    {/* Badge */}
+                                    {plan.badge && (
+                                        <div className="pricing-card-badge">{plan.badge}</div>
+                                    )}
+
+                                    {/* Header */}
+                                    <div className="pricing-card-header">
+                                        <div className="pricing-card-title-row">
+                                            <h2 className="title-two pricing-card-title">
+                                                {plan.title}
+                                                <span className="pricing-card-period-label">
+                                                    · {plan.period === 'yearly' ? 'Yearly' : 'Monthly'}
+                                                </span>
+                                            </h2>
+                                            {plan.discount && (
+                                                <span className="pricing-card-discount">{plan.discount}</span>
+                                            )}
+                                        </div>
+                                        <p className="pricing-card-subtitle">{plan.subtitle}</p>
+                                    </div>
+
+                                    {/* Price */}
+                                    <div className="pricing-card-price-wrap">
+                                        <div className="pricing-card-price-row">
+                                            {plan.originalPrice && (
+                                                <span className="pricing-card-original-price">
+                                                    ${plan.originalPrice.toFixed(2)}
+                                                </span>
+                                            )}
+                                            <span className="title-two pricing-card-price">
+                                                ${plan.monthlyPrice.toFixed(2)}
+                                            </span>
+                                            <span className="pricing-card-per-mo">/mo</span>
+                                        </div>
+                                        {plan.period === 'yearly' && plan.yearlyTotal && (
+                                            <p className="pricing-card-billed-yearly">
+                                                Billed ${plan.yearlyTotal.toFixed(2)} per year
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* CTA */}
+                                    <button
+                                        type="button"
+                                        disabled={isLoading || loadingKey !== null}
+                                        onClick={() => handlePurchase(plan)}
+                                        className={`btn btn-two w-100 justify-content-center pricing-card-btn ${isLoading || loadingKey !== null ? 'disabled' : ''}`}
+                                    >
+                                        {isLoading ? (
+                                            <>
+                                                <i className="fas fa-spinner fa-spin" />
+                                                &nbsp;Processing...
+                                            </>
+                                        ) : (
+                                            `Get ${plan.title} ${plan.period === 'yearly' ? 'Yearly' : 'Monthly'}`
+                                        )}
+                                    </button>
+
+                                    <hr className="pricing-card-divider" />
+
+                                    {/* Features */}
+                                    <ul className="pricing-feature-list">
+                                        {plan.features.map((feature, i) => (
+                                            <li
+                                                key={i}
+                                                className={`pricing-feature-item ${!feature.included ? 'pricing-feature-item--excluded' : ''}`}
+                                            >
+                                                <span className={`pricing-feature-icon ${feature.included ? 'pricing-feature-icon--included' : 'pricing-feature-icon--excluded'}`}>
+                                                    <i className={feature.included ? 'fas fa-check' : 'fas fa-times'} />
+                                                </span>
+                                                {feature.text}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {/* ── Footer note ──────────────────────────────────────── */}
+                    <p className="pricing-footer-note">
+                        All plans renew automatically. Cancel anytime from your profile settings.&nbsp;
+                        Secure payments powered by <span className="pricing-stripe-label">Stripe</span>.
+                    </p>
+
                 </div>
             </main>
         </div>

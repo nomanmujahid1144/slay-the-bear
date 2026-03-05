@@ -1,147 +1,209 @@
 // src/app/(public)/purchase-success/page.tsx
-
 'use client'
 
 import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { stripeService } from "@/services/stripe.service";
 import { LoaderCircleIcon } from "@/app/components/loader/LoadingCircle";
 
+// ── Types ─────────────────────────────────────────────────────────────────────
+
 interface SubscriptionDetails {
     invoiceId: string;
-    startDate: string;
-    endDate: string;
-    period: string;
-    amount: number;
+    amount:    number;
+    period:    string;   // 'month' | 'year' from Stripe interval
+    planType:  string;   // 'basic' | 'premium' from session metadata
+    startDate: string | number;
+    endDate:   string | number;
 }
 
-function ThankYouComponent() {
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+const fmtDate = (d: string | number) =>
+    new Date(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+const fmtPeriod = (p: string) =>
+    p === 'year' || p === 'yearly' ? 'Yearly' : 'Monthly';
+
+const fmtPlan = (p: string) =>
+    p ? p.charAt(0).toUpperCase() + p.slice(1) : '';
+
+// Features unlocked per plan
+const BASIC_FEATURES = [
+    'Ad-free experience across all tools',
+    'Save & view calculation history',
+    'Basic financial reports',
+    'Email support',
+];
+
+const PREMIUM_FEATURES = [
+    'Ad-free experience across all tools',
+    'Save & view calculation history',
+    'Advanced financial reports',
+    'Portfolio Optimizer',
+    'Stock Analyzer',
+    'Priority support',
+    'Early access to new tools',
+];
+
+// ── Inner component (needs useSearchParams) ───────────────────────────────────
+
+function ThankYouInner() {
     const searchParams = useSearchParams();
-    const session_id = searchParams.get('session_id');
+    const session_id   = searchParams.get('session_id');
 
     const [loading, setLoading] = useState(true);
-    const [subscriptionDetails, setSubscriptionDetails] = useState<SubscriptionDetails | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    const [details, setDetails] = useState<SubscriptionDetails | null>(null);
+    const [error, setError]     = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchSessionDetails = async () => {
-            if (!session_id) {
-                setError('No session ID found');
-                setLoading(false);
-                return;
-            }
-
-            try {
-                const { data } = await stripeService.getSessionDetails(session_id);
-                setSubscriptionDetails(data.data as SubscriptionDetails);
-            } catch {
-                setError('Failed to load subscription details');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchSessionDetails();
+        if (!session_id) {
+            setError('No session ID found.');
+            setLoading(false);
+            return;
+        }
+        stripeService.getSessionDetails(session_id)
+            .then(({ data }) => setDetails(data.data as SubscriptionDetails))
+            .catch(() => setError('Failed to load subscription details. Check your email for confirmation.'))
+            .finally(() => setLoading(false));
     }, [session_id]);
+
+    // ── Loading ───────────────────────────────────────────────────────────────
 
     if (loading) {
         return (
-            <section className="min-h-screen flex items-center justify-center py-12 px-4">
-                <LoaderCircleIcon />
-            </section>
-        );
-    }
-
-    if (error) {
-        return (
-            <section className="min-h-screen flex items-center justify-center py-12 px-4">
-                <div className="max-w-2xl w-full contact-area rounded-lg shadow-lg p-8 text-center">
-                    <div className="mb-6">
-                        <svg className="w-16 h-16 text-red-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <h2 className="text-2xl font-bold mb-4">Error Loading Details</h2>
-                    <p className="mb-6">{error}</p>
-                    <Link href="/" className="btn btn-two">Return to Home</Link>
+            <div className="purchase-success-wrap">
+                <div className="purchase-success-card contact-form">
+                    <LoaderCircleIcon />
                 </div>
-            </section>
+            </div>
         );
     }
 
-    if (!subscriptionDetails) return null;
+    // ── Error ─────────────────────────────────────────────────────────────────
+
+    if (error || !details) {
+        return (
+            <div className="purchase-success-wrap">
+                <div className="purchase-success-card contact-form">
+                    <div className="purchase-success-icon purchase-success-icon--error">
+                        <FontAwesomeIcon icon={['fas', 'circle-xmark']} />
+                    </div>
+                    <div className="purchase-success-header">
+                        <h2 className="title-two purchase-success-title">Something went wrong</h2>
+                        <p className="purchase-success-subtitle">{error}</p>
+                    </div>
+                    <div className="purchase-success-actions">
+                        <Link href="/profile" className="btn btn-two">Go to Profile</Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    const isPremium  = details.planType === 'premium';
+    const planLabel  = fmtPlan(details.planType);
+    const features   = isPremium ? PREMIUM_FEATURES : BASIC_FEATURES;
+
+    // ── Success ───────────────────────────────────────────────────────────────
 
     return (
-        <section className="min-h-screen flex items-center justify-center py-12 px-4">
-            <div className="max-w-2xl w-full contact-area rounded-lg shadow-lg p-8 md:p-12">
-                <div className="text-center mb-8">
-                    <div className="mb-6">
-                        <svg className="w-20 h-20 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <h2 className="text-3xl md:text-4xl font-bold mb-4">Payment Successful!</h2>
-                    <p className="text-gray-600 dark:text-gray-400 mb-6 md:mb-8">
-                        Thank you for subscribing to our premium service! We are thrilled to welcome you as a premium
-                        member of the SlayTheBear family. Your order{' '}
-                        <span className="font-medium hover:underline">#{subscriptionDetails.invoiceId}</span> has been
-                        successfully processed. As a valued member, you now have access to exclusive calculators and
-                        advanced features.
+        <div className="purchase-success-wrap">
+            <div className="purchase-success-card contact-form">
+
+                {/* Success icon */}
+                <div className="purchase-success-icon purchase-success-icon--success">
+                    <FontAwesomeIcon icon={['fas', 'circle-check']} />
+                </div>
+
+                {/* Heading */}
+                <div className="purchase-success-header">
+                    <h2 className="title-two purchase-success-title">Payment Successful!</h2>
+                    <p className="purchase-success-subtitle">
+                        Welcome to Slay the Bear {planLabel}! Your subscription is now active.
                     </p>
                 </div>
 
-                <div className="space-y-4 sm:space-y-2 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6 md:mb-8 bg-gray-50 dark:bg-gray-800">
-                    <dl className="sm:flex items-center justify-between gap-4 py-2">
-                        <dt className="font-normal mb-1 sm:mb-0 text-gray-600 dark:text-gray-400">Start Date</dt>
-                        <dd className="font-medium sm:text-end">
-                            {new Date(subscriptionDetails.startDate).toLocaleDateString('en-US', {
-                                year: 'numeric', month: 'long', day: 'numeric',
-                            })}
-                        </dd>
-                    </dl>
-                    <hr className="border-gray-200 dark:border-gray-700" />
-                    <dl className="sm:flex items-center justify-between gap-4 py-2">
-                        <dt className="font-normal mb-1 sm:mb-0 text-gray-600 dark:text-gray-400">End Date</dt>
-                        <dd className="font-medium sm:text-end">
-                            {new Date(subscriptionDetails.endDate).toLocaleDateString('en-US', {
-                                year: 'numeric', month: 'long', day: 'numeric',
-                            })}
-                        </dd>
-                    </dl>
-                    <hr className="border-gray-200 dark:border-gray-700" />
-                    <dl className="sm:flex items-center justify-between gap-4 py-2">
-                        <dt className="font-normal mb-1 sm:mb-0 text-gray-600 dark:text-gray-400">Subscription Period</dt>
-                        <dd className="font-medium sm:text-end capitalize">
-                            {subscriptionDetails.period === 'year' ? 'Yearly' : 'Monthly'}
-                        </dd>
-                    </dl>
-                    <hr className="border-gray-200 dark:border-gray-700" />
-                    <dl className="sm:flex items-center justify-between gap-4 py-2">
-                        <dt className="font-normal mb-1 sm:mb-0 text-gray-600 dark:text-gray-400">Amount</dt>
-                        <dd className="font-medium sm:text-end text-primary text-xl">
-                            ${subscriptionDetails.amount.toFixed(2)}
-                        </dd>
-                    </dl>
+                {/* Plan badge */}
+                <div className="purchase-success-plan-badge-wrap">
+                    <span className={`profile-plan-badge profile-plan-badge--${details.planType}`}>
+                        <FontAwesomeIcon icon={['fas', isPremium ? 'crown' : 'shield-halved']} />
+                        &nbsp;{planLabel} &middot; {fmtPeriod(details.period)}
+                    </span>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Link href="/profile" className="btn btn-two text-center">View Profile</Link>
-                    <Link href="/" className="btn btn-one text-center">Return to Home</Link>
+                {/* Order details */}
+                <div className="purchase-success-details">
+                    <div className="purchase-success-row">
+                        <span className="purchase-success-row-label">Invoice</span>
+                        <span className="purchase-success-row-value">#{details.invoiceId}</span>
+                    </div>
+                    <div className="purchase-success-row">
+                        <span className="purchase-success-row-label">Amount charged</span>
+                        <span className="purchase-success-row-value tg-cell-value">
+                            ${details.amount.toFixed(2)}
+                        </span>
+                    </div>
+                    <div className="purchase-success-row">
+                        <span className="purchase-success-row-label">Billing period</span>
+                        <span className="purchase-success-row-value">{fmtPeriod(details.period)}</span>
+                    </div>
+                    <div className="purchase-success-row">
+                        <span className="purchase-success-row-label">Start date</span>
+                        <span className="purchase-success-row-value">{fmtDate(details.startDate)}</span>
+                    </div>
+                    <div className="purchase-success-row">
+                        <span className="purchase-success-row-label">Next renewal</span>
+                        <span className="purchase-success-row-value">{fmtDate(details.endDate)}</span>
+                    </div>
                 </div>
+
+                {/* Features unlocked */}
+                <div className="purchase-success-unlocked">
+                    <p className="purchase-success-unlocked-title">
+                        <FontAwesomeIcon icon={['fas', 'unlock']} />
+                        &nbsp;What you've unlocked
+                    </p>
+                    <ul className="purchase-success-unlocked-list">
+                        {features.map((f) => (
+                            <li key={f}>
+                                <FontAwesomeIcon icon={['fas', 'check']} className="purchase-success-check" />
+                                {f}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                {/* CTAs */}
+                <div className="purchase-success-actions">
+                    <Link href={isPremium ? '/premium-tools' : '/tools'} className="btn btn-two">
+                        {isPremium ? 'Explore Premium Tools' : 'Explore Tools'}
+                    </Link>
+                    <Link href="/profile" className="purchase-success-profile-link">
+                        View subscription in profile
+                        <FontAwesomeIcon icon={['fas', 'arrow-right']} />
+                    </Link>
+                </div>
+
             </div>
-        </section>
+        </div>
     );
 }
 
-export default function ThankYou() {
+// ── Page export ───────────────────────────────────────────────────────────────
+
+export default function PurchaseSuccessPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen flex items-center justify-center">
-                <LoaderCircleIcon />
+            <div className="purchase-success-wrap">
+                <div className="purchase-success-card contact-form">
+                    <LoaderCircleIcon />
+                </div>
             </div>
         }>
-            <ThankYouComponent />
+            <ThankYouInner />
         </Suspense>
     );
 }

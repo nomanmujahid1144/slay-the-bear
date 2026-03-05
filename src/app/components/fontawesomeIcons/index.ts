@@ -28,7 +28,18 @@ import {
     faUser,
     faCreditCard,
     faCrown,
-    faArrowRightFromBracket
+    faArrowRightFromBracket,
+    faLock,
+    faArrowRight,
+    faCircleInfo,
+    faCircleUp,
+    faCircleDown,
+    faUnlock,
+    faFileInvoiceDollar,
+    faCheck,
+    faArrowUp,
+    faArrowDown,
+    faTriangleExclamation
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -60,5 +71,16 @@ library.add(
     faUser,
     faCreditCard,
     faCrown,
-    faArrowRightFromBracket
+    faArrowRightFromBracket,
+    faLock,
+    faArrowRight,
+    faCircleInfo,
+    faCircleUp,
+    faCircleDown,
+    faUnlock,
+    faFileInvoiceDollar,
+    faCheck,
+    faArrowUp,
+    faArrowDown,
+    faTriangleExclamation
 );

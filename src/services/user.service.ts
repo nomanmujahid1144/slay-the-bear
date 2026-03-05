@@ -1,4 +1,5 @@
 // src/services/user.service.ts
+// getSubscription uses silentOn404 — free users have no subscription, that's fine
 
 import axiosInstance from '@/utils/axiosInstance';
 import { API_CONFIG } from '@/config/api.config';
@@ -24,10 +25,10 @@ export const userService = {
 
     getSubscription: () =>
         axiosInstance.get<ApiResponse<UserSubscription>>(
-            API_CONFIG.ENDPOINTS.USERS.SUBSCRIPTION
+            API_CONFIG.ENDPOINTS.USERS.SUBSCRIPTION,
+            { silentOn404: true } as any   // no subscription = expected, don't toast
         ),
 
-    // Backend returns an array of invoice entries, not a single billing object
     getBilling: () =>
         axiosInstance.get<ApiResponse<UserBillingEntry[]>>(
             API_CONFIG.ENDPOINTS.USERS.BILLING

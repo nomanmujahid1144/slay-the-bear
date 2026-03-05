@@ -1,122 +1,119 @@
+// src/app/components/profile/billings-pages/InvoiceHistory.tsx
 'use client'
 
 import { useEffect, useState } from "react";
-import { LoaderCircleIcon } from "../../loader/LoadingCircle";
+import { TgTable, type TgTableColumn } from "@/app/components/table/TgTable";
+import { TgTableSkeleton } from "@/app/components/skeletons/tables/TableSkeleton";
 import { userService } from "@/services/user.service";
-import type { ChangeEvent } from "react";
 import type { UserBillingEntry } from "@/types";
 
-const tabHeaders = ["ID", "Amount", "Status", "Start Date", "End Date", "Actions"];
+const fmt = (date: string) =>
+    new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+const COLUMNS: TgTableColumn<UserBillingEntry>[] = [
+    {
+        key: 'invoiceId',
+        label: 'Invoice ID',
+        render: (row) => (
+            <span className="tg-cell-value">{row.invoiceId}</span>
+        ),
+    },
+    {
+        key: 'amount',
+        label: 'Amount',
+        render: (row) => (
+            <span className="tg-cell-value">${Number(row.amount).toFixed(2)}</span>
+        ),
+    },
+    {
+        key: 'status',
+        label: 'Status',
+        render: (row) => {
+            const isActive = row.status === 'Subscribed' || row.status === 'Renewal';
+            return (
+                <span className={`profile-invoice-status ${isActive ? 'profile-invoice-status--active' : 'profile-invoice-status--canceled'}`}>
+                    <i className={`fas ${isActive ? 'fa-circle-check' : 'fa-circle-xmark'}`} />
+                    {row.status}
+                </span>
+            );
+        },
+    },
+    {
+        key: 'startDate',
+        label: 'Start Date',
+        render: (row) => <span>{fmt(row.startDate)}</span>,
+    },
+    {
+        key: 'endDate',
+        label: 'End Date',
+        render: (row) => <span>{row.endDate ? fmt(row.endDate) : '—'}</span>,
+    },
+    {
+        key: 'actions',
+        label: 'Actions',
+        align: 'right',
+        render: (row) => (
+            <div className="profile-invoice-actions">
+                {row.viewURL && (
+                    <a
+                        href={row.viewURL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="profile-invoice-btn"
+                        title="View Invoice"
+                    >
+                        <i className="fas fa-eye" />
+                    </a>
+                )}
+                {row.downloadURL && (
+                    <a
+                        href={row.downloadURL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="profile-invoice-btn"
+                        title="Download PDF"
+                    >
+                        <i className="fas fa-download" />
+                    </a>
+                )}
+                {!row.viewURL && !row.downloadURL && (
+                    <span className="profile-invoice-no-action">—</span>
+                )}
+            </div>
+        ),
+    },
+];
 
 export const InvoiceHistory = () => {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [invoices, setInvoices] = useState<UserBillingEntry[]>([]);
 
-    const getBillingData = async () => {
-        setLoading(true);
-        try {
-            const { data } = await userService.getBilling();
-            setInvoices(data.data || []);
-        } catch {
-            setInvoices([]);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
-        getBillingData();
+        const fetch = async () => {
+            try {
+                const { data } = await userService.getBilling();
+                setInvoices(data.data || []);
+            } catch {
+                setInvoices([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetch();
     }, []);
 
-    const handleInvoiceAction = (e: ChangeEvent<HTMLSelectElement>, invoice: UserBillingEntry) => {
-        const action = e.target.value;
-        if (action === "view" && invoice.viewURL) {
-            window.open(invoice.viewURL, "_blank");
-        } else if (action === "download" && invoice.downloadURL) {
-            window.open(invoice.downloadURL, "_blank");
-        }
-    };
+    if (loading) {
+        return <TgTableSkeleton rows={4} cols={6} />;
+    }
 
     return (
-        <section>
-            <div className="flex flex-col">
-                <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                        <div className="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg">
-                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                <thead className="bg-gray-50 dark:bg-gray-800">
-                                    <tr>
-                                        {tabHeaders.map((tab, index) => (
-                                            <th
-                                                key={index}
-                                                scope="col"
-                                                className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
-                                            >
-                                                {tab}
-                                            </th>
-                                        ))}
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                                    {loading ? (
-                                        <tr>
-                                            <td colSpan={6} className="py-10">
-                                                <LoaderCircleIcon />
-                                            </td>
-                                        </tr>
-                                    ) : invoices.length > 0 ? (
-                                        invoices.map((invoice, index) => (
-                                            <tr key={index}>
-                                                <td className="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                                                    <div className="inline-flex items-center gap-x-3">
-                                                        <span>{invoice.invoiceId}</span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                                                    ${invoice.amount}
-                                                </td>
-                                                <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                                                    <div className={`inline-flex items-center px-3 py-1 rounded-full gap-x-2 dark:bg-gray-800 ${invoice.status === 'Subscribed' ? 'text-emerald-500 bg-emerald-100/60' : 'text-red-500 bg-red-100/60'}`}>
-                                                        <svg width={12} height={12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                                        </svg>
-                                                        <h2 className="text-sm font-normal">{invoice.status}</h2>
-                                                    </div>
-                                                </td>
-                                                <td className="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                                                    {new Date(invoice.startDate).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
-                                                </td>
-                                                <td className="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                                                    {new Date(invoice.endDate).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
-                                                </td>
-                                                <td className="px-4 py-4 text-sm whitespace-nowrap">
-                                                    <div className="flex items-center gap-x-6">
-                                                        <select
-                                                            className="px-4 py-2 text-sm text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700"
-                                                            onChange={(e) => handleInvoiceAction(e, invoice)}
-                                                            defaultValue=""
-                                                        >
-                                                            <option value="" disabled>Select Action</option>
-                                                            <option value="view">View</option>
-                                                            <option value="download">Download</option>
-                                                        </select>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan={6} className="py-10">
-                                                <div className="w-full flex justify-center">No Invoice Found</div>
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+            <TgTable
+                columns={COLUMNS}
+                rows={invoices}
+                keyExtractor={(row) => row.id}
+                emptyText="No invoices yet. Your payment history will appear here."
+            />
+        </div>
     );
 };

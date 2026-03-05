@@ -1,4 +1,5 @@
 // src/utils/axiosInstance.ts
+// Add silentOn404 support to skip toasting for expected 404s
 
 import axios, { type InternalAxiosRequestConfig } from 'axios';
 import { API_CONFIG } from '@/config/api.config';
@@ -6,11 +7,11 @@ import { errorHandler } from '@/utils/errors/errorHandler';
 
 interface RetryAxiosRequestConfig extends InternalAxiosRequestConfig {
     _retry?: boolean;
+    silentOn404?: boolean;   // ← new: skip toast when 404 is expected
 }
 
-// Public endpoints — 401 on these should NEVER trigger a redirect
 const PUBLIC_ENDPOINTS = [
-    API_CONFIG.ENDPOINTS.USERS.PROFILE,      // called by initialize() on public pages
+    API_CONFIG.ENDPOINTS.USERS.PROFILE,
     API_CONFIG.ENDPOINTS.AUTH.REFRESH_TOKEN,
     API_CONFIG.ENDPOINTS.AUTH.LOGIN,
     API_CONFIG.ENDPOINTS.AUTH.SIGNUP,
@@ -28,22 +29,23 @@ const axiosInstance = axios.create({
     withCredentials: true,
 });
 
-// Request interceptor
 axiosInstance.interceptors.request.use(
     (config) => config,
     (error) => Promise.reject(errorHandler.handle(error))
 );
 
-// Response interceptor
 axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config as RetryAxiosRequestConfig;
 
-        // Handle 401 — attempt token refresh once
+        // If caller marked this as silentOn404 and it's a 404 — reject silently
+        if (originalRequest?.silentOn404 && error.response?.status === 404) {
+            return Promise.reject(error);
+        }
+
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
-
             try {
                 await axios.post(
                     `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.AUTH.REFRESH_TOKEN}`,
@@ -52,9 +54,6 @@ axiosInstance.interceptors.response.use(
                 );
                 return axiosInstance(originalRequest);
             } catch {
-                // Only redirect to login if this was a protected endpoint request.
-                // Public pages call getProfile() to check auth state — a 401 there
-                // just means the user is logged out, which is fine on public routes.
                 if (typeof window !== 'undefined' && !isPublicEndpoint(originalRequest.url)) {
                     window.location.href = '/login';
                 }
