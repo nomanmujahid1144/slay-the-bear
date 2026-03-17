@@ -39,7 +39,11 @@ import {
     faCheck,
     faArrowUp,
     faArrowDown,
-    faTriangleExclamation
+    faTriangleExclamation,
+    faSyncAlt,
+    faExclamationTriangle,
+    faChevronLeft,
+    faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -82,5 +86,9 @@ library.add(
     faCheck,
     faArrowUp,
     faArrowDown,
-    faTriangleExclamation
+    faTriangleExclamation,
+    faSyncAlt,
+    faExclamationTriangle,
+    faChevronLeft,
+    faChevronRight,
 );
