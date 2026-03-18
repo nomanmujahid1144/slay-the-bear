@@ -29,6 +29,7 @@ export function useMarketWebSocket({
     const reconnectTimeout = useRef<NodeJS.Timeout | undefined>(undefined);
     const reconnectAttempts = useRef(0);
     const maxReconnectAttempts = 5;
+    const isConnecting = useRef(false); // Prevent multiple simultaneous connections
 
     // Get WebSocket URL from environment
     const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:5000/ws/markets';
@@ -38,8 +39,16 @@ export function useMarketWebSocket({
      */
     const connect = useCallback(() => {
         if (!enabled || symbols.length === 0) return;
+        
+        // Prevent multiple simultaneous connection attempts
+        if (isConnecting.current) {
+            console.log('[WebSocket] Already connecting, skipping...');
+            return;
+        }
 
         try {
+            isConnecting.current = true;
+            
             // Create WebSocket connection
             ws.current = new WebSocket(wsUrl);
 
@@ -49,14 +58,17 @@ export function useMarketWebSocket({
                 setIsConnected(true);
                 setError(null);
                 reconnectAttempts.current = 0;
+                isConnecting.current = false; // Reset flag
 
-                // Subscribe to symbols
-                if (ws.current && symbols.length > 0) {
-                    ws.current.send(JSON.stringify({
-                        type: 'subscribe',
-                        symbols
-                    }));
-                }
+                // FIXED: Wait for connection to be fully ready before sending
+                setTimeout(() => {
+                    if (ws.current && ws.current.readyState === WebSocket.OPEN && symbols.length > 0) {
+                        ws.current.send(JSON.stringify({
+                            type: 'subscribe',
+                            symbols
+                        }));
+                    }
+                }, 100);
             };
 
             // Listen for messages
@@ -93,6 +105,7 @@ export function useMarketWebSocket({
             ws.current.onclose = () => {
                 console.log('❌ WebSocket disconnected');
                 setIsConnected(false);
+                isConnecting.current = false; // Reset flag
 
                 // Attempt to reconnect
                 if (reconnectAttempts.current < maxReconnectAttempts) {
@@ -112,11 +125,13 @@ export function useMarketWebSocket({
             ws.current.onerror = (error) => {
                 console.error('WebSocket error:', error);
                 setError('Connection error');
+                isConnecting.current = false; // Reset flag
             };
 
         } catch (error) {
             console.error('Error creating WebSocket:', error);
             setError('Failed to create connection');
+            isConnecting.current = false; // Reset flag
         }
     }, [symbols, enabled, wsUrl, onQuoteUpdate]);
 
@@ -130,11 +145,15 @@ export function useMarketWebSocket({
 
         if (ws.current) {
             // Unsubscribe from symbols
-            if (symbols.length > 0) {
-                ws.current.send(JSON.stringify({
-                    type: 'unsubscribe',
-                    symbols
-                }));
+            if (ws.current.readyState === WebSocket.OPEN && symbols.length > 0) {
+                try {
+                    ws.current.send(JSON.stringify({
+                        type: 'unsubscribe',
+                        symbols
+                    }));
+                } catch (e) {
+                    // Ignore if send fails
+                }
             }
 
             ws.current.close();
@@ -177,14 +196,18 @@ export function useMarketWebSocket({
         };
     }, [connect, disconnect]);
 
-    // Update subscription when symbols change
+    // FIXED: Update subscription when symbols change - with readyState check
     useEffect(() => {
-        if (isConnected && ws.current) {
+        if (isConnected && ws.current && ws.current.readyState === WebSocket.OPEN) {
             // Resubscribe with new symbols
-            ws.current.send(JSON.stringify({
-                type: 'subscribe',
-                symbols
-            }));
+            setTimeout(() => {
+                if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+                    ws.current.send(JSON.stringify({
+                        type: 'subscribe',
+                        symbols
+                    }));
+                }
+            }, 50);
         }
     }, [symbols, isConnected]);
 
