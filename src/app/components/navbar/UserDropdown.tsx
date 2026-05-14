@@ -15,6 +15,7 @@ interface UserDropdownProps {
 }
 
 const MENU_ITEMS = [
+    { label: 'Dashboard', href: '/dashboard', icon: 'gauge' }, 
     { label: 'Profile', href: '/profile', icon: 'user' },
     { label: 'Billing', href: '/profile', icon: 'credit-card' },
     { label: 'Subscription', href: '/pricing', icon: 'crown' },

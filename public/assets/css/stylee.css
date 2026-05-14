@@ -63,6 +63,7 @@
     --tg-icon-color: #6D757F;
     --tg-icon-market-delayed-color: #ff9800;
     --tg-border-color: #DFDFDF;
+    --tg-db-challange-border-color: #91C7FF;
     --tg-border-dark: #273341;
     --tg-body-font-size: 16px;
     --tg-body-font-weight: 400;
@@ -70,19 +71,32 @@
     --tg-body-line-height: 1.75;
     --tg-heading-line-height: 1.2;
     --tg-blue: #0d6efd;
+    --tg-blue-light: #E8F1FF;
+    --tg-blue-muted: #CBDCF5;
     --tg-indigo: #6610f2;
     --tg-purple: #6f42c1;
     --tg-pink: #d63384;
     --tg-red: #dc3545;
     --tg-orange: #fd7e14;
     --tg-yellow: #ffc107;
+    --tg-gold: #D69411;
+    --tg-gold-light: #EEB117;
+    --tg-xp-bar-start: #FFD198;
+    --tg-xp-bar-end: #FF9106;
+    --tg-db-challenge-start: #FFFFFF;
+    --tg-db-challenge-end: #B8D3FF;
+    --tg-bg-streak: rgba(255, 147, 12, 0.1);
+    --tg-bg-xp: rgba(16, 174, 108, 0.1);
+    --tg-bg-rank: rgba(234, 63, 73, 0.1);
     --tg-green: #198754;
+    --tg-green-light: #00BC7D;
     --tg-teal: #E8F1F1;
     --tg-cyan: #0dcaf0;
     --tg-white: #ffffff;
     --tg-black: #0C1622;
     --tg-black-two: #000000;
     --tg-gray: #D9D9D9;
+    --tg-gray-light: #F0F3F7;
     --tg-gray-two: #BACCE1;
     --tg-gray-three: #F9F9F7;
     --facebook: #104E87;
@@ -8987,9 +9001,11 @@ label {
     0% {
         background-color: rgba(34, 197, 94, 0.25);
     }
+
     50% {
         background-color: rgba(34, 197, 94, 0.18);
     }
+
     100% {
         background-color: rgba(34, 197, 94, 0.08);
     }
@@ -9000,9 +9016,11 @@ label {
     0% {
         background-color: rgba(239, 68, 68, 0.25);
     }
+
     50% {
         background-color: rgba(239, 68, 68, 0.18);
     }
+
     100% {
         background-color: rgba(239, 68, 68, 0.08);
     }
@@ -9024,9 +9042,11 @@ label {
         0% {
             background-color: rgba(34, 197, 94, 0.2);
         }
+
         50% {
             background-color: rgba(34, 197, 94, 0.14);
         }
+
         100% {
             background-color: rgba(34, 197, 94, 0.06);
         }
@@ -9036,9 +9056,11 @@ label {
         0% {
             background-color: rgba(239, 68, 68, 0.2);
         }
+
         50% {
             background-color: rgba(239, 68, 68, 0.14);
         }
+
         100% {
             background-color: rgba(239, 68, 68, 0.06);
         }
@@ -9192,10 +9214,13 @@ label {
 }
 
 @keyframes pulse-green {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 1;
         transform: scale(1);
     }
+
     50% {
         opacity: 0.7;
         transform: scale(1.1);
@@ -9488,7 +9513,8 @@ label {
 .market-mover-item.selected {
     background: var(--tg-gray-three);
     border-left: 3px solid var(--tg-primary-color);
-    padding-left: 13px; /* Compensate for border */
+    padding-left: 13px;
+    /* Compensate for border */
 }
 
 .market-mover-item:hover {
@@ -9619,7 +9645,8 @@ label {
     padding: 24px;
     background: var(--tg-white);
     border-bottom: 1px solid var(--tg-border-color);
-    min-height: 200px; /* Added minimum height */
+    min-height: 200px;
+    /* Added minimum height */
 }
 
 .etf-carousel-chart-stats {
@@ -9716,7 +9743,8 @@ label {
 
 .etf-carousel-item-chart {
     width: 100%;
-    height: 50px; /* Increased from 30px */
+    height: 50px;
+    /* Increased from 30px */
     margin-bottom: 8px;
 }
 
@@ -9755,6 +9783,3064 @@ label {
     background: var(--tg-primary-color);
     width: 24px;
     border-radius: 5px;
+}
+
+
+/* =============================================================
+   DASHBOARD — Layout
+   Page: /dashboard
+   Covers: sidebar, main area shell
+   Dark mode: [tg-theme=dark] .db-*
+   ============================================================= */
+
+/* ── Page wrapper ─────────────────────────────────────────────
+   Full viewport two-column grid:
+   [sidebar | main content]
+   ──────────────────────────────────────────────────────────── */
+.db-wrap {
+    display: grid;
+    grid-template-columns: 175px 1fr;
+    min-height: calc(100vh - 140px);
+    /* subtract header + footer */
+    transition: grid-template-columns 0.25s ease;
+}
+
+/* Collapsed sidebar state */
+.db-wrap:has(.db-sidebar--collapsed) {
+    grid-template-columns: 64px 1fr;
+}
+
+/* ── Sidebar ──────────────────────────────────────────────────
+   Fixed left panel with nav items
+   ──────────────────────────────────────────────────────────── */
+.db-sidebar {
+    background: var(--tg-white);
+    border-right: 1px solid var(--tg-border-color);
+    padding: 24px 12px;
+    position: sticky;
+    top: 80px;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: padding 0.25s ease;
+}
+
+.db-sidebar--collapsed {
+    padding: 24px 8px;
+    align-items: center;
+}
+
+/* ── Collapse toggle button ───────────────────────────────────
+   Small arrow button at top right of sidebar
+   ──────────────────────────────────────────────────────────── */
+.db-sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--tg-border-color);
+    background: var(--tg-white);
+    color: var(--tg-icon-color);
+    cursor: pointer;
+    align-self: flex-end;
+    margin-bottom: 24px;
+    flex-shrink: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+    font-size: 10px;
+}
+
+.db-sidebar-toggle:hover {
+    background: var(--tg-primary-color);
+    color: var(--tg-white);
+    border-color: var(--tg-primary-color);
+}
+
+/* ── Sidebar nav ──────────────────────────────────────────────
+   Nav list container
+   ──────────────────────────────────────────────────────────── */
+.db-sidebar-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.db-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* ── Section label ────────────────────────────────────────────
+   Small "Settings" label between nav groups
+   ──────────────────────────────────────────────────────────── */
+.db-nav-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--tg-icon-color);
+    padding: 16px 14px 6px;
+    margin: 0;
+}
+
+.db-nav-divider {
+    width: 32px;
+    height: 1px;
+    background: var(--tg-border-color);
+    margin: 12px auto;
+}
+
+/* ── Nav item (button) ────────────────────────────────────────
+   Each clickable tab button in sidebar
+   ──────────────────────────────────────────────────────────── */
+.db-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--tg-heading-font-family);
+    color: var(--tg-body-font-color);
+    text-align: left;
+    transition: background 0.15s ease, color 0.15s ease;
+    border-left: 3px solid transparent;
+    white-space: nowrap;
+}
+
+.db-nav-item:hover {
+    background: var(--tg-teal);
+    color: var(--tg-primary-color);
+    border-left-color: var(--tg-primary-color);
+}
+
+/* Active state */
+.db-nav-item--active {
+    background: var(--tg-teal);
+    color: var(--tg-primary-color);
+    border-left-color: var(--tg-primary-color);
+}
+
+/* Icon inside nav item */
+.db-nav-icon {
+    font-size: 14px;
+    width: 16px;
+    color: inherit;
+    flex-shrink: 0;
+}
+
+/* Label text inside nav item */
+.db-nav-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: inherit;
+}
+
+/* ── Main content area ────────────────────────────────────────
+   Right side of the grid — holds all tab content
+   ──────────────────────────────────────────────────────────── */
+.db-main {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    /* prevent overflow */
+    background: var(--tg-white);
+}
+
+/* ── Content panel ────────────────────────────────────────────
+   Scrollable content area for each tab
+   ──────────────────────────────────────────────────────────── */
+.db-content {
+    flex: 1;
+    padding: 32px 36px;
+    overflow-y: auto;
+}
+
+/* ── Settings wrapper ─────────────────────────────────────────
+   Wraps existing Account/Billing components inside dashboard
+   Removes their own outer padding to fit cleanly
+   ──────────────────────────────────────────────────────────── */
+.db-settings-wrap {
+    max-width: 860px;
+}
+
+.db-settings-wrap .profile-page-wrap {
+    padding: 0;
+    max-width: 100%;
+}
+
+
+/* =============================================================
+   DASHBOARD TAB — Content Styles
+   Page: /dashboard → Dashboard tab
+   Covers: XP bar, stats, challenge, activity, lessons
+   Dark mode: [tg-theme=dark] .db-*
+   ============================================================= */
+
+/* ── Tab content wrapper ──────────────────────────────────────
+   Outer container for all dashboard tab sections
+   ──────────────────────────────────────────────────────────── */
+.db-tab-content {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+/* ── Section title ────────────────────────────────────────────
+   Used above activity grid and core lessons
+   ──────────────────────────────────────────────────────────── */
+.db-section-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--tg-heading-font-color);
+}
+
+/* =============================================================
+   XP PROGRESS BAR
+   ============================================================= */
+
+/* ── XP bar wrapper ───────────────────────────────────────────
+   Full-width bar showing level progress
+   ──────────────────────────────────────────────────────────── */
+.db-xp-bar-wrap {
+    background: var(--tg-heading-font-color);
+    border-radius: 10px;
+    padding: 14px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.db-xp-bar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.db-xp-bar-level {
+    color: var(--tg-white);
+    font-family: var(--tg-heading-font-family);
+}
+
+.db-xp-bar-count {
+    color: var(--tg-white);
+}
+
+.db-xp-bar-count-gold {
+    color: var(--tg-gold);
+}
+
+/* Progress bar — XP level indicator */
+.db-xp-bar {
+    width: 100%;
+    height: 8px;
+    border-radius: 100px;
+    border: none;
+    overflow: hidden;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+/* Track (background — white) */
+.db-xp-bar::-webkit-progress-bar {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 100px;
+}
+
+/* Fill (gradient from Figma) */
+.db-xp-bar::-webkit-progress-value {
+    background: linear-gradient(90deg, var(--tg-xp-bar-start) 0%, var(--tg-xp-bar-end) 100%);
+    border-radius: 100px;
+    transition: width 0.4s ease;
+}
+
+/* Firefox */
+.db-xp-bar::-moz-progress-bar {
+    background: linear-gradient(90deg, var(--tg-xp-bar-start) 0%, var(--tg-xp-bar-end) 100%);
+    border-radius: 100px;
+}
+
+.db-xp-bar-sub {
+    color: var(--tg-white);
+}
+
+/* =============================================================
+   STAT CARDS ROW
+   ============================================================= */
+
+/* ── Stats row ────────────────────────────────────────────────
+   2-column layout: [3 stat cards] [Mr. Finley spans 2 rows]
+   ──────────────────────────────────────────────────────────── */
+.db-stats-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.db-top-grid {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.db-top-left {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Left side — 3 stat cards in a row */
+.db-stats-left {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+/* ── Base stat card ───────────────────────────────────────────
+   White card with icon + info
+   ──────────────────────────────────────────────────────────── */
+.db-stat-card {
+    background: var(--tg-white);
+    border: 1px solid var(--tg-border-color);
+}
+
+.db-stat-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.db-stat-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.db-stat-label {
+    /* color: var(--tg-icon-color); */
+}
+
+.db-stat-value {
+    font-size: 40px;
+    font-weight: 700;
+    font-family: var(--tg-heading-font-family);
+    line-height: 1;
+    color: var(--tg-heading-font-color);
+}
+
+.db-stat-sub {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--tg-icon-color);
+}
+
+/* =============================================================
+   MR. FINLEY — 3 Layer Card
+   ============================================================= */
+
+/* ── Wrapper ──────────────────────────────────────────────────
+   Positions all 3 layers relative to each other
+   ──────────────────────────────────────────────────────────── */
+.db-finley-wrap {
+    position: relative;
+    width: 93%;
+    height: 60%;
+}
+
+/* ── Base layer styles ────────────────────────────────────────
+   Each layer is absolutely positioned, slightly offset
+   ──────────────────────────────────────────────────────────── */
+.db-finley-layer {
+    position: absolute;
+    border-radius: 16px;
+    left: 0;
+    right: 0;
+}
+
+/* Layer 3 — bottom, lightest, biggest offset */
+.db-finley-layer--3 {
+    background: var(--tg-blue-light);
+    top: -20px;
+    bottom: 10px;
+    left: 24px;
+    right: -20px;
+}
+
+/* Layer 2 — middle */
+.db-finley-layer--2 {
+    background: var(--tg-blue-muted);
+    top: -10px;
+    bottom: 5px;
+    left: 12px;
+    right: -10px;
+}
+
+/* Layer 1 — top, dark navy, no offset */
+.db-finley-layer--1 {
+    background: var(--tg-secondary-color);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    z-index: 1;
+}
+
+/* ── Text inside top layer ────────────────────────────────────*/
+.db-finley-chat-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--tg-white);
+    line-height: 110%;
+    letter-spacing: -3%;
+}
+
+.db-finley-chat-desc {
+    font-size: 16px;
+    color: var(--tg-gray);
+    line-height: 110%;
+    letter-spacing: -3%;
+}
+
+/* Ask Mr. Finley button */
+.db-finley-chat-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px;
+    background: var(--tg-white);
+    color: var(--tg-secondary-color);
+    border: none;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: auto;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.db-finley-chat-btn:hover {
+    opacity: 0.9;
+}
+
+/* ── Mr. Finley card ──────────────────────────────────────────
+   4th stat card — darker navy background
+   ──────────────────────────────────────────────────────────── */
+.db-stat-card--finley {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--tg-white);
+    border: solid 1px var(--tg-border-color);
+}
+
+.db-finley-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Avatar with online dot */
+.db-finley-avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.db-finley-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--tg-primary-color);
+    opacity: 0.8;
+}
+
+.db-finley-dot {
+    position: absolute;
+    bottom: 1px;
+    right: 1px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--tg-green-light);
+    border: 2px solid var(--tg-white);
+}
+
+.db-finley-meta {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.db-finley-name {
+    color: var(--tg-black);
+}
+
+.db-finley-status {
+    font-size: 11px;
+    color: #27AE60;
+    font-weight: 600;
+}
+
+.db-finley-arrow {
+    background: var(--tg-blue-light);
+    color: var(--tg-black);
+    cursor: pointer;
+}
+
+.db-finley-btn {
+    width: 100%;
+    padding: 8px 14px;
+    background: var(--tg-white);
+    color: var(--tg-heading-font-color);
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: var(--tg-heading-font-family);
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.db-finley-btn:hover {
+    opacity: 0.9;
+}
+
+.bg-streak {
+    background: var(--tg-bg-streak);
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.bg-xp {
+    background: var(--tg-bg-xp);
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.bg-rank {
+    background: var(--tg-bg-rank);
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+/* =============================================================
+   DAILY CHALLENGE
+   ============================================================= */
+
+/* ── Challenge bar ────────────────────────────────────────────
+   Full-width row with icon, info, timer, reward, button
+   ──────────────────────────────────────────────────────────── */
+.db-challenge {
+    background: linear-gradient(172deg, var(--tg-db-challenge-start) 0%, var(--tg-db-challenge-end) 100%);
+    border: 1px solid var(--tg-db-challange-border-color);
+    border-radius: 12px;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.db-challenge-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+}
+
+.db-challenge-icon {
+    background: var(--tg-white);
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.db-challenge-title {
+    color: var(--tg-secondary-color);
+}
+
+.db-challenge-name {
+    color: var(--tg-heading-font-color);
+}
+
+.db-challenge-hint {
+    color: var(--tg-icon-color);
+}
+
+.db-challenge-mid {
+    display: flex;
+    gap: 28px;
+    flex-shrink: 0;
+}
+
+.db-challenge-meta-label {
+    color: var(--tg-primary-color);
+}
+
+.db-challenge-timer {
+    color: var(--tg-heading-font-color);
+}
+
+.db-challenge-reward {
+    color: var(--tg-heading-font-color);
+}
+
+/* Challenge CTA button */
+.db-challenge-btn {
+    padding: 10px 22px;
+    background: var(--tg-secondary-color);
+    color: var(--tg-white);
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: opacity 0.15s ease;
+}
+
+.db-challenge-btn:hover {
+    opacity: 0.85;
+}
+
+/* =============================================================
+   RECENT ACTIVITY GRID
+   ============================================================= */
+
+.db-activity-section {
+    padding: 14px;
+}
+
+/* ── Activity grid ────────────────────────────────────────────
+   3-column grid: lesson card | badges | leaderboard
+   ──────────────────────────────────────────────────────────── */
+.db-activity-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+}
+
+/* ── Base activity card ───────────────────────────────────────
+   Shared card shell
+   ──────────────────────────────────────────────────────────── */
+.db-activity-card {
+    background: var(--tg-white);
+    border: 1px solid var(--tg-border-color);
+    border-radius: 24px;
+    padding: 20px;
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Card header row */
+.db-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+}
+
+.db-card-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--tg-heading-font-color);
+}
+
+.db-card-subtitle {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--tg-black);
+    border: solid 1px var(--tg-border-color);
+    border-radius: 18px;
+    padding: 4px 8px
+}
+
+/* ── Lesson activity card ─────────────────────────────────────
+   First column — shows current lesson progress
+   ──────────────────────────────────────────────────────────── */
+.db-act-lesson-thumb {
+    position: relative;
+    height: 160px;
+    background: linear-gradient(135deg, #0a1628 0%, #1a3a5c 100%);
+    overflow: hidden;
+}
+
+.db-act-lesson-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.db-act-lesson-tag {
+    /* background: var(--tg-secondary-color); */
+    background: color-mix(in srgb, var(--tg-secondary-color), transparent 90%);
+    color: var(--tg-secondary-color);
+    padding: 3px 8px;
+    border-radius: 14px;
+    width: fit-content;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.db-act-lesson-body {
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.db-act-lesson-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--tg-heading-font-color);
+}
+
+.db-act-lesson-desc {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--tg-icon-color);
+    line-height: normal;
+}
+
+.db-act-lesson-meta {
+    padding-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.db-act-lesson-continue {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--tg-xp-bar-end);
+}
+
+.db-act-lesson-num {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--tg-secondary-color);
+    letter-spacing: 0;
+}
+
+/* Lesson progress bar */
+.db-act-lesson-bar {
+    height: 12px;
+    background: var(--tg-gray);
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+.db-act-lesson-bar-fill {
+    height: 100%;
+    background: var(--tg-secondary-color);
+    border-radius: 100px;
+}
+
+.db-act-lesson-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.db-act-lesson-pct {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--tg-icon-color);
+}
+
+.db-act-lesson-xp {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--tg-green-light);
+}
+
+/* Resume button */
+.db-act-lesson-btn {
+    width: 100%;
+    padding: 10px;
+    background: var(--tg-secondary-color);
+    color: var(--tg-white);
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.db-act-lesson-btn:hover {
+    opacity: 0.85;
+}
+
+.db-act-lessons-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+/* Lock icon overlay */
+.db-act-lesson-card-lock {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    background: color-mix(in srgb, var(--tg-secondary-color), transparent 70%);
+}
+
+/* ── Level badges ─────────────────────────────────────────────
+   Coloured pill showing lesson difficulty
+   ──────────────────────────────────────────────────────────── */
+.db-act-lesson-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    width: fit-content;
+}
+
+.db-act-lesson-badge--beginner {
+    background: rgba(41, 191, 240, 0.12);
+    color: var(--tg-primary-color);
+    border: 1px solid rgba(41, 191, 240, 0.25);
+}
+
+.db-act-lesson-badge--intermediate {
+    background: rgba(245, 166, 35, 0.12);
+    color: #D4891A;
+    border: 1px solid rgba(245, 166, 35, 0.25);
+}
+
+.db-act-lesson-badge--advanced {
+    background: rgba(231, 76, 60, 0.1);
+    color: #C0392B;
+    border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+.db-act-lesson-badge--master {
+    background: rgba(142, 68, 173, 0.1);
+    color: #7D3C98;
+    border: 1px solid rgba(142, 68, 173, 0.2);
+}
+
+/* ── Badges list ──────────────────────────────────────────────
+   List of earned/locked badges in second column
+   ──────────────────────────────────────────────────────────── */
+.db-badges-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.db-badge-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 12px;
+    border-radius: 10px;
+    border: solid 1px var(--tg-border-color);
+}
+
+.db-badge-item--locked {
+    opacity: 0.5;
+}
+
+.db-badge-icon {
+    background: var(--tg-gray-light);
+    padding: 0.5rem;
+    border-radius: 10px;
+}
+
+.db-badge-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.db-badge-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--tg-black);
+}
+
+.db-badge-date {
+    font-size: 12px;
+    color: var(--tg-icon-color);
+}
+
+/* ── Leaderboard ──────────────────────────────────────────────
+   Ranked list in third column
+   ──────────────────────────────────────────────────────────── */
+.db-lb-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.db-lb-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+}
+
+/* Highlighted row for current user */
+.db-lb-item--you {
+    background: rgba(41, 191, 240, 0.08);
+    border: 1px solid rgba(41, 191, 240, 0.2);
+}
+
+.db-lb-rank-num {
+    width: 26px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--tg-icon-color);
+    flex-shrink: 0;
+}
+
+/* Avatar placeholder */
+.db-lb-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--tg-border-color);
+    flex-shrink: 0;
+}
+
+.db-lb-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.db-lb-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--tg-heading-font-color);
+}
+
+.db-lb-xp {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--tg-icon-color);
+}
+
+/* YOU badge */
+.db-lb-you {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--tg-primary-color);
+    background: rgba(41, 191, 240, 0.1);
+    border: 1px solid rgba(41, 191, 240, 0.3);
+    padding: 2px 8px;
+    border-radius: 20px;
+    flex-shrink: 0;
+}
+
+/* =============================================================
+   CORE LESSONS
+   ============================================================= */
+
+/* ── Filter buttons row ───────────────────────────────────────
+   Tab-style filter: All | Beginner | Intermediate | etc.
+   ──────────────────────────────────────────────────────────── */
+.db-filters {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.db-filter-btn {
+    padding: 7px 16px;
+    border-radius: 6px;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--tg-body-font-color);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.db-filter-btn:hover {
+    background: var(--tg-teal);
+    color: var(--tg-primary-color);
+    border-color: var(--tg-primary-color);
+}
+
+/* Active filter */
+.db-filter-btn--active {
+    background: var(--tg-heading-font-color);
+    color: var(--tg-white);
+    border-color: var(--tg-heading-font-color);
+}
+
+.db-filter-btn--active:hover {
+    background: var(--tg-heading-font-color);
+    color: var(--tg-white);
+    border-color: var(--tg-heading-font-color);
+}
+
+
+/* =============================================================
+   LEARN TAB — Content Styles
+   Page: /dashboard → Learn tab
+   Covers: header, path stepper, level sections, lessons list
+   Dark mode: [tg-theme=dark] .learn-*
+   ============================================================= */
+
+/* ── Page wrapper ─────────────────────────────────────────────
+   Outer container for all learn tab sections
+   ──────────────────────────────────────────────────────────── */
+.learn-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+/* =============================================================
+   PAGE HEADER
+   ============================================================= */
+
+.learn-header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.learn-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--tg-heading-font-color);
+}
+
+.learn-subtitle {
+    font-size: 16px;
+    color: var(--tg-icon-color);
+}
+
+/* =============================================================
+   PATH TO MASTERY STEPPER
+   ============================================================= */
+
+/* ── Card wrapper ─────────────────────────────────────────────
+   White card containing the 5-step path stepper
+   ──────────────────────────────────────────────────────────── */
+.learn-path-card {
+    background: var(--tg-white);
+    border: 1px solid var(--tg-border-color);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Header row */
+.learn-path-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.learn-path-label {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: var(--tg-heading-font-family);
+    color: var(--tg-heading-font-color);
+}
+
+.learn-path-progress-text {
+    font-size: 13px;
+    color: var(--tg-icon-color);
+}
+
+/* ── Steps row ────────────────────────────────────────────────
+   5 equal-width step cards in a row
+   ──────────────────────────────────────────────────────────── */
+.learn-path-steps {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 28px;
+}
+
+/* ── Individual step card ─────────────────────────────────────
+   Each step shows number/lock + label + bar/locked text
+   ──────────────────────────────────────────────────────────── */
+.learn-path-step {
+    border-radius: 16px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Active step — green tint */
+.learn-path-step--active {
+    background: color-mix(in srgb, var(--tg-green-light), transparent 90%);
+    border: 1px solid color-mix(in srgb, var(--tg-green-light), transparent 70%);
+}
+
+/* Locked step — gray tint */
+.learn-path-step--locked {
+    background: var(--tg-gray-three);
+}
+
+/* Top row: number circle + label */
+.learn-path-step-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Number or lock circle */
+.learn-path-step-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.learn-path-step--active .learn-path-step-num {
+    background: var(--tg-green);
+    color: var(--tg-white);
+}
+
+.learn-path-step--locked .learn-path-step-num {
+    background: var(--tg-border-color);
+    color: var(--tg-icon-color);
+}
+
+.learn-path-step-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--tg-green);
+}
+
+.learn-path-step--locked .learn-path-step-label {
+    color: var(--tg-icon-color);
+}
+
+/* Mini progress bar inside active step */
+.learn-path-step-bar {
+    height: 6px;
+    background: var(--tg-gray);
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+.learn-path-step-bar-fill {
+    height: 100%;
+    background: var(--tg-green);
+    border-radius: 100px;
+}
+
+/* Sub text — "Lesson 2 of 6" or "locked" */
+.learn-path-step-sub {
+    font-size: 12px;
+    color: var(--tg-icon-color);
+}
+
+/* ── Connector line between steps ────────────────────────────
+   Horizontal line that runs through the middle of all steps
+   ──────────────────────────────────────────────────────────── */
+.learn-path-steps {
+    position: relative;
+}
+
+/* .learn-path-steps::before {
+    content: '';
+    position: absolute;
+    top: 55px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--tg-border-color);
+    z-index: 0;
+} */
+
+/* Make step cards sit above the line */
+.learn-path-step {
+    position: relative;
+    z-index: 1;
+}
+
+/* =============================================================
+   LEVEL SECTIONS
+   ============================================================= */
+
+/* ── Levels container ─────────────────────────────────────────
+   Stack of all 5 level cards
+   ──────────────────────────────────────────────────────────── */
+.learn-levels {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* ── Level card ───────────────────────────────────────────────
+   Individual level container
+   ──────────────────────────────────────────────────────────── */
+.learn-level {
+    background: var(--tg-white);
+    overflow: hidden;
+}
+
+/* ── Level header ─────────────────────────────────────────────
+   Row with avatar, title, badge, progress bar
+   ──────────────────────────────────────────────────────────── */
+.learn-level-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.learn-level-header-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+/* Level avatar circle */
+.learn-level-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.learn-level-avatar--unlocked {
+    background: color-mix(in srgb, var(--tg-green-light), transparent 85%);
+    color: var(--tg-green);
+    border: 1px solid color-mix(in srgb, var(--tg-green-light), transparent 70%);
+}
+
+.learn-level-avatar--locked {
+    background: var(--tg-gray-light);
+    color: var(--tg-icon-color);
+}
+
+.learn-level-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Title + badge row */
+.learn-level-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.learn-level-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--tg-heading-font-color);
+}
+
+.learn-level--locked .learn-level-title {
+    color: var(--tg-icon-color);
+}
+
+/* Unlocked / Locked badge */
+.learn-level-badge {
+    padding: 2px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.learn-level-badge--unlocked {
+    background: color-mix(in srgb, var(--tg-green), transparent 85%);
+    color: color-mix(in srgb, var(--tg-green-light), transparent 30%);
+}
+
+.learn-level-badge--locked {
+    background: color-mix(in srgb, var(--tg-gray), transparent 50%);
+    color: color-mix(var(--tg-gray));
+}
+
+.learn-level-sub {
+    font-size: 16px;
+}
+
+/* Progress bar + percentage — right side of header */
+.learn-level-progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.learn-level-progress {
+    width: 160px;
+    height: 8px;
+    border-radius: 100px;
+    border: none;
+    appearance: none;
+    -webkit-appearance: none;
+    overflow: hidden;
+}
+
+.learn-level-progress::-webkit-progress-bar {
+    background: var(--tg-gray);
+    border-radius: 100px;
+}
+
+.learn-level-progress::-webkit-progress-value {
+    background: var(--tg-green);
+    border-radius: 100px;
+}
+
+.learn-level-progress::-moz-progress-bar {
+    background: var(--tg-green);
+    border-radius: 100px;
+}
+
+.learn-level-pct {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--tg-icon-color);
+    white-space: nowrap;
+}
+
+/* =============================================================
+   LESSON LIST (inside unlocked level)
+   ============================================================= */
+
+/* ── Lessons container ────────────────────────────────────────
+   Stacked lesson rows with top border separator
+   ──────────────────────────────────────────────────────────── */
+.learn-lessons {
+    border-top: 1px solid var(--tg-border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Individual lesson row ────────────────────────────────────
+   Icon + info on left, XP + time + button on right
+   ──────────────────────────────────────────────────────────── */
+.learn-lesson {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 16px;
+    border-bottom: 1px solid var(--tg-border-color);
+    gap: 20px;
+}
+
+.learn-lesson:last-child {
+    border-bottom: none;
+}
+
+.learn-lesson--locked {
+    opacity: 0.65;
+}
+
+/* Left side */
+.learn-lesson-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+}
+
+.learn-lesson-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    flex: 1;
+}
+
+.learn-lesson-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--tg-heading-font-color);
+}
+
+.learn-lesson-sub {
+    font-size: 14px;
+    color: var(--tg-icon-color);
+}
+
+/* Progress bar for in-progress lessons */
+.learn-lesson-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.learn-lesson-bar {
+    width: 100%;
+    height: 6px;
+    border-radius: 100px;
+    border: none;
+    appearance: none;
+    -webkit-appearance: none;
+    overflow: hidden;
+}
+
+.learn-lesson-bar::-webkit-progress-bar {
+    background: var(--tg-border-color);
+    border-radius: 100px;
+}
+
+.learn-lesson-bar::-webkit-progress-value {
+    background: var(--tg-green);
+    border-radius: 100px;
+}
+
+.learn-lesson-bar::-moz-progress-bar {
+    background: var(--tg-green);
+    border-radius: 100px;
+}
+
+.learn-lesson-bar-pct {
+    font-size: 12px;
+    color: var(--tg-icon-color);
+    white-space: nowrap;
+}
+
+/* ── Lesson status icons ──────────────────────────────────────
+   Circle icons showing completed / in-progress / locked
+   ──────────────────────────────────────────────────────────── */
+.learn-lesson-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Completed — green circle with checkmark */
+.learn-lesson-icon--completed {
+    background: color-mix(in srgb, var(--tg-green-light), transparent 90%);
+    border: 1px solid color-mix(in srgb, var(--tg-green-light), transparent 70%);
+    color: color-mix(in srgb, var(--tg-green-light), transparent 30%);
+}
+
+/* In-progress — white circle with green ring */
+.learn-lesson-icon--progress {
+    background: var(--tg-white);
+    border: 3px solid var(--tg-green);
+    position: relative;
+}
+
+/* .learn-lesson-icon-inner {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--tg-green);
+} */
+
+/* Locked — gray circle with lock */
+.learn-lesson-icon--locked {
+    background: var(--tg-gray-light);
+    color: var(--tg-icon-color);
+}
+
+/* Right side — XP, time, button */
+.learn-lesson-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+}
+
+.learn-lesson-xp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    gap: 2px;
+    color: var(--tg-gold-light);
+    white-space: nowrap;
+}
+
+.learn-lesson-time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    gap: 4px;
+    font-size: 16px;
+    color: color-mix(in srgb, var(--tg-black), transparent 40%);
+    ;
+    white-space: nowrap;
+}
+
+/* Action buttons */
+.learn-lesson-btn {
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+}
+
+.learn-lesson-btn:hover {
+    opacity: 0.85;
+}
+
+/* Review button — outlined */
+.learn-lesson-btn--review {
+    background: transparent;
+    color: var(--tg-heading-font-color);
+    border-color: var(--tg-border-color);
+}
+
+/* Continue button — primary blue */
+.learn-lesson-btn--continue {
+    background: transparent;
+    color: var(--tg-primary-color);
+    border-color: var(--tg-primary-color);
+}
+
+/* Dash for locked lessons */
+.learn-lesson-dash {
+    height: 6px;
+    width: 2.5rem;
+    background: var(--tg-gray);
+    text-align: center;
+    border-radius: 20px
+}
+
+/* =============================================================
+   TEST OUT BANNER
+   ============================================================= */
+
+/* ── Test out banner ──────────────────────────────────────────
+   Dark banner at bottom of unlocked level — skip to next level
+   ──────────────────────────────────────────────────────────── */
+.learn-testout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    background: var(--tg-secondary-color);
+    gap: 20px;
+    padding: 20px 16px;
+}
+
+.learn-testout-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    flex: 1;
+}
+
+/* Lock icon circle */
+.learn-testout-icon {
+    background: var(--tg-white);
+    color: var(--tg-secondary-color);
+    border-radius: 8px;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    display: flex
+}
+
+.learn-testout-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--tg-white);
+}
+
+.learn-testout-sub {
+    font-size: 14px;
+    color: var(--tg-gray);
+    line-height: 1.5;
+}
+
+/* Take Quiz button */
+.learn-testout-btn {
+    padding: 8px 20px;
+    background: var(--tg-white);
+    color: var(--tg-secondary-color);
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: opacity 0.15s ease;
+}
+
+.learn-testout-btn:hover {
+    opacity: 0.9;
+}
+
+/* =============================================================
+   LOCKED LEVEL — PREVIEW TOPICS
+   ============================================================= */
+
+/* ── Preview section ──────────────────────────────────────────
+   Shows topic list for locked levels
+   ──────────────────────────────────────────────────────────── */
+.learn-preview {
+    border-top: 1px solid var(--tg-border-color);
+    padding: 24px;
+}
+
+.learn-preview-label {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--tg-icon-color);
+    margin: 0 0 12px;
+}
+
+/* 2-column grid of topics */
+.learn-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 24px;
+}
+
+.learn-preview-topic {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    color: var(--tg-icon-color);
+}
+
+.learn-preview-lock {
+    color: var(--tg-border-color);
+    flex-shrink: 0;
+}
+
+
+/* =============================================================
+   LESSON READER PAGE
+   Page: /dashboard/lesson/[id]
+   Covers: back link, lesson card, progress, content, nav
+   Dark mode: [tg-theme=dark] .lesson-*
+   ============================================================= */
+
+/* ── Page wrapper ─────────────────────────────────────────────
+   Full page container with max width
+   ──────────────────────────────────────────────────────────── */
+.lesson-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ── Back link ────────────────────────────────────────────────
+   ← Back to Learn navigation link
+   ──────────────────────────────────────────────────────────── */
+.lesson-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--tg-heading-font-color);
+    text-decoration: none;
+    font-family: var(--tg-heading-font-family);
+    transition: color 0.15s ease;
+}
+
+.lesson-back:hover {
+    color: var(--tg-primary-color);
+}
+
+/* ── Lesson card ──────────────────────────────────────────────
+   Main white card containing all lesson content
+   ──────────────────────────────────────────────────────────── */
+.lesson-card {
+    display: flex;
+    flex-direction: column;
+    /* gap: 20px; */
+}
+
+/* ── Lesson header ────────────────────────────────────────────
+   Title + meta info row
+   ──────────────────────────────────────────────────────────── */
+.lesson-card-header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.lesson-title {
+    font-size: 25px;
+    font-weight: 500;
+    color: var(--tg-heading-font-color);
+}
+
+/* Meta row: Level · Lesson X of Y · X min read */
+.lesson-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    color: var(--tg-icon-color);
+}
+
+.lesson-meta-dot {
+    color: var(--tg-border-color);
+}
+
+/* ── Progress bar row ─────────────────────────────────────────
+   Label + bar + XP on one line
+   ──────────────────────────────────────────────────────────── */
+.lesson-progress-row {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.lesson-progress-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--tg-black);
+}
+
+/* Progress bar — full width between label and XP */
+.lesson-progress-bar {
+    height: 8px;
+    width: 100%;
+    border-radius: 100px;
+    border: none;
+    appearance: none;
+    -webkit-appearance: none;
+    overflow: hidden;
+}
+
+.lesson-progress-bar::-webkit-progress-bar {
+    background: var(--tg-border-color);
+    border-radius: 100px;
+}
+
+.lesson-progress-bar::-webkit-progress-value {
+    background: var(--tg-green);
+    border-radius: 100px;
+}
+
+.lesson-progress-bar::-moz-progress-bar {
+    background: var(--tg-green);
+    border-radius: 100px;
+}
+
+/* XP reward label */
+.lesson-xp {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--tg-gold-light);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ── Divider ──────────────────────────────────────────────────
+   Horizontal rule between sections
+   ──────────────────────────────────────────────────────────── */
+.lesson-divider {
+    border: none;
+    border-top: 1px solid var(--tg-border-color);
+    margin: 0;
+}
+
+/* ── Lesson content ───────────────────────────────────────────
+   Article body — headings and paragraphs
+   ──────────────────────────────────────────────────────────── */
+.lesson-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Section headings e.g. KEY CONCEPT, DID YOU KNOW? */
+.lesson-content-heading {
+    font-size: 18px;
+    font-weight: 500;
+    font-family: var(--tg-heading-font-family);
+    color: var(--tg-heading-font-color);
+}
+
+.lesson-content-sub-heading {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--tg-heading-font-color);
+    margin-top: 8px;
+}
+
+/* Body paragraphs */
+.lesson-content-para {
+    font-size: 14px;
+    line-height: 1.75;
+    margin: 0;
+}
+
+/* ── Navigation buttons ───────────────────────────────────────
+   Previous / Next lesson buttons at the bottom
+   ──────────────────────────────────────────────────────────── */
+.lesson-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+/* Shared button styles */
+.lesson-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.lesson-nav-btn:hover {
+    opacity: 0.85;
+}
+
+/* Previous — outlined */
+.lesson-nav-btn--prev {
+    background: transparent;
+    color: var(--tg-secondary-color);
+    border: 1px solid var(--tg-secondary-color);
+}
+
+/* Next — filled dark */
+.lesson-nav-btn--next {
+    background: var(--tg-secondary-color);
+    color: var(--tg-white);
+    border: 1px solid var(--tg-secondary-color);
+}
+
+
+/* =============================================================
+   QUIZ START PAGE
+   Page: /dashboard/quiz/[id]
+   Covers: centered card, icon, stats row, start button
+   Dark mode: [tg-theme=dark] .quiz-start-*
+   ============================================================= */
+
+/* ── Page wrapper ─────────────────────────────────────────────
+   Full height flex column — back link + centered card
+   ──────────────────────────────────────────────────────────── */
+.quiz-start-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: calc(100vh - 200px);
+}
+
+/* ── Center container ─────────────────────────────────────────
+   Grows to fill remaining space and centers the card
+   ──────────────────────────────────────────────────────────── */
+.quiz-start-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Quiz card ────────────────────────────────────────────────
+   White centered card with icon, title, stats, button
+   ──────────────────────────────────────────────────────────── */
+.quiz-start-card {
+    background: var(--tg-white);
+    border: 1px solid var(--tg-border-color);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 460px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+/* ── Quiz icon ────────────────────────────────────────────────
+   Green icon circle at top of card
+   ──────────────────────────────────────────────────────────── */
+.quiz-start-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--tg-green-light), transparent 85%);
+    color: var(--tg-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Quiz title ───────────────────────────────────────────────*/
+.quiz-start-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--tg-heading-font-color);
+    text-align: center;
+}
+
+/* ── Stats row ────────────────────────────────────────────────
+   3 equal stat boxes: Questions | To Pass | Attempts
+   ──────────────────────────────────────────────────────────── */
+.quiz-start-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+}
+
+/* Individual stat box */
+.quiz-start-stat {
+    background: var(--tg-gray-light);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.quiz-start-stat-value {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--tg-heading-font-color);
+    line-height: 1;
+}
+
+.quiz-start-stat-label {
+    font-size: 14px;
+    color: var(--tg-icon-color);
+    text-align: center;
+}
+
+/* ── Start Quiz button ────────────────────────────────────────
+   Full width dark blue button with arrow
+   ──────────────────────────────────────────────────────────── */
+.quiz-start-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--tg-secondary-color);
+    color: var(--tg-white);
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: opacity 0.15s ease;
+}
+
+.quiz-start-btn:hover {
+    opacity: 0.88;
+}
+
+
+/* =============================================================
+   QUIZ QUESTION PAGE
+   Page: /dashboard/quiz/[id]/question
+   Covers: progress bar, question, options A-D, confirm button
+   Dark mode: [tg-theme=dark] .quiz-q-*
+   ============================================================= */
+
+/* ── Page wrapper ─────────────────────────────────────────────
+   Full height flex column with back link + centered card
+   ──────────────────────────────────────────────────────────── */
+.quiz-q-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: calc(100vh - 200px);
+}
+
+/* ── Center container ─────────────────────────────────────────
+   Grows to fill space and centers the card
+   ──────────────────────────────────────────────────────────── */
+.quiz-q-center {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+/* ── Question card ────────────────────────────────────────────
+   Main white card holding all quiz content
+   ──────────────────────────────────────────────────────────── */
+.quiz-q-card {
+    background: var(--tg-white);
+    border: 1px solid var(--tg-border-color);
+    border-radius: 16px;
+    padding: 32px 36px;
+    width: 100%;
+    max-width: 660px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ── Header row ───────────────────────────────────────────────
+   "Question 1 of 10" on left, level badge on right
+   ──────────────────────────────────────────────────────────── */
+.quiz-q-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.quiz-q-count {
+    font-size: 14px;
+    color: var(--tg-icon-color);
+    font-weight: 500;
+}
+
+/* Level badge — green pill */
+.quiz-q-level-badge {
+    background: color-mix(in srgb, var(--tg-green), transparent 85%);
+    color: color-mix(in srgb, var(--tg-green-light), transparent 30%);
+    padding: 2px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* ── Progress bar ─────────────────────────────────────────────
+   Full width thin bar showing quiz progress
+   ──────────────────────────────────────────────────────────── */
+.quiz-q-progress {
+    width: 100%;
+    height: 6px;
+    border-radius: 100px;
+    border: none;
+    appearance: none;
+    -webkit-appearance: none;
+    overflow: hidden;
+    margin-top: -12px;
+}
+
+.quiz-q-progress::-webkit-progress-bar {
+    background: var(--tg-border-color);
+    border-radius: 100px;
+}
+
+.quiz-q-progress::-webkit-progress-value {
+    background: var(--tg-green);
+    border-radius: 100px;
+}
+
+.quiz-q-progress::-moz-progress-bar {
+    background: var(--tg-green);
+    border-radius: 100px;
+}
+
+/* ── Question text ────────────────────────────────────────────
+   The actual question shown to the user
+   ──────────────────────────────────────────────────────────── */
+.quiz-q-text {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--tg-heading-font-color);
+    line-height: 1.4;
+}
+
+/* ── Answer options ───────────────────────────────────────────
+   Stack of 4 clickable answer buttons A B C D
+   ──────────────────────────────────────────────────────────── */
+.quiz-q-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Individual option button */
+.quiz-q-option {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: var(--tg-white);
+    border: 1px solid var(--tg-border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.quiz-q-option:hover:not(.quiz-q-option--selected) {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-color);
+}
+
+/* Selected option — blue border + blue bg tint */
+.quiz-q-option--selected {
+    border-color: var(--tg-secondary-color);
+    background: color-mix(in srgb, var(--tg-secondary-color), transparent 93%);
+}
+
+/* Letter label — A. B. C. D. */
+.quiz-q-option-letter {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--tg-icon-color);
+    flex-shrink: 0;
+    min-width: 20px;
+}
+
+/* Selected letter — blue */
+.quiz-q-option-letter--selected {
+    color: var(--tg-secondary-color);
+}
+
+/* Option answer text */
+.quiz-q-option-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--tg-heading-font-color);
+    line-height: 1.4;
+}
+
+.quiz-q-option--selected .quiz-q-option-text {
+    color: var(--tg-secondary-color);
+    font-weight: 600;
+}
+
+/* ── Confirm button ───────────────────────────────────────────
+   Full width dark blue button — disabled until option selected
+   ──────────────────────────────────────────────────────────── */
+.quiz-q-confirm-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--tg-secondary-color);
+    color: var(--tg-white);
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.quiz-q-confirm-btn:hover:not(:disabled) {
+    opacity: 0.88;
+}
+
+/* Disabled state — no answer selected yet */
+.quiz-q-confirm-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* =============================================================
+   QUIZ RESULT PAGE
+   Page: /dashboard/quiz/[id]/result
+   Covers: pass/fail states, score box, progress bar, buttons
+   Dark mode: [tg-theme=dark] .quiz-result-*
+   ============================================================= */
+
+/* ── Page wrapper ─────────────────────────────────────────────
+   Full height flex column with back link + centered card
+   ──────────────────────────────────────────────────────────── */
+.quiz-result-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: calc(100vh - 200px);
+}
+
+/* ── Center container ─────────────────────────────────────────
+   Grows to fill space and centers the card
+   ──────────────────────────────────────────────────────────── */
+.quiz-result-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Result card ──────────────────────────────────────────────
+   Main white card with all result content
+   ──────────────────────────────────────────────────────────── */
+.quiz-result-card {
+    background: var(--tg-white);
+    border: 1px solid var(--tg-border-color);
+    border-radius: 16px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+/* ── Emoji ────────────────────────────────────────────────────
+   Large emoji at top of card
+   ──────────────────────────────────────────────────────────── */
+.quiz-result-emoji {
+    font-size: 52px;
+    line-height: 1;
+}
+
+/* ── Header text ──────────────────────────────────────────────
+   Title + subtitle centered
+   ──────────────────────────────────────────────────────────── */
+.quiz-result-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.quiz-result-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--tg-heading-font-color);
+}
+
+.quiz-result-subtitle {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--tg-icon-color);
+    line-height: 1.5;
+}
+
+/* ── Score box ────────────────────────────────────────────────
+   Gray inner card showing score + progress bar
+   ──────────────────────────────────────────────────────────── */
+.quiz-result-score-box {
+    width: 100%;
+    background: var(--tg-gray-three);
+    border-radius: 12px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Large score percentage */
+.quiz-result-score {
+    font-size: 40px;
+    font-weight: 600;
+    color: var(--tg-black);
+    line-height: 1;
+}
+
+/* X / Y correct text */
+.quiz-result-correct {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--tg-icon-color);
+    margin: 0 0 12px;
+}
+
+/* ── Progress bar with marker ─────────────────────────────────
+   Shows score vs pass threshold
+   ──────────────────────────────────────────────────────────── */
+.quiz-result-bar-wrap {
+    width: 100%;
+    position: relative;
+}
+
+.quiz-result-bar {
+    width: 100%;
+    height: 10px;
+    border-radius: 100px;
+    border: none;
+    appearance: none;
+    -webkit-appearance: none;
+    overflow: hidden;
+    display: block;
+}
+
+.quiz-result-bar::-webkit-progress-bar {
+    background: var(--tg-gray);
+    border-radius: 100px;
+}
+
+/* Pass state — green fill */
+.quiz-result-bar--pass::-webkit-progress-value {
+    background: var(--tg-green-light);
+    border-radius: 100px;
+}
+
+.quiz-result-bar--pass::-moz-progress-bar {
+    background: var(--tg-green-light);
+    border-radius: 100px;
+}
+
+/* Fail state — red fill */
+.quiz-result-bar--fail::-webkit-progress-value {
+    background: var(--tg-red);
+    border-radius: 100px;
+}
+
+.quiz-result-bar--fail::-moz-progress-bar {
+    background: var(--tg-red);
+    border-radius: 100px;
+}
+
+/* Pass marker — thin vertical line at passmark position */
+.quiz-result-bar-marker {
+    position: absolute;
+    top: 0;
+    bottom: 4px;
+    width: 2px;
+    background: var(--tg-icon-color);
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+/* Bar labels: 0% | Pass:80% | 100% */
+.quiz-result-bar-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 6px;
+}
+
+.quiz-result-bar-labels span {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--tg-icon-color);
+}
+
+/* ── CTA Buttons ──────────────────────────────────────────────
+   Pass: single full-width button
+   Fail: two buttons side by side
+   ──────────────────────────────────────────────────────────── */
+.quiz-result-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 16px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+    border: none;
+}
+
+.quiz-result-btn:hover {
+    opacity: 0.88;
+    color: var(--tg-white);
+}
+
+/* Pass button — dark navy */
+.quiz-result-btn--pass {
+    background: var(--tg-secondary-color);
+    color: var(--tg-white);
+}
+
+/* Fail — two button row */
+.quiz-result-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+/* Back to Lessons — outlined */
+.quiz-result-btn--back {
+    background: transparent;
+    color: var(--tg-heading-font-color);
+    border: 1px solid var(--tg-border-color) !important;
+}
+
+/* Try Again — dark navy */
+.quiz-result-btn--retry {
+    background: var(--tg-heading-font-color);
+    color: var(--tg-white);
+}
+
+/* =============================================================
+   MR. FINLEY TAB — Empty State
+   Page: /dashboard/mrfinley
+   Covers: avatar, greeting, input box, chips, voice, tip card
+   Dark mode: [tg-theme=dark] .finley-*
+   ============================================================= */
+
+/* ── Page wrapper ─────────────────────────────────────────────
+   Full height container — centers everything vertically
+   ──────────────────────────────────────────────────────────── */
+.finley-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 220px);
+}
+
+/* ── Empty state container ────────────────────────────────────
+   Centered column with all empty state content
+   ──────────────────────────────────────────────────────────── */
+.finley-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+    max-width: 660px;
+}
+
+/* =============================================================
+   AVATAR
+   ============================================================= */
+
+/* ── Avatar wrapper ───────────────────────────────────────────
+   Relative container for avatar + online dot
+   ──────────────────────────────────────────────────────────── */
+.finley-empty-avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.finley-empty-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Online green dot */
+.finley-empty-dot {
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #27AE60;
+    border: 2px solid var(--tg-white);
+}
+
+/* =============================================================
+   GREETING
+   ============================================================= */
+
+.finley-empty-greeting {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    /* gap: 4px; */
+}
+
+/* "Good Morning, Masud A." */
+.finley-greeting-top {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--tg-black);
+}
+
+/* "HOW Can I Assist You Today?" */
+.finley-greeting-bottom {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--tg-black);
+    margin: 0;
+}
+
+/* "Assist You Today?" — primary blue */
+.finley-greeting-highlight {
+    color: var(--tg-secondary-color);
+}
+
+/* =============================================================
+   INPUT BOX
+   ============================================================= */
+
+/* ── Input card ───────────────────────────────────────────────
+   White rounded box with textarea + footer row
+   ──────────────────────────────────────────────────────────── */
+.finley-input-box {
+    width: 100%;
+    background: var(--tg-gray-three);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* Textarea */
+.finley-input {
+    width: 100%;
+    padding: 16px;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    font-size: 15px;
+    font-family: var(--tg-body-font-family);
+    color: var(--tg-body-font-color);
+    line-height: 1.6;
+}
+
+.finley-input::placeholder {
+    color: var(--tg-icon-color);
+}
+
+/* ── Input footer ─────────────────────────────────────────────
+   Attachment + chips + voice button row
+   ──────────────────────────────────────────────────────────── */
+.finley-input-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px 12px;
+}
+
+/* Attachment icon button */
+.finley-attach-btn {
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color 0.15s ease;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    background: var(--tg-white);
+    color: var(--tg-body-font-color);
+    height: 100%;
+    width: auto;
+}
+
+.finley-attach-btn:hover {
+    color: var(--tg-primary-color);
+}
+
+/* ── Quick action chips row ───────────────────────────────────
+   Scrollable row of topic suggestion chips
+   ──────────────────────────────────────────────────────────── */
+.finley-chips {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.finley-chips::-webkit-scrollbar {
+    display: none;
+}
+
+/* Individual chip */
+.finley-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    background: var(--tg-white);
+    color: var(--tg-body-font-color);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.finley-chip:hover {
+    background: var(--tg-primary-color);
+    color: var(--tg-white);
+    border-color: var(--tg-primary-color);
+}
+
+/* ── Voice button ─────────────────────────────────────────────
+   Dark blue microphone button on right of footer
+   ──────────────────────────────────────────────────────────── */
+.finley-voice-btn-outer {
+    border: 1px solid var(--tg-secondary-color);
+    padding: 1.43px;
+    border-radius: 10px;
+}
+
+.finley-voice-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--tg-secondary-color);
+    color: var(--tg-white);
+    border: none;
+    cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    transition: opacity 0.15s ease;
+}
+
+.finley-voice-btn:hover {
+    opacity: 0.85;
+}
+
+/* =============================================================
+   TODAY'S TIP
+   ============================================================= */
+
+/* ── Tip section ──────────────────────────────────────────────
+   Label + tip card — left-aligned below input
+   ──────────────────────────────────────────────────────────── */
+.finley-tip-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+}
+
+.finley-tip-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--tg-heading-font-color);
+}
+
+/* Tip card */
+.finley-tip-card {
+    background: var(--tg-gray-three);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 200px;
+    max-width: 260px;
+}
+
+.finley-tip-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--tg-heading-font-color);
+}
+
+.finley-tip-text {
+    font-size: 14px;
+    color: var(--tg-icon-color);
+    line-height: 1.5;
+}
+
+.finley-chat-layout {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 20px;
+    align-items: start;
+}
+ 
+/* ── Main chat area ───────────────────────────────────────────
+   White card with header, messages, input
+   ──────────────────────────────────────────────────────────── */
+.finley-chat-main {
+    background: var(--tg-white);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+ 
+/* ── Chat header ──────────────────────────────────────────────
+   Mr. Finley name + online status + avatar
+   ──────────────────────────────────────────────────────────── */
+.finley-chat-header {
+    background: var(--tg-gray-three);
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+ 
+.finley-chat-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+ 
+.finley-chat-avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+ 
+.finley-chat-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+ 
+.finley-chat-dot {
+    position: absolute;
+    bottom: 1px;
+    right: 1px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #27AE60;
+    border: 2px solid var(--tg-white);
+}
+ 
+.finley-chat-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--tg-heading-font-color);
+}
+ 
+.finley-chat-status {
+    font-size: 12px;
+    color: var(--tg-green-light);
+    margin: 0;
+}
+ 
+/* ── Messages area ────────────────────────────────────────────
+   Scrollable message list
+   ──────────────────────────────────────────────────────────── */
+.finley-messages {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 400px;
+    max-height: 520px;
+    overflow-y: auto;
+}
+ 
+/* Message row — aligns bubble left or right */
+.finley-msg-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+}
+ 
+.finley-msg-row--ai {
+    justify-content: flex-start;
+}
+ 
+.finley-msg-row--user {
+    justify-content: flex-end;
+}
+ 
+/* ── Message bubble ───────────────────────────────────────────
+   AI = light gray left, User = blue right
+   ──────────────────────────────────────────────────────────── */
+.finley-msg-bubble {
+    max-width: 75%;
+    padding: 19px 16px;
+    border-radius: 12px;
+    line-height: 1.6;
+}
+ 
+/* AI bubble — gray bg, left aligned */
+.finley-msg-bubble--ai {
+    background: var(--tg-gray-three);
+    border-top-left-radius: 1px;
+}
+ 
+/* User bubble — primary blue, right aligned */
+.finley-msg-bubble--user {
+    background: var(--tg-secondary-color);
+    border-top-right-radius: 2px;
+}
+ 
+.finley-msg-text {
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.6;
+}
+ 
+.finley-msg-bubble--ai .finley-msg-text {
+    color: var(--tg-body-font-color);
+}
+ 
+.finley-msg-bubble--user .finley-msg-text {
+    color: var(--tg-white);
+}
+ 
+/* Reaction button next to AI bubble */
+.finley-msg-reaction {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    opacity: 0.6;
+    transition: opacity 0.15s ease;
+    flex-shrink: 0;
+}
+ 
+.finley-msg-reaction:hover {
+    opacity: 1;
+}
+ 
+/* Timestamp */
+.finley-msg-time {
+    font-size: 11px;
+    color: var(--tg-icon-color);
+    margin: 4px 0 12px;
+}
+ 
+.finley-msg-time--ai {
+    text-align: left;
+    padding-left: 4px;
+}
+ 
+.finley-msg-time--user {
+    text-align: right;
+    padding-right: 4px;
+}
+ 
+/* ── Suggested questions ──────────────────────────────────────
+   Scrollable chip row above input bar
+   ──────────────────────────────────────────────────────────── */
+.finley-suggested {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+ 
+.finley-suggested::-webkit-scrollbar {
+    display: none;
+}
+ 
+.finley-suggested-chip {
+    padding: 4px 12px;
+    background: transparent;
+    border: 1px solid var(--tg-border-color);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--tg-body-font-color);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+ 
+.finley-suggested-chip:hover {
+    background: var(--tg-primary-color);
+    color: var(--tg-white);
+    border-color: var(--tg-primary-color);
+}
+ 
+/* ── Chat input bar ───────────────────────────────────────────
+   Bottom input with icons + send button
+   ──────────────────────────────────────────────────────────── */
+.finley-chat-input-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: var(--tg-gray-three);
+}
+ 
+.finley-chat-input-icon {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.15s ease;
+}
+ 
+.finley-chat-input-icon:hover {
+    color: var(--tg-primary-color);
+}
+ 
+.finley-chat-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+    font-family: var(--tg-body-font-family);
+    color: var(--tg-body-font-color);
+}
+ 
+.finley-chat-input::placeholder {
+    color: var(--tg-icon-color);
+}
+ 
+/* Send button — blue arrow */
+.finley-chat-send-btn {
+    cursor: pointer;
+}
+ 
+.finley-chat-send-btn:hover {
+    opacity: 0.85;
+}
+ 
+/* =============================================================
+   RIGHT SIDEBAR
+   ============================================================= */
+ 
+.finley-chat-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+ 
+/* Section wrapper */
+.finley-sidebar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+ 
+/* Section title — uppercase small label */
+.finley-sidebar-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--tg-heading-font-color);
+}
+ 
+/* ── Quick actions list ───────────────────────────────────────*/
+.finley-sidebar-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.finley-sidebar-action-icon{
+    padding: 10px;
+    background: var(--tg-gray-three);
+    border-radius: 8px;
+}
+ 
+.finley-sidebar-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px;
+    background: var(--tg-white);
+    border: 1px solid var(--tg-border-color);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--tg-body-font-color);
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+ 
+.finley-sidebar-action:hover {
+    background: var(--tg-teal);
+    color: var(--tg-primary-color);
+}
+ 
+/* ── Today's Tip card ─────────────────────────────────────────*/
+.finley-sidebar-tip {
+    background: color-mix(in srgb, var(--tg-yellow), transparent 95%);;
+    border: 1px solid var(--tg-yellow);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+}
+ 
+.finley-sidebar-tip-title {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 5;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--tg-heading-font-color);
+}
+ 
+.finley-sidebar-tip-text {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--tg-body-font-color);
+}
+ 
+/* ── Session stats ────────────────────────────────────────────*/
+.finley-sidebar-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+ 
+.finley-sidebar-stat {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 0;
+}
+ 
+.finley-sidebar-stat:last-child {
+    border-bottom: none;
+}
+ 
+.finley-sidebar-stat-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--tg-icon-color);
+}
+ 
+.finley-sidebar-stat-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--tg-heading-font-color);
 }
 
 /*=============================
@@ -10959,6 +14045,493 @@ label {
 [tg-theme=dark] .etf-carousel-dot.active {
     background: var(--tg-primary-color);
 }
+
+/* =============================================================
+   DASHBOARD — Dark Mode: Layout
+   ============================================================= */
+
+[tg-theme=dark] .db-sidebar {
+    background: var(--tg-black);
+    border-right-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .db-sidebar-toggle {
+    background: var(--tg-black);
+    border-color: var(--tg-border-dark);
+    color: var(--tg-gray-two);
+}
+
+[tg-theme=dark] .db-sidebar-toggle:hover {
+    background: var(--tg-primary-color);
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .db-nav-item {
+    color: var(--tg-gray-three);
+}
+
+[tg-theme=dark] .db-nav-item:hover {
+    background: var(--tg-teal);
+    color: var(--tg-primary-color);
+}
+
+[tg-theme=dark] .db-nav-item--active {
+    background: var(--tg-teal);
+    color: var(--tg-primary-color);
+}
+
+[tg-theme=dark] .db-nav-section-label {
+    color: var(--tg-gray-two);
+}
+
+[tg-theme=dark] .db-nav-divider {
+    background: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .db-main {
+    background: var(--tg-black);
+}
+
+/* =============================================================
+   DASHBOARD TAB — Dark Mode
+   ============================================================= */
+
+[tg-theme=dark] .db-xp-bar-wrap {
+    background: #1B2D45;
+}
+
+[tg-theme=dark] .db-stat-card {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .db-stat-value {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .db-stat-card--finley {
+    background: #1B2D45;
+    border-color: #1B2D45;
+}
+
+[tg-theme=dark] .db-challenge {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .db-challenge-name {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .db-challenge-timer {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .db-challenge-reward {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .db-challenge-btn {
+    background: var(--tg-primary-color);
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .db-activity-card {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .db-act-lesson-title {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .db-badge-label {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .db-badge-item {
+    background: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .db-lb-name {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .db-filter-btn {
+    border-color: var(--tg-border-dark);
+    color: var(--tg-gray-three);
+}
+
+[tg-theme=dark] .db-filter-btn:hover {
+    background: var(--tg-teal);
+    color: var(--tg-primary-color);
+}
+
+[tg-theme=dark] .db-filter-btn--active {
+    background: var(--tg-primary-color);
+    color: var(--tg-white);
+    border-color: var(--tg-primary-color);
+}
+
+[tg-theme=dark] .db-lesson-card {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .db-lesson-card-title {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .db-section-title {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .db-card-title {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .db-card-subtitle {
+    color: var(--tg-white);
+}
+
+/* =============================================================
+   LEARN TAB — Dark Mode
+   ============================================================= */
+
+[tg-theme=dark] .learn-path-card {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .learn-path-label {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .learn-path-step--locked {
+    background: color-mix(in srgb, var(--tg-white), transparent 95%);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .learn-level {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .learn-level-title {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .learn-lesson-title {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .learn-lessons {
+    border-top-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .learn-lesson {
+    border-bottom-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .learn-lesson-icon--locked {
+    background: var(--tg-border-dark);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme="dark"] .learn-path-step--locked .learn-path-step-num {
+    background: var(--tg-border-dark);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme="dark"] .learn-level-avatar--locked {
+    background: var(--tg-border-dark);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .learn-lesson-icon--locked {
+    background: var(--tg-border-dark);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme="dark"] .learn-lesson-icon--progress {
+    background: var(--tg-border-dark);
+}
+
+[tg-theme="dark"] .learn-lesson-time {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .learn-preview {
+    border-top-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .learn-level-badge--locked {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .learn-title {
+    color: var(--tg-white);
+}
+
+/* =============================================================
+   LESSON READER — Dark Mode
+   ============================================================= */
+
+[tg-theme=dark] .lesson-back {
+    color: var(--tg-gray-two);
+}
+
+[tg-theme=dark] .lesson-back:hover {
+    color: var(--tg-primary-color);
+}
+
+[tg-theme=dark] .lesson-card {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .lesson-title {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .lesson-divider {
+    border-top-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .lesson-content-heading {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .lesson-progress-label {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .lesson-content-para {
+    color: var(--tg-gray-two);
+}
+
+[tg-theme=dark] .lesson-nav-btn--prev {
+    color: var(--tg-white);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .lesson-nav-btn--next {
+    background: var(--tg-primary-color);
+    border-color: var(--tg-primary-color);
+}
+
+/* =============================================================
+   QUIZ START — Dark Mode
+   ============================================================= */
+
+[tg-theme=dark] .quiz-start-card {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .quiz-start-title {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .quiz-start-stat {
+    background: color-mix(in srgb, var(--tg-white), transparent 95%);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .quiz-start-stat-value {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .quiz-start-btn {
+    background: var(--tg-primary-color);
+}
+
+
+/* =============================================================
+   QUIZ QUESTION — Dark Mode
+   ============================================================= */
+
+[tg-theme=dark] .quiz-q-card {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .quiz-q-text {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .quiz-q-option {
+    background: color-mix(in srgb, var(--tg-white), transparent 95%);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .quiz-q-option:hover:not(.quiz-q-option--selected) {
+    background: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .quiz-q-option-text {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .quiz-q-option--selected {
+    border-color: var(--tg-primary-color);
+    background: color-mix(in srgb, var(--tg-primary-color), transparent 88%);
+}
+
+[tg-theme=dark] .quiz-q-confirm-btn {
+    background: var(--tg-primary-color);
+}
+
+/* =============================================================
+   QUIZ RESULT — Dark Mode
+   ============================================================= */
+
+[tg-theme=dark] .quiz-result-card {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .quiz-result-title {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .quiz-result-score-box {
+    background: color-mix(in srgb, var(--tg-white), transparent 95%);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .quiz-result-score {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .quiz-result-btn--pass {
+    background: var(--tg-primary-color);
+}
+
+[tg-theme=dark] .quiz-result-btn--retry {
+    background: var(--tg-primary-color);
+}
+
+[tg-theme=dark] .quiz-result-btn--back {
+    color: var(--tg-white);
+    border-color: var(--tg-border-dark) !important;
+}
+
+/* =============================================================
+   MR. FINLEY — Dark Mode
+   ============================================================= */
+
+[tg-theme=dark] .finley-greeting-top,
+[tg-theme=dark] .finley-greeting-bottom {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .finley-input-box {
+    background: color-mix(in srgb, var(--tg-white), transparent 95%);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .finley-input {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .finley-chip {
+    background: color-mix(in srgb, var(--tg-white), transparent 92%);
+    border-color: var(--tg-border-dark);
+    color: var(--tg-gray-two);
+}
+
+[tg-theme=dark] .finley-chip:hover {
+    background: var(--tg-primary-color);
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .finley-tip-card {
+    background: color-mix(in srgb, var(--tg-white), transparent 95%);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .finley-tip-label,
+[tg-theme=dark] .finley-tip-title {
+    color: var(--tg-white);
+}
+
+[tg-theme=dark] .finley-empty-dot {
+    border-color: var(--tg-black);
+}
+ 
+[tg-theme=dark] .finley-chat-main {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-dark);
+}
+ 
+[tg-theme=dark] .finley-chat-header {
+    border-bottom-color: var(--tg-border-dark);
+}
+ 
+[tg-theme=dark] .finley-chat-name {
+    color: var(--tg-white);
+}
+ 
+[tg-theme=dark] .finley-chat-dot {
+    border-color: var(--tg-black);
+}
+ 
+[tg-theme=dark] .finley-msg-bubble--ai {
+    background: var(--tg-border-dark);
+    border-color: var(--tg-border-dark);
+}
+ 
+[tg-theme=dark] .finley-msg-bubble--ai .finley-msg-text {
+    color: var(--tg-gray-two);
+}
+ 
+[tg-theme=dark] .finley-suggested {
+    border-top-color: var(--tg-border-dark);
+}
+ 
+[tg-theme=dark] .finley-suggested-chip {
+    border-color: var(--tg-border-dark);
+    color: var(--tg-gray-two);
+}
+ 
+[tg-theme=dark] .finley-chat-input-bar {
+    border-top-color: var(--tg-border-dark);
+}
+ 
+[tg-theme=dark] .finley-chat-input {
+    color: var(--tg-white);
+}
+ 
+[tg-theme=dark] .finley-sidebar-action {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-dark);
+    color: var(--tg-gray-two);
+}
+ 
+[tg-theme=dark] .finley-sidebar-title {
+    color: var(--tg-white);
+}
+ 
+[tg-theme=dark] .finley-sidebar-stat-value {
+    color: var(--tg-white);
+}
+ 
+[tg-theme=dark] .finley-sidebar-stat {
+    border-bottom-color: var(--tg-border-dark);
+}
+ 
+[tg-theme=dark] .finley-sidebar-tip {
+    background: rgba(255, 251, 234, 0.05);
+    border-color: var(--tg-border-dark);
+}
+ 
+[tg-theme=dark] .finley-sidebar-tip-title,
+[tg-theme=dark] .finley-sidebar-tip-text {
+    color: var(--tg-gray-two);
+}
+
+
 
 /* TERMS AND CONDITIONS */
 

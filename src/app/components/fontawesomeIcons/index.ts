@@ -44,6 +44,9 @@ import {
     faExclamationTriangle,
     faChevronLeft,
     faChevronRight,
+    faGauge,
+    faLink,
+    faMicrophone
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -91,4 +94,7 @@ library.add(
     faExclamationTriangle,
     faChevronLeft,
     faChevronRight,
+    faGauge,
+    faLink,
+    faMicrophone
 );

@@ -58,10 +58,29 @@ const API_CONFIG = {
       PRIVACY_POLICY: '/api/legal/privacy-policy',
     },
     MARKETS: {
+      // ── Tradier (Stocks + ETFs) ───────────────────────────────────────────
       QUOTES: '/api/markets/quotes',
       HISTORY: '/api/markets/history',
       TIMESALES: '/api/markets/timesales',
       SEARCH: '/api/markets/search',
+
+      // ── Alpha Vantage — Crypto ────────────────────────────────────────────
+      CRYPTO_QUOTE: '/api/markets/crypto/quote',
+      CRYPTO_INTRADAY: '/api/markets/crypto/intraday',
+      CRYPTO_HISTORY: '/api/markets/crypto/history',
+
+      // ── Alpha Vantage — Forex ─────────────────────────────────────────────
+      FOREX_RATE: '/api/markets/forex/rate',
+      FOREX_INTRADAY: '/api/markets/forex/intraday',
+      FOREX_HISTORY: '/api/markets/forex/history',
+
+      // ── Alpha Vantage — Mutual Funds ──────────────────────────────────────
+      MUTUAL_FUND_QUOTE: '/api/markets/mutual-fund/quote',
+      MUTUAL_FUND_HISTORY: '/api/markets/mutual-fund/history',
+
+      // ── Alpha Vantage — Market Intelligence ───────────────────────────────
+      TOP_GAINERS_LOSERS: '/api/markets/top-gainers-losers',
+      MARKET_STATUS: '/api/markets/market-status',
     },
     NEWS: {
       LATEST: '/api/news/latest',

@@ -1,171 +1,119 @@
-'use client'
+// src/app/(public)/markets/cryptocurrency/page.tsx
 
-import { useEffect } from "react";
-import { useDarkMode } from "@/app/components/dark-mode/DarkModeContext";
+'use client';
+
 import { Heading } from "@/app/components/heading/Heading";
-import { srcFile } from "@/app/utils/tradingViewSrcFiles";
-import { addTradingViewWidget } from "@/app/utils/utils";
 import { Banner } from "@/app/components/ads/Banner";
-
-type InitWidget = (id: string, config: Record<string, unknown>, src: string) => (() => void) | undefined;
-
-const SIDEBAR_TABS = [
-    { title: 'Forex', originalTitle: 'Forex', symbols: [
-        { s: 'FX:EURUSD', d: 'EUR to USD' }, { s: 'FX:GBPUSD', d: 'GBP to USD' },
-        { s: 'FX:USDJPY', d: 'USD to JPY' }, { s: 'FX:USDCHF', d: 'USD to CHF' },
-        { s: 'FX:AUDUSD', d: 'AUD to USD' }, { s: 'FX:USDCAD', d: 'USD to CAD' },
-    ] },
-    { title: 'ETFs', symbols: [
-        { s: 'AMEX:SPY' }, { s: 'NASDAQ:QQQ' }, { s: 'AMEX:IWM' },
-        { s: 'NASDAQ:TLT' }, { s: 'AMEX:SOXL' }, { s: 'NASDAQ:TQQQ' },
-    ] },
-    { title: 'Mutual Funds', symbols: [
-        { s: 'AMEX:PHYS' }, { s: 'AMEX:PSLV' }, { s: 'OTC:LTCN' },
-        { s: 'NYSE:PTY' }, { s: 'OTC:SRUUF' }, { s: 'NYSE:DXYZ' },
-    ] },
-];
-
-const CHART_COLORS = {
-    plotLineColorGrowing: 'rgb(41,191,240, 1)',
-    plotLineColorFalling: 'rgb(15,96,139, 1)',
-    gridLineColor: 'rgba(240, 243, 250, 0)',
-    scaleFontColor: 'rgba(19, 23, 34, 1)',
-    belowLineFillColorGrowing: 'rgba(41, 98, 255, 0.12)',
-    belowLineFillColorFalling: 'rgba(41, 98, 255, 0.12)',
-    belowLineFillColorGrowingBottom: 'rgba(41, 98, 255, 0)',
-    belowLineFillColorFallingBottom: 'rgba(41, 98, 255, 0)',
-    symbolActiveColor: 'rgba(41, 98, 255, 0.12)',
-};
+import { MarketDataTable } from "@/app/components/table/MarketDataTable";
+import { MarketMovers } from "@/app/components/markets/shared/MarketMovers";
+import { MarketNews } from "@/app/components/markets/shared/MarketNews";
+import { newsService } from "@/services/news.service";
 
 export default function Cryptocurrency() {
-    const { isDarkMode } = useDarkMode();
 
-    useEffect(() => {
-        const theme = isDarkMode ? 'dark' : 'light';
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    // Popular crypto symbols — uses AV CURRENCY_EXCHANGE_RATE via our backend
+    const popularCryptos = [
+        'BTC',  // Bitcoin
+        'ETH',  // Ethereum
+        'XRP',  // XRP
+        'SOL',  // Solana
+        'DOGE', // Dogecoin
+        'LTC',  // Litecoin
+        'DOT',  // Polkadot
+        'XLM',  // Stellar
+    ];
 
-        const init: InitWidget = (containerId, config, callback) => {
-            const el = document.getElementById(containerId);
-            if (el) el.innerHTML = '';
-            return addTradingViewWidget(containerId, config, callback);
-        };
-
-        const cleanupCryptocurrency = init('tradingview-widget-cryptocurrency', {
-            width: '100%', height: '100%',
-            largeChartUrl: `${baseUrl}/symbols`,
-            colorTheme: theme,
-            symbolsGroups: [{ name: 'Cryptocurrency', originalName: 'Indices', symbols: [
-                { name: 'CRYPTOCAP:BTC' }, { name: 'CRYPTOCAP:ETH' }, { name: 'CRYPTO:USDTUSD' },
-                { name: 'CRYPTOCAP:BNB' }, { name: 'CRYPTO:SOLUSD' }, { name: 'CRYPTOCAP:USDC' },
-                { name: 'CRYPTOCAP:XRP' }, { name: 'CRYPTO:DOGEUSD' }, { name: 'CRYPTO:TONUSD' },
-                { name: 'CRYPTO:TRXUSD' }, { name: 'CRYPTO:ADAUSD' }, { name: 'CRYPTO:AVAXUSD' },
-                { name: 'CRYPTO:SHIBUSD' }, { name: 'CRYPTO:DOTUSD' }, { name: 'CRYPTO:LINKUSD' },
-                { name: 'OANDA:BCHUSD' }, { name: 'CRYPTOCAP:DAI' }, { name: 'CRYPTO:LEOUSD' },
-                { name: 'CRYPTOCAP:LTC' }, { name: 'CRYPTOCAP:NEAR' },
-            ] }],
-            showSymbolLogo: true, isTransparent: true, locale: 'en',
-        }, srcFile.getStocks);
-
-        const cleanupCryptocurrencyPairs = init('tradingview-widget-cryptocurrency-pairs', {
-            width: '100%', height: '100%',
-            largeChartUrl: `${baseUrl}/symbols`,
-            colorTheme: theme,
-            symbolsGroups: [{ name: 'Cryptocurrency', originalName: 'Indices', symbols: [
-                { name: 'BINANCE:BTCUSD' }, { name: 'CRYPTOCAP:BTC' }, { name: 'BINANCE:ETHUSD' },
-                { name: 'CRYPTO:SOLUSD' }, { name: 'PYTH:TONUSD' }, { name: 'CRYPTOCAP:XRP' },
-                { name: 'CRYPTOCAP:ETH' }, { name: 'BITMEX:BPEPE' }, { name: 'CRYPTOCAP:BNB' },
-                { name: 'BINANCE:DOGEUSD' }, { name: 'PYTH:USDMXN' }, { name: 'WHITEBIT:FETTRY' },
-                { name: 'BINANCE:LINKUSD' }, { name: 'BITAZZA:USDTTHB' }, { name: 'BINANCE:NFPUSD' },
-                { name: 'BITKUB:XRPTHB' }, { name: 'CRYPTO:ADAUSD' }, { name: 'CRYPTO:VELOUSD' },
-                { name: 'COINBASE:BCHUSD' }, { name: 'CRYPTO:RDNTUSD' }, { name: 'CRYPTO:JASMYUSD' },
-            ] }],
-            showSymbolLogo: true, isTransparent: true, locale: 'en',
-        }, srcFile.getStocks);
-
-        const cleanupAllCryptoNews = init('tradingview-widget-crypto-news', {
-            feedMode: 'market', market: 'crypto', isTransparent: true,
-            displayMode: 'regular', width: '100%', height: '100%',
-            colorTheme: theme, locale: 'en',
-        }, srcFile.getTimeline);
-
-        const cleanupMarketStocksNews = init('tradingview-widget-market-stocks-news', {
-            ...CHART_COLORS,
-            colorTheme: theme, dateRange: 'ALL', exchange: 'US', showChart: true,
-            locale: 'en', width: '100%', height: '100%', isTransparent: true,
-            showSymbolLogo: false, showFloatingTooltip: true,
-            largeChartUrl: `${baseUrl}/symbols`,
-        }, srcFile.getNews);
-
-        const cleanupMarketStocksOverview = init('tradingview-widget-market-stocks-overview', {
-            ...CHART_COLORS,
-            colorTheme: theme, dateRange: 'ALL', showChart: true, locale: 'en',
-            width: '100%', height: '100%', isTransparent: true,
-            showSymbolLogo: false, showFloatingTooltip: true,
-            largeChartUrl: `${baseUrl}/symbols`,
-            tabs: SIDEBAR_TABS,
-        }, srcFile.getMarketOverview);
-
-        return () => {
-            if (cleanupCryptocurrency) cleanupCryptocurrency();
-            if (cleanupCryptocurrencyPairs) cleanupCryptocurrencyPairs();
-            if (cleanupAllCryptoNews) cleanupAllCryptoNews();
-            if (cleanupMarketStocksNews) cleanupMarketStocksNews();
-            if (cleanupMarketStocksOverview) cleanupMarketStocksOverview();
-        };
-    }, [isDarkMode]);
+    // Market Movers tabs for Crypto
+    // These use top-gainers-losers from Alpha Vantage (real data)
+    // For now using well-known crypto-related stock tickers that Tradier supports
+    // until we build a dedicated AV-powered MarketMovers for crypto
+    const cryptoMoversTabs = [
+        {
+            id: 'active',
+            label: 'Active',
+            symbols: ['COIN', 'MSTR', 'MARA', 'RIOT', 'HUT', 'CLSK']
+        },
+        {
+            id: 'gainers',
+            label: 'Gainers',
+            symbols: ['COIN', 'MSTR', 'MARA', 'RIOT', 'CIFR', 'BTBT']
+        },
+        {
+            id: 'losers',
+            label: 'Losers',
+            symbols: ['MARA', 'RIOT', 'HUT', 'CLSK', 'BTBT', 'CIFR']
+        },
+    ];
 
     return (
         <section className="top-news-post-area pt-70 pb-70">
             <div className="container">
                 <div className="row justify-content-center">
+
+                    {/* Main Content - Left Side (9 columns) */}
                     <div className="col-xl-9">
                         <div className="sidebar-wrap">
+
+                            {/* Crypto Market Table */}
                             <Heading textHeading="Cryptocurrency Market" showBtn={false} />
-                            <div className="!h-[49rem]" id="tradingview-widget-cryptocurrency">
-                                <div className="tradingview-widget-cryptocurrency"></div>
+                            <div className="markets-widget-card">
+                                <MarketDataTable
+                                    symbols={popularCryptos}
+                                    type="crypto"
+                                    autoRefresh={true}
+                                    refreshInterval={60000}
+                                    showHeader={true}
+                                />
                             </div>
+
+                            {/* Ad Banner */}
                             <div className="sidebar-widget sidebar-widget-two">
-                                <div className="sidebar-img"><Banner /></div>
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
                             </div>
-                            <hr className="my-3" />
-                            <Heading textHeading="More Active Cryptocurrency Pairs" showBtn={false} />
-                            <div className="!h-[51rem]" id="tradingview-widget-cryptocurrency-pairs">
-                                <div className="tradingview-widget-cryptocurrency-pairs"></div>
-                            </div>
-                            <div className="sidebar-widget sidebar-widget-two">
-                                <div className="sidebar-img"><Banner /></div>
-                            </div>
-                            <hr className="my-3" />
+
+                            {/* Crypto News Section */}
                             <Heading textHeading="Cryptocurrency News" showBtn={false} />
-                            <div className="!h-[51rem]" id="tradingview-widget-crypto-news">
-                                <div className="tradingview-widget-crypto-news"></div>
-                            </div>
-                            <div className="sidebar-widget sidebar-widget-two">
-                                <div className="sidebar-img"><Banner /></div>
-                            </div>
+                            <MarketNews
+                                fetchNews={newsService.getCryptoNews}
+                                refreshInterval={300000}
+                                itemsPerPage={20}
+                            />
+
                         </div>
                     </div>
+
+                    {/* Sidebar - Right Side (3 columns) */}
                     <div className="col-xl-3 col-lg-8">
                         <div className="sidebar-wrap-three">
+
+                            {/* Ad Banner */}
                             <div className="sidebar-widget sidebar-widget-two">
-                                <div className="sidebar-img"><Banner /></div>
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
                             </div>
-                            <div className="!h-[36rem]" id="tradingview-widget-market-stocks-overview">
-                                <div className="tradingview-widget-market-stocks-overview"></div>
-                            </div>
-                            <hr className="my-3" />
+
+                            {/* Crypto Movers: Active | Gainers | Losers */}
+                            <MarketMovers
+                                tabs={cryptoMoversTabs}
+                                defaultTab="active"
+                                refreshInterval={30000}
+                            />
+
+                            <hr className="my-1" />
+
+                            {/* Ad Banner */}
                             <div className="sidebar-widget sidebar-widget-two">
-                                <div className="sidebar-img"><Banner /></div>
+                                <div className="sidebar-img">
+                                    <Banner />
+                                </div>
                             </div>
-                            <hr className="my-3" />
-                            <div className="!h-[34rem]" id="tradingview-widget-market-stocks-news">
-                                <div className="tradingview-widget-market-stocks-news"></div>
-                            </div>
-                            <div className="sidebar-widget sidebar-widget-two">
-                                <div className="sidebar-img"><Banner /></div>
-                            </div>
+
                         </div>
                     </div>
+
                 </div>
             </div>
         </section>
