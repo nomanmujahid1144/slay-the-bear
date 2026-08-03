@@ -5,21 +5,29 @@ import { InvoiceHistory } from "./InvoiceHistory";
 
 export const Billing = () => {
     return (
-        <div className="profile-tab-content">
+        <div className="stg-wrap">
 
-            {/* ── Section header ──────────────────────────────── */}
-            <div className="profile-section">
-                <div className="profile-section-header">
-                    <span className="profile-section-icon">
+            {/* ── Page intro ───────────────────────────────────── */}
+            <div className="stg-page-head">
+                <h1 className="stg-page-title">Billing</h1>
+                <p className="stg-page-sub">Your payment history and receipts</p>
+            </div>
+
+            {/* ── Invoice History ──────────────────────────────── */}
+            <div className="stg-card">
+                <div className="stg-card-head">
+                    <div className="stg-card-icon">
                         <i className="fas fa-file-invoice-dollar" />
-                    </span>
+                    </div>
                     <div>
-                        <h2 className="profile-section-title">Invoice History</h2>
-                        <p className="profile-section-desc">All your past payments and receipts</p>
+                        <h2 className="stg-card-title">Invoice History</h2>
+                        <p className="stg-card-desc">All your past payments and receipts</p>
                     </div>
                 </div>
 
-                <InvoiceHistory />
+                <div className="stg-card-body">
+                    <InvoiceHistory />
+                </div>
             </div>
 
         </div>

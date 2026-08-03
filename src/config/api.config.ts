@@ -10,6 +10,7 @@ const API_CONFIG = {
       LOGIN: '/api/auth/login',
       LOGOUT: '/api/auth/logout',
       VERIFY_EMAIL: '/api/auth/verify-email',
+      RESEND_OTP: '/api/auth/resend-otp',
       FORGOT_PASSWORD: '/api/auth/forgot-password',
       VERIFY_RESET_TOKEN: '/api/auth/verify-reset-token',
       CHANGE_PASSWORD: '/api/auth/change-password',

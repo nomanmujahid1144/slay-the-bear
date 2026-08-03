@@ -42,8 +42,14 @@ function LoginComponent() {
             await login(form);
             toast.success('Logged in successfully!');
             router.push(redirectUrl ?? '/');
-        } catch {
-            // Error already handled by errorHandler
+        } catch (error: any) {
+            // Unverified account — send to OTP screen (toast already shown by errorHandler)
+            const status = error?.response?.status ?? error?.status;
+            const message = error?.response?.data?.message ?? error?.message ?? '';
+
+            if (status === 403 || message.includes('verify your email')) {
+                router.push(`/verifyemail?email=${encodeURIComponent(form.email)}`);
+            }
         } finally {
             setLoading(false);
         }

@@ -15,10 +15,10 @@ interface UserDropdownProps {
 }
 
 const MENU_ITEMS = [
-    { label: 'Dashboard', href: '/dashboard', icon: 'gauge' }, 
-    { label: 'Profile', href: '/profile', icon: 'user' },
-    { label: 'Billing', href: '/profile', icon: 'credit-card' },
-    { label: 'Subscription', href: '/pricing', icon: 'crown' },
+    { label: 'Dashboard', href: '/dashboard',         icon: 'gauge'       },
+    { label: 'Account',   href: '/dashboard/account', icon: 'user'        },
+    { label: 'Billing',   href: '/dashboard/billing', icon: 'credit-card' },
+    { label: 'Subscription', href: '/pricing',        icon: 'crown'       },
 ] as const;
 
 export function UserDropdown({ user, onLogout }: UserDropdownProps) {

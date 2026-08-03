@@ -2,24 +2,32 @@
 
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { Plan } from '@/constants/enums';
 
 export function PremiumRoute({ children }: { children: React.ReactNode }) {
     const router = useRouter();
-    const { user, isAuthenticated, isLoading } = useAuthStore();
+    const { user, isAuthenticated, isLoading, refreshUser } = useAuthStore();
+    const [checking, setChecking] = useState(true);
+
+    // Refetch profile on mount — plan may have changed since login (e.g. new subscription)
+    useEffect(() => {
+        refreshUser().finally(() => setChecking(false));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
-        if (!isLoading && !isAuthenticated) {
+        if (checking || isLoading) return;
+        if (!isAuthenticated) {
             router.push('/login');
-        } else if (!isLoading && isAuthenticated && user?.plan !== Plan.PREMIUM) {
+        } else if (user?.plan !== Plan.PREMIUM) {
             router.push('/pricing');
         }
-    }, [isAuthenticated, isLoading, user, router]);
+    }, [isAuthenticated, isLoading, checking, user, router]);
 
-    if (isLoading) {
+    if (isLoading || checking) {
         return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
     }
 

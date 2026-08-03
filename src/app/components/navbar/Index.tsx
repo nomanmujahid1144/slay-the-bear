@@ -17,7 +17,6 @@ import { useSymbolSearch } from '@/app/hooks/useSymbolSearch';
 import { menuItems } from './menuItems';
 import { toast } from '@/utils/toast';
 import logoImage from '../../../../public/assets/img/logo/logo.png';
-import defaultProfileImage from '../../../../public/assets/img/default/defaultUserMaleTmp.png';
 import { UserDropdown } from './UserDropdown';
 
 export const Navbar = () => {

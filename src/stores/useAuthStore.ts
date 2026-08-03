@@ -14,6 +14,7 @@ interface AuthState {
     isLoading: boolean;
 
     initialize: () => Promise<void>;
+    refreshUser: () => Promise<void>;
     login: (credentials: LoginRequest) => Promise<void>;
     logout: () => Promise<void>;
     setUser: (user: UserProfile) => void;
@@ -43,6 +44,22 @@ export const useAuthStore = create<AuthState>((set) => ({
                 isAuthenticated: false,
                 isLoading: false,
             });
+        }
+    },
+
+    // Silent refetch — no delay, no loading flash. Use after actions that
+    // change the user server-side (e.g. subscribing to a plan) so the
+    // store reflects the DB instead of the stale snapshot from login/initialize.
+    refreshUser: async () => {
+        try {
+            const { data } = await userService.getProfile();
+            set({
+                user: data.data ?? null,
+                isAuthenticated: true,
+            });
+        } catch {
+            // Silent — keep whatever we had rather than kicking the user out
+            // over a transient refresh failure.
         }
     },
 

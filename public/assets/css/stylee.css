@@ -7689,6 +7689,36 @@ label {
     opacity: 1;
 }
 
+/* ── Portfolio analysis box ───────────────────────────────────
+   Explanation paragraphs under the metrics table
+   ──────────────────────────────────────────────────────────── */
+.tg-analysis-box {
+    border: 1px solid var(--tg-border-color);
+    border-radius: 12px;
+    padding: 18px 20px;
+    background: var(--tg-gray-three);
+}
+
+.tg-analysis-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--tg-body-font-color);
+    margin-bottom: 12px;
+}
+
+.tg-analysis-text:last-of-type {
+    margin-bottom: 0;
+}
+
+/* Disclaimer — smaller, muted, separated */
+.tg-analysis-disclaimer {
+    font-size: 12px;
+    color: var(--tg-icon-color);
+    border-top: 1px solid var(--tg-border-color);
+    padding-top: 12px;
+    margin: 12px 0 0;
+}
+
 /* Pricing/Subscription Page */
 /* ── Page layout ────────────────────────────────────────── */
 .pricing-page {
@@ -12843,6 +12873,593 @@ label {
     color: var(--tg-heading-font-color);
 }
 
+/* =============================================================
+   SETTINGS PAGES — Account / Billing
+   Pages: /dashboard/account, /dashboard/billing
+   Covers: page head, cards, plan summary, notices, plan change
+   Dark mode: [tg-theme=dark] .stg-*
+   ============================================================= */
+
+/* ── Page wrapper ─────────────────────────────────────────────
+   Column of settings cards with page heading on top
+   ──────────────────────────────────────────────────────────── */
+.stg-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.stg-page-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--tg-heading-font-color);
+    margin-bottom: 4px;
+}
+
+.stg-page-sub {
+    font-size: 14px;
+    color: var(--tg-icon-color);
+    margin: 0;
+}
+
+/* ── Card shell ───────────────────────────────────────────────
+   White card with head / body / footer sections
+   ──────────────────────────────────────────────────────────── */
+.stg-card {
+    background: var(--tg-white);
+    border: 1px solid var(--tg-border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: border-color 0.15s ease;
+}
+
+.stg-card:hover {
+    border-color: color-mix(in srgb, var(--tg-primary-color), transparent 40%);
+}
+
+/* ── Card header ──────────────────────────────────────────────
+   Icon tile + title + description row
+   ──────────────────────────────────────────────────────────── */
+.stg-card-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 24px 16px;
+}
+
+.stg-card-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: var(--tg-primary-color);
+    background: color-mix(in srgb, var(--tg-primary-color), transparent 90%);
+    border: 1px solid color-mix(in srgb, var(--tg-primary-color), transparent 80%);
+    flex-shrink: 0;
+}
+
+/* Gold variant — subscription card */
+.stg-card-icon--gold {
+    color: var(--tg-gold);
+    background: color-mix(in srgb, var(--tg-gold), transparent 90%);
+    border-color: color-mix(in srgb, var(--tg-gold), transparent 75%);
+}
+
+.stg-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--tg-heading-font-color);
+    margin-bottom: 2px;
+}
+
+.stg-card-desc {
+    font-size: 13px;
+    color: var(--tg-icon-color);
+    margin: 0;
+}
+
+/* ── Card body / footer ───────────────────────────────────────
+   Body holds content, footer holds action buttons
+   ──────────────────────────────────────────────────────────── */
+.stg-card-body {
+    padding: 0 24px 20px;
+}
+
+.stg-card-foot {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 14px 24px;
+    border-top: 1px solid var(--tg-border-color);
+    background: var(--tg-gray-three);
+}
+
+/* Footer note variant — info line instead of buttons */
+.stg-card-foot--note {
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--tg-icon-color);
+}
+
+/* ── Plan summary ─────────────────────────────────────────────
+   3-column grid: current plan badge, start date, end date
+   ──────────────────────────────────────────────────────────── */
+.stg-plan-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 16px 18px;
+    border: 1px solid var(--tg-border-color);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    background: var(--tg-gray-three);
+}
+
+.stg-plan-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.stg-plan-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--tg-icon-color);
+}
+
+.stg-plan-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--tg-heading-font-color);
+}
+
+/* Plan badge — pill with crown/shield icon */
+.stg-plan-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    width: fit-content;
+    padding: 4px 12px;
+    border-radius: 100px;
+}
+
+.stg-plan-badge em {
+    font-style: normal;
+    font-weight: 500;
+    opacity: 0.7;
+    text-transform: capitalize;
+}
+
+.stg-plan-badge--premium {
+    color: var(--tg-gold);
+    background: color-mix(in srgb, var(--tg-gold), transparent 88%);
+    border: 1px solid color-mix(in srgb, var(--tg-gold), transparent 70%);
+}
+
+.stg-plan-badge--basic {
+    color: var(--tg-primary-color);
+    background: color-mix(in srgb, var(--tg-primary-color), transparent 90%);
+    border: 1px solid color-mix(in srgb, var(--tg-primary-color), transparent 72%);
+}
+
+/* ── Notices ──────────────────────────────────────────────────
+   Warning (pending downgrade) and danger (canceling) banners
+   ──────────────────────────────────────────────────────────── */
+.stg-notice {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    margin-bottom: 14px;
+}
+
+.stg-notice p {
+    margin: 0;
+    color: var(--tg-body-font-color);
+}
+
+.stg-notice svg {
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+.stg-notice--warning {
+    background: color-mix(in srgb, var(--tg-yellow), transparent 92%);
+    border: 1px solid color-mix(in srgb, var(--tg-yellow), transparent 70%);
+    color: var(--tg-gold);
+}
+
+.stg-notice--danger {
+    background: color-mix(in srgb, var(--tg-red), transparent 92%);
+    border: 1px solid color-mix(in srgb, var(--tg-red), transparent 72%);
+    color: var(--tg-red);
+}
+
+/* ── Invoice stats row ────────────────────────────────────────
+   3 summary tiles above the invoice table
+   ──────────────────────────────────────────────────────────── */
+.stg-invoice-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.stg-invoice-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 16px;
+    border: 1px solid var(--tg-border-color);
+    border-radius: 12px;
+    background: var(--tg-gray-three);
+}
+
+.stg-invoice-stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--tg-icon-color);
+}
+
+.stg-invoice-stat-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--tg-heading-font-color);
+}
+
+/* ── Invoice table cells ──────────────────────────────────────
+   ID mono style, bold amount, status pills, icon actions
+   ──────────────────────────────────────────────────────────── */
+.stg-invoice-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.stg-invoice-id {
+    font-size: 13px;
+    color: var(--tg-icon-color);
+}
+
+.stg-invoice-amount {
+    font-weight: 700;
+    color: var(--tg-heading-font-color);
+}
+
+/* Status pill — active (green) / canceled (red) */
+.stg-invoice-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+}
+
+.stg-invoice-status--active {
+    color: var(--tg-green-light);
+    background: color-mix(in srgb, var(--tg-green-light), transparent 90%);
+    border: 1px solid color-mix(in srgb, var(--tg-green-light), transparent 72%);
+}
+
+.stg-invoice-status--canceled {
+    color: var(--tg-red);
+    background: color-mix(in srgb, var(--tg-red), transparent 92%);
+    border: 1px solid color-mix(in srgb, var(--tg-red), transparent 72%);
+}
+
+/* Action icon buttons — view / download */
+.stg-invoice-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.stg-invoice-btn {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--tg-icon-color);
+    background: var(--tg-gray-light);
+    border: 1px solid var(--tg-border-color);
+    transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.stg-invoice-btn:hover {
+    color: var(--tg-white);
+    background: var(--tg-primary-color);
+    border-color: var(--tg-primary-color);
+}
+
+.stg-invoice-no-action {
+    color: var(--tg-icon-color);
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .stg-invoice-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Plan change panel ────────────────────────────────────────
+   Expandable panel with selectable plan option cards
+   ──────────────────────────────────────────────────────────── */
+.stg-plan-change {
+    border: 1px solid color-mix(in srgb, var(--tg-primary-color), transparent 70%);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 14px;
+}
+
+.stg-plan-change-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--tg-heading-font-color);
+    margin-bottom: 12px;
+}
+
+.stg-plan-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+/* Individual plan option card */
+.stg-plan-option {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--tg-border-color);
+    background: var(--tg-white);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.stg-plan-option:hover:not(:disabled) {
+    border-color: color-mix(in srgb, var(--tg-primary-color), transparent 40%);
+}
+
+/* Selected option — primary border + tint + soft ring */
+.stg-plan-option--selected {
+    border-color: var(--tg-primary-color);
+    background: color-mix(in srgb, var(--tg-primary-color), transparent 94%);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--tg-primary-color), transparent 88%);
+}
+
+/* Current plan — visible but not selectable */
+.stg-plan-option--current {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.stg-plan-option-label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--tg-heading-font-color);
+}
+
+.stg-plan-option-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--tg-secondary-color);
+}
+
+.stg-plan-option-note {
+    font-size: 11.5px;
+    color: var(--tg-icon-color);
+}
+
+/* "Current" tag on the active plan */
+.stg-plan-option-tag {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: var(--tg-gray-light);
+    color: var(--tg-icon-color);
+}
+
+/* Upgrade / downgrade hint under the options */
+.stg-plan-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    margin: 0;
+}
+
+.stg-plan-hint--upgrade {
+    color: var(--tg-green-light);
+}
+
+.stg-plan-hint--downgrade {
+    color: var(--tg-gold);
+}
+
+/* ── Cancel confirmation modal ────────────────────────────────
+   Themed replacement for window.confirm()
+   ──────────────────────────────────────────────────────────── */
+.stg-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: color-mix(in srgb, var(--tg-black), transparent 45%);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    animation: stgFadeIn 0.15s ease;
+}
+
+.stg-modal {
+    background: var(--tg-white);
+    border: 1px solid var(--tg-border-color);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 420px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    animation: stgScaleUp 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.stg-modal-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--tg-red);
+    background: color-mix(in srgb, var(--tg-red), transparent 90%);
+    border: 1px solid color-mix(in srgb, var(--tg-red), transparent 72%);
+    margin-bottom: 4px;
+}
+
+.stg-modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--tg-heading-font-color);
+    margin: 0;
+}
+
+.stg-modal-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--tg-body-font-color);
+    margin: 0 0 8px;
+}
+
+.stg-modal-actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.stg-modal-btn-secondary,
+.stg-modal-btn-danger {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.stg-modal-btn-secondary {
+    background: var(--tg-gray-three);
+    border: 1px solid var(--tg-border-color);
+    color: var(--tg-heading-font-color);
+}
+
+.stg-modal-btn-secondary:hover:not(:disabled) {
+    background: var(--tg-gray-light);
+}
+
+.stg-modal-btn-danger {
+    background: var(--tg-red);
+    border: 1px solid var(--tg-red);
+    color: var(--tg-white);
+}
+
+.stg-modal-btn-danger:hover:not(:disabled) {
+    opacity: 0.88;
+}
+
+.stg-modal-btn-secondary:disabled,
+.stg-modal-btn-danger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@keyframes stgFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes stgScaleUp {
+    from { transform: scale(0.92); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* ── Actions row ──────────────────────────────────────────────
+   Primary buttons + quiet danger button
+   ──────────────────────────────────────────────────────────── */
+.stg-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+/* Danger button — outlined red, destructive action */
+.stg-btn-danger {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid color-mix(in srgb, var(--tg-red), transparent 55%);
+    background: transparent;
+    color: var(--tg-red);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.stg-btn-danger:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--tg-red), transparent 92%);
+    border-color: color-mix(in srgb, var(--tg-red), transparent 35%);
+}
+
+.stg-btn-danger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Responsive ───────────────────────────────────────────────
+   Stack plan summary on small screens
+   ──────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .stg-plan-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .stg-card-foot {
+        justify-content: stretch;
+    }
+}
+
 /*=============================
     00. Dark CSS
 ===============================*/
@@ -13762,6 +14379,27 @@ label {
     color: var(--tg-gray-three);
 }
 
+[tg-theme=dark] .tg-analysis-box {
+    background: color-mix(in srgb, var(--tg-black), transparent 40%);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .tg-analysis-disclaimer {
+    border-color: var(--tg-border-dark);
+}
+
+/* Cancle Subscription */
+[tg-theme=dark] .stg-modal {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .stg-modal-btn-secondary {
+    background: color-mix(in srgb, var(--tg-black), transparent 40%);
+    border-color: var(--tg-border-dark);
+    color: var(--tg-white);
+}
+
 /* ══════════════════════════════════════════════════════════════════════════ */
 /* DARK MODE - MARKET DATA TABLE - GENERIC REUSABLE COMPONENT                                              */
 /* ══════════════════════════════════════════════════════════════════════════ */
@@ -14532,6 +15170,65 @@ label {
 }
 
 
+/* =============================================================
+   ACCOUNTS/BILLING — Dark Mode
+   ============================================================= */
+
+/* ── Settings pages dark ──────────────────────────────────── */
+[tg-theme=dark] .stg-card {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .stg-card-foot {
+    background: color-mix(in srgb, var(--tg-black), transparent 40%);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .stg-plan-summary {
+    background: color-mix(in srgb, var(--tg-black), transparent 40%);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .stg-plan-option {
+    background: var(--tg-teal);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .stg-plan-option--selected {
+    background: color-mix(in srgb, var(--tg-primary-color), transparent 88%);
+}
+
+[tg-theme=dark] .stg-plan-option-tag {
+    background: var(--tg-border-dark);
+    color: var(--tg-gray-two);
+}
+
+[tg-theme=dark] .stg-plan-option-price {
+    color: var(--tg-primary-color);
+}
+
+[tg-theme=dark] .stg-plan-change {
+    border-color: color-mix(in srgb, var(--tg-primary-color), transparent 60%);
+}
+
+/* ── Billing dark ─────────────────────────────────────────── */
+[tg-theme=dark] .stg-invoice-stat {
+    background: color-mix(in srgb, var(--tg-black), transparent 40%);
+    border-color: var(--tg-border-dark);
+}
+
+[tg-theme=dark] .stg-invoice-btn {
+    background: var(--tg-border-dark);
+    border-color: var(--tg-border-dark);
+    color: var(--tg-gray-two);
+}
+
+[tg-theme=dark] .stg-invoice-btn:hover {
+    background: var(--tg-primary-color);
+    border-color: var(--tg-primary-color);
+    color: var(--tg-white);
+}
 
 /* TERMS AND CONDITIONS */
 

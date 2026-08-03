@@ -372,15 +372,19 @@ export interface PortfolioMetrics {
     sharpeRatio: number;
     valueAtRisk: number;
     potentialLoss: number;
+    annualizedReturn5Y: number;
+    totalValueAfter5Y: number;
 }
 
 export interface PortfolioOptimizerResult extends CalcBase {
     portfolio: PortfolioAllocation[];
     metrics: PortfolioMetrics;
+    explanation: string[];
     inputs: {
         investmentAmount: number;
         riskFreeRate: number;
         targetReturn: number;
+        symbols: string[];
     };
 }
 

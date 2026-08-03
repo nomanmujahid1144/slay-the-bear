@@ -17,7 +17,13 @@ export interface LoginRequest {
 
 // POST /api/auth/verify-email
 export interface VerifyEmailRequest {
-    token: string;
+    email: string;
+    otp: string;
+}
+
+// POST /api/auth/resend-otp
+export interface ResendOTPRequest {
+    email: string;
 }
 
 // POST /api/auth/forgot-password

@@ -66,6 +66,9 @@ export const Accounts = () => {
     const [selectedTier, setSelectedTier] = useState<PlanTier>('premium');
     const [selectedPeriod, setSelectedPeriod] = useState<PlanPeriod>('yearly');
 
+    // For cancel subscription
+    const [showCancelModal, setShowCancelModal] = useState(false);
+
     // ── Data fetching ─────────────────────────────────────────────────────────
 
     const getUserData = async () => {
@@ -135,11 +138,11 @@ export const Accounts = () => {
     };
 
     const handleCancelSubscription = async () => {
-        if (!confirm('Are you sure? You will keep access until the end of your billing period.')) return;
         setCancelLoading(true);
         try {
             await stripeService.cancelSubscription();
             toast.success('Subscription will be canceled at the end of the billing period.');
+            setShowCancelModal(false);
             getSubscriptionData();
         } catch {
             // handled by errorHandler
@@ -203,58 +206,64 @@ export const Accounts = () => {
     const changeType = getChangeType();
 
     return (
-        <div className="profile-tab-content">
+        <div className="stg-wrap">
+
+            {/* ── Page intro ───────────────────────────────────────────── */}
+            <div className="stg-page-head">
+                <h1 className="stg-page-title">Account</h1>
+                <p className="stg-page-sub">Manage your profile, security and subscription</p>
+            </div>
 
             {/* ── Profile Information ──────────────────────────────────── */}
-            <div className="profile-section">
-                <div className="profile-section-header">
-                    <span className="profile-section-icon">
+            <div className="stg-card">
+                <div className="stg-card-head">
+                    <div className="stg-card-icon">
                         <FontAwesomeIcon icon={['fas', 'user']} />
-                    </span>
+                    </div>
                     <div>
-                        <h2 className="profile-section-title">Profile Information</h2>
-                        <p className="profile-section-desc">Update your name and personal details</p>
+                        <h2 className="stg-card-title">Profile Information</h2>
+                        <p className="stg-card-desc">Update your name and personal details</p>
                     </div>
                 </div>
                 <form onSubmit={handleUpdateProfile}>
-                    <div className="row">
-                        <div className="col-md-6">
-                            <InputField required label="First Name" id="firstName" type="text"
-                                value={credentials.firstName} onChange={onChange}
-                                placeholder="First Name" isVisible={false} />
-                        </div>
-                        <div className="col-md-6">
-                            <InputField required label="Last Name" id="lastName" type="text"
-                                value={credentials.lastName} onChange={onChange}
-                                placeholder="Last Name" isVisible={false} />
-                        </div>
-                        <div className="col-md-12">
-                            <InputField required label="Email Address" id="email" type="email"
-                                value={credentials.email} onChange={onChange}
-                                placeholder="Email" disabled isVisible={false} />
+                    <div className="stg-card-body">
+                        <div className="row">
+                            <div className="col-md-6">
+                                <InputField required label="First Name" id="firstName" type="text"
+                                    value={credentials.firstName} onChange={onChange}
+                                    placeholder="First Name" isVisible={false} />
+                            </div>
+                            <div className="col-md-6">
+                                <InputField required label="Last Name" id="lastName" type="text"
+                                    value={credentials.lastName} onChange={onChange}
+                                    placeholder="Last Name" isVisible={false} />
+                            </div>
+                            <div className="col-md-12">
+                                <InputField required label="Email Address" id="email" type="email"
+                                    value={credentials.email} onChange={onChange}
+                                    placeholder="Email" disabled isVisible={false} />
+                            </div>
                         </div>
                     </div>
-                    <div className="profile-action-row">
+                    <div className="stg-card-foot">
                         <DefaultButton type="submit" text="Save Changes" loadingText="Saving..."
                             loading={loading} disabled={loading} />
                     </div>
                 </form>
             </div>
 
-            <div className="profile-divider" />
-
             {/* ── Password ─────────────────────────────────────────────── */}
-            <div className="profile-section">
-                <div className="profile-section-header">
-                    <span className="profile-section-icon">
+            <div className="stg-card">
+                <div className="stg-card-head">
+                    <div className="stg-card-icon">
                         <FontAwesomeIcon icon={['fas', 'lock']} />
-                    </span>
+                    </div>
                     <div>
-                        <h2 className="profile-section-title">Password</h2>
-                        <p className="profile-section-desc">We'll send a reset link to your email address</p>
+                        <h2 className="stg-card-title">Password</h2>
+                        <p className="stg-card-desc">We&apos;ll send a reset link to your email address</p>
                     </div>
                 </div>
-                <div className="profile-action-row">
+                <div className="stg-card-foot">
                     <DefaultButton type="button" text="Send Reset Link" loadingText="Sending..."
                         loading={passwordLoading} disabled={passwordLoading}
                         onClick={handleRecoverPassword} />
@@ -263,94 +272,84 @@ export const Accounts = () => {
 
             {/* ── Subscription ─────────────────────────────────────────── */}
             {hasSubscription && (
-                <>
-                    <div className="profile-divider" />
-                    <div className="profile-section">
-                        <div className="profile-section-header">
-                            <span className="profile-section-icon">
-                                <FontAwesomeIcon icon={['fas', 'crown']} />
-                            </span>
-                            <div>
-                                <h2 className="profile-section-title">Subscription</h2>
-                                <p className="profile-section-desc">Manage your active plan</p>
+                <div className="stg-card">
+                    <div className="stg-card-head">
+                        <div className="stg-card-icon stg-card-icon--gold">
+                            <FontAwesomeIcon icon={['fas', 'crown']} />
+                        </div>
+                        <div>
+                            <h2 className="stg-card-title">Subscription</h2>
+                            <p className="stg-card-desc">Manage your active plan</p>
+                        </div>
+                    </div>
+
+                    <div className="stg-card-body">
+
+                        {/* Current plan summary */}
+                        <div className="stg-plan-summary">
+                            <div className="stg-plan-cell">
+                                <span className="stg-plan-label">Current Plan</span>
+                                <span className={`stg-plan-badge stg-plan-badge--${subscription!.plan}`}>
+                                    <FontAwesomeIcon icon={['fas', subscription!.plan === 'premium' ? 'crown' : 'shield-halved']} />
+                                    {subscription!.plan.charAt(0).toUpperCase() + subscription!.plan.slice(1)}
+                                    <em>· {subscription!.period}</em>
+                                </span>
+                            </div>
+                            <div className="stg-plan-cell">
+                                <span className="stg-plan-label">Start Date</span>
+                                <span className="stg-plan-value">
+                                    {new Date(subscription!.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                </span>
+                            </div>
+                            <div className="stg-plan-cell">
+                                <span className="stg-plan-label">Renews / Ends</span>
+                                <span className="stg-plan-value">
+                                    {new Date(subscription!.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                </span>
                             </div>
                         </div>
 
-                        {/* ── Current plan card ─────────────────────────── */}
-                        <div className="profile-plan-card">
-                            <div className="profile-plan-grid">
-                                <div className="profile-plan-cell">
-                                    <span className="profile-plan-label">Current Plan</span>
-                                    <span className={`profile-plan-badge profile-plan-badge--${subscription!.plan}`}>
-                                        <FontAwesomeIcon icon={['fas', subscription!.plan === 'premium' ? 'crown' : 'shield-halved']} />
-                                        &nbsp;{subscription!.plan.charAt(0).toUpperCase() + subscription!.plan.slice(1)}
-                                    </span>
-                                    <span className="profile-plan-period">{subscription!.period}</span>
-                                </div>
-                                <div className="profile-plan-cell">
-                                    <span className="profile-plan-label">Start Date</span>
-                                    <span className="profile-plan-value">
-                                        {new Date(subscription!.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                                    </span>
-                                </div>
-                                <div className="profile-plan-cell">
-                                    <span className="profile-plan-label">Renews / Ends</span>
-                                    <span className="profile-plan-value">
-                                        {new Date(subscription!.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* ── Pending downgrade notice ──────────────────────── */}
+                        {/* Pending downgrade notice */}
                         {subscription!.pendingDowngrade && (
-                            <div className="profile-plan-notice profile-plan-notice--warning">
-                                <FontAwesomeIcon icon={['fas', 'clock']} className="mt-1" />
+                            <div className="stg-notice stg-notice--warning">
+                                <FontAwesomeIcon icon={['fas', 'clock']} />
                                 <div>
                                     <strong>Downgrade Scheduled</strong>
                                     <p>
                                         Your plan will change to{' '}
                                         <strong>
-                                            {subscription!.pendingDowngrade.plan.charAt(0).toUpperCase() +
-                                                subscription!.pendingDowngrade.plan.slice(1)}{' '}
-                                            {subscription!.pendingDowngrade.period.charAt(0).toUpperCase() +
-                                                subscription!.pendingDowngrade.period.slice(1)}
+                                            {subscription!.pendingDowngrade.plan.charAt(0).toUpperCase() + subscription!.pendingDowngrade.plan.slice(1)}{' '}
+                                            {subscription!.pendingDowngrade.period.charAt(0).toUpperCase() + subscription!.pendingDowngrade.period.slice(1)}
                                         </strong>{' '}
-                                        on{' '}
-                                        {new Date(subscription!.pendingDowngrade.effectiveDate).toLocaleDateString('en-US', {
-                                            month: 'long', day: 'numeric', year: 'numeric'
-                                        })}.
+                                        on {new Date(subscription!.pendingDowngrade.effectiveDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}.
                                         You have full access until then.
                                     </p>
                                 </div>
                             </div>
                         )}
 
-                        {/* ── Cancellation notice ───────────────────────────── */}
+                        {/* Cancellation notice */}
                         {subscription!.cancelAtPeriodEnd && (
-                            <div className="profile-plan-notice profile-plan-notice--danger">
+                            <div className="stg-notice stg-notice--danger">
                                 <FontAwesomeIcon icon={['fas', 'triangle-exclamation']} />
                                 <div>
                                     <strong>Subscription Canceling</strong>
                                     <p>
                                         Your subscription will end on{' '}
                                         <strong>
-                                            {new Date(subscription!.endDate).toLocaleDateString('en-US', {
-                                                month: 'long', day: 'numeric', year: 'numeric'
-                                            })}
-                                        </strong>
-                                        . You have full access until then.
+                                            {new Date(subscription!.endDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                                        </strong>. You have full access until then.
                                     </p>
                                 </div>
                             </div>
                         )}
 
-                        {/* ── Plan change panel ─────────────────────────── */}
+                        {/* Plan change panel */}
                         {showPlanChange && (
-                            <div className="profile-plan-change-panel">
-                                <p className="profile-plan-change-title">Select a new plan</p>
+                            <div className="stg-plan-change">
+                                <p className="stg-plan-change-title">Select a new plan</p>
 
-                                <div className="profile-plan-options">
+                                <div className="stg-plan-options">
                                     {PLAN_OPTIONS.map((opt) => {
                                         const key = `${opt.tier}-${opt.period}`;
                                         const isCurrent = key === currentKey;
@@ -361,33 +360,27 @@ export const Accounts = () => {
                                                 type="button"
                                                 disabled={isCurrent}
                                                 onClick={() => { setSelectedTier(opt.tier); setSelectedPeriod(opt.period); }}
-                                                className={`profile-plan-option ${isSelected ? 'profile-plan-option--selected' : ''} ${isCurrent ? 'profile-plan-option--current' : ''}`}
+                                                className={`stg-plan-option ${isSelected ? 'stg-plan-option--selected' : ''} ${isCurrent ? 'stg-plan-option--current' : ''}`}
                                             >
-                                                <span className="profile-plan-option-label">{opt.label}</span>
-                                                <span className="profile-plan-option-price">{opt.price}</span>
-                                                {opt.yearlyNote && (
-                                                    <span className="profile-plan-option-note">{opt.yearlyNote}</span>
-                                                )}
-                                                {isCurrent && (
-                                                    <span className="profile-plan-option-current-tag">Current</span>
-                                                )}
+                                                <span className="stg-plan-option-label">{opt.label}</span>
+                                                <span className="stg-plan-option-price">{opt.price}</span>
+                                                {opt.yearlyNote && <span className="stg-plan-option-note">{opt.yearlyNote}</span>}
+                                                {isCurrent && <span className="stg-plan-option-tag">Current</span>}
                                             </button>
                                         );
                                     })}
                                 </div>
 
-                                {/* Upgrade / downgrade hint */}
                                 {changeType !== 'same' && (
-                                    <p className={`profile-plan-change-hint profile-plan-change-hint--${changeType}`}>
+                                    <p className={`stg-plan-hint stg-plan-hint--${changeType}`}>
                                         <FontAwesomeIcon icon={['fas', changeType === 'upgrade' ? 'arrow-up' : 'arrow-down']} />
-                                        &nbsp;
                                         {changeType === 'upgrade'
                                             ? 'Upgrade — charged immediately with proration.'
                                             : 'Downgrade — takes effect at end of your current billing period.'}
                                     </p>
                                 )}
 
-                                <div className="profile-sub-actions" style={{ marginTop: '16px' }}>
+                                <div className="stg-actions">
                                     <DefaultButton
                                         type="button"
                                         text={changeType === 'upgrade' ? 'Confirm Upgrade' : changeType === 'downgrade' ? 'Confirm Downgrade' : 'Select a different plan'}
@@ -397,9 +390,7 @@ export const Accounts = () => {
                                         onClick={handleChangePlan}
                                     />
                                     <DefaultButton
-                                        type="button"
-                                        text="Cancel"
-                                        loadingText=""
+                                        type="button" text="Cancel" loadingText=""
                                         disabled={changePlanLoading}
                                         onClick={() => setShowPlanChange(false)}
                                     />
@@ -407,32 +398,72 @@ export const Accounts = () => {
                             </div>
                         )}
 
-                        {/* ── Main action buttons ───────────────────────── */}
+                        {/* Main actions */}
                         {!showPlanChange && (
-                            <div className="profile-sub-actions">
+                            <div className="stg-actions">
                                 <DefaultButton
                                     type="button" text="Change Plan" loadingText=""
                                     disabled={cancelLoading || reactivateLoading || !!subscription?.pendingDowngrade || subscription?.cancelAtPeriodEnd}
                                     onClick={() => setShowPlanChange(true)} />
-
-                                <DefaultButton
-                                    type="button" text="Cancel Subscription" loadingText="Canceling..."
-                                    loading={cancelLoading}
-                                    disabled={cancelLoading || reactivateLoading || subscription?.cancelAtPeriodEnd}
-                                    onClick={handleCancelSubscription} />
-                                <DefaultButton
-                                    type="button" text="Reactivate" loadingText="Reactivating..."
-                                    loading={reactivateLoading} disabled={cancelLoading || reactivateLoading}
-                                    onClick={handleReactivateSubscription} />
+                                {subscription?.cancelAtPeriodEnd ? (
+                                    <DefaultButton
+                                        type="button" text="Reactivate" loadingText="Reactivating..."
+                                        loading={reactivateLoading} disabled={cancelLoading || reactivateLoading}
+                                        onClick={handleReactivateSubscription} />
+                                ) : (
+                                    <button
+                                        type="button"
+                                        className="stg-btn-danger"
+                                        disabled={cancelLoading || reactivateLoading}
+                                        onClick={() => setShowCancelModal(true)}
+                                    >
+                                        {cancelLoading ? 'Canceling...' : 'Cancel Subscription'}
+                                    </button>
+                                )}
                             </div>
                         )}
-
-                        <p className="profile-sub-note">
-                            <FontAwesomeIcon icon={['fas', 'circle-info']} />
-                            &nbsp;Canceling keeps access active until the end of your current billing period.
-                        </p>
                     </div>
-                </>
+
+                    <div className="stg-card-foot stg-card-foot--note">
+                        <FontAwesomeIcon icon={['fas', 'circle-info']} />
+                        Canceling keeps access active until the end of your current billing period.
+                    </div>
+                </div>
+            )}
+            {/* ── Cancel confirmation modal ────────────────────────────── */}
+            {showCancelModal && (
+                <div className="stg-modal-overlay" onClick={() => !cancelLoading && setShowCancelModal(false)}>
+                    <div className="stg-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="stg-modal-icon">
+                            <FontAwesomeIcon icon={['fas', 'triangle-exclamation']} />
+                        </div>
+                        <h3 className="stg-modal-title">Cancel Subscription?</h3>
+                        <p className="stg-modal-text">
+                            You&apos;ll keep full access until the end of your current billing period
+                            {subscription?.endDate && (
+                                <> — <strong>{new Date(subscription.endDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</strong></>
+                            )}. After that, your plan will downgrade to Free.
+                        </p>
+                        <div className="stg-modal-actions">
+                            <button
+                                type="button"
+                                className="stg-modal-btn-secondary"
+                                disabled={cancelLoading}
+                                onClick={() => setShowCancelModal(false)}
+                            >
+                                Keep Subscription
+                            </button>
+                            <button
+                                type="button"
+                                className="stg-modal-btn-danger"
+                                disabled={cancelLoading}
+                                onClick={handleCancelSubscription}
+                            >
+                                {cancelLoading ? 'Canceling...' : 'Yes, Cancel'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

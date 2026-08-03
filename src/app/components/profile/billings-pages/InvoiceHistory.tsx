@@ -6,6 +6,7 @@ import { TgTable, type TgTableColumn } from "@/app/components/table/TgTable";
 import { TgTableSkeleton } from "@/app/components/skeletons/tables/TableSkeleton";
 import { userService } from "@/services/user.service";
 import type { UserBillingEntry } from "@/types";
+import Link from "next/link";
 
 const fmt = (date: string) =>
     new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -15,14 +16,14 @@ const COLUMNS: TgTableColumn<UserBillingEntry>[] = [
         key: 'invoiceId',
         label: 'Invoice ID',
         render: (row) => (
-            <span className="tg-cell-value">{row.invoiceId}</span>
+            <span className="stg-invoice-id">{row.invoiceId}</span>
         ),
     },
     {
         key: 'amount',
         label: 'Amount',
         render: (row) => (
-            <span className="tg-cell-value">${Number(row.amount).toFixed(2)}</span>
+            <span className="stg-invoice-amount">${Number(row.amount).toFixed(2)}</span>
         ),
     },
     {
@@ -31,7 +32,7 @@ const COLUMNS: TgTableColumn<UserBillingEntry>[] = [
         render: (row) => {
             const isActive = row.status === 'Subscribed' || row.status === 'Renewal';
             return (
-                <span className={`profile-invoice-status ${isActive ? 'profile-invoice-status--active' : 'profile-invoice-status--canceled'}`}>
+                <span className={`stg-invoice-status ${isActive ? 'stg-invoice-status--active' : 'stg-invoice-status--canceled'}`}>
                     <i className={`fas ${isActive ? 'fa-circle-check' : 'fa-circle-xmark'}`} />
                     {row.status}
                 </span>
@@ -53,31 +54,31 @@ const COLUMNS: TgTableColumn<UserBillingEntry>[] = [
         label: 'Actions',
         align: 'right',
         render: (row) => (
-            <div className="profile-invoice-actions">
+            <div className="stg-invoice-actions">
                 {row.viewURL && (
-                    <a
+                    <Link
                         href={row.viewURL}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="profile-invoice-btn"
+                        className="stg-invoice-btn"
                         title="View Invoice"
                     >
                         <i className="fas fa-eye" />
-                    </a>
+                    </Link>
                 )}
                 {row.downloadURL && (
-                    <a
+                    <Link
                         href={row.downloadURL}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="profile-invoice-btn"
+                        className="stg-invoice-btn"
                         title="Download PDF"
                     >
                         <i className="fas fa-download" />
-                    </a>
+                    </Link>
                 )}
                 {!row.viewURL && !row.downloadURL && (
-                    <span className="profile-invoice-no-action">—</span>
+                    <span className="stg-invoice-no-action">—</span>
                 )}
             </div>
         ),
@@ -102,18 +103,42 @@ export const InvoiceHistory = () => {
         fetch();
     }, []);
 
+    // Derived — summary stats over all invoices
+    const totalSpent = invoices.reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
+
     if (loading) {
         return <TgTableSkeleton rows={4} cols={6} />;
     }
 
     return (
-        <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-            <TgTable
-                columns={COLUMNS}
-                rows={invoices}
-                keyExtractor={(row) => row.id}
-                emptyText="No invoices yet. Your payment history will appear here."
-            />
-        </div>
+        <>
+            {/* ── Summary stats ────────────────────────────────── */}
+            {invoices.length > 0 && (
+                <div className="stg-invoice-stats">
+                    <div className="stg-invoice-stat">
+                        <span className="stg-invoice-stat-label">Total Invoices</span>
+                        <span className="stg-invoice-stat-value">{invoices.length}</span>
+                    </div>
+                    <div className="stg-invoice-stat">
+                        <span className="stg-invoice-stat-label">Total Spent</span>
+                        <span className="stg-invoice-stat-value">${totalSpent.toFixed(2)}</span>
+                    </div>
+                    <div className="stg-invoice-stat">
+                        <span className="stg-invoice-stat-label">Last Payment</span>
+                        <span className="stg-invoice-stat-value">{fmt(invoices[0].startDate)}</span>
+                    </div>
+                </div>
+            )}
+
+            {/* ── Table ────────────────────────────────────────── */}
+            <div className="stg-invoice-table-wrap">
+                <TgTable
+                    columns={COLUMNS}
+                    rows={invoices}
+                    keyExtractor={(row) => row.id}
+                    emptyText="No invoices yet. Your payment history will appear here."
+                />
+            </div>
+        </>
     );
 };

@@ -72,7 +72,7 @@ export default function Register() {
                 password: form.password,
             });
             toast.success(data.message || 'Registered successfully! Please check your email.');
-            router.push('/login');
+            router.push(`/verifyemail?email=${encodeURIComponent(form.email)}&sent=true`);
         } catch {
             // Error already handled by errorHandler
         } finally {

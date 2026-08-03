@@ -16,6 +16,8 @@ import type {
     VerifyResetTokenResponse,
     ChangePasswordRequest,
     ChangePasswordResponse,
+    ResendOTPRequest,
+    ResendOTPResponse,
 } from '@/types/auth';
 
 export const authService = {
@@ -43,10 +45,18 @@ export const authService = {
         ),
 
     // POST /api/auth/verify-email
-    // Response: { success, message }
+    // Response: { success, message, data: { user, tokens } } — auto sign-in
     verifyEmail: (data: VerifyEmailRequest) =>
         axiosInstance.post<ApiResponse<VerifyEmailResponse>>(
             API_CONFIG.ENDPOINTS.AUTH.VERIFY_EMAIL,
+            data
+        ),
+
+    // POST /api/auth/resend-otp
+    // Response: { success, message }
+    resendOTP: (data: ResendOTPRequest) =>
+        axiosInstance.post<ApiResponse<ResendOTPResponse>>(
+            API_CONFIG.ENDPOINTS.AUTH.RESEND_OTP,
             data
         ),
 

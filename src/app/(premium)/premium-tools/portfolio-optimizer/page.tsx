@@ -209,6 +209,8 @@ export default function PortfolioOptimizerCalculator() {
         { label: 'Sharpe Ratio', value: `${result.metrics.sharpeRatio}`, color: 'var(--tg-primary-color)' },
         { label: 'Value at Risk (95%)', value: `${result.metrics.valueAtRisk}%`, color: '#ffc107' },
         { label: 'Potential Loss', value: `$${result.metrics.potentialLoss.toLocaleString()}`, color: 'var(--tg-red)' },
+        { label: 'Annualized Return (5Y)', value: `${result.metrics.annualizedReturn5Y}%`, color: 'var(--tg-green-light)' },
+        { label: 'Value After 5 Years', value: `$${result.metrics.totalValueAfter5Y.toLocaleString()}`, color: 'var(--tg-gold)' },
         { label: 'Total Investment', value: `$${result.inputs.investmentAmount.toLocaleString()}`, color: 'var(--tg-secondary-color)' },
     ] : [];
 
@@ -486,7 +488,6 @@ export default function PortfolioOptimizerCalculator() {
                                                 rows={result.portfolio}
                                                 keyExtractor={(row) => row.symbol}
                                             />
-
                                             <p className="tg-section-label" style={{ marginTop: '20px' }}>
                                                 Portfolio Metrics
                                             </p>
@@ -495,6 +496,29 @@ export default function PortfolioOptimizerCalculator() {
                                                 rows={metricRows}
                                                 keyExtractor={(row) => row.label}
                                             />
+
+                                            {/* Analysis / explanation paragraphs */}
+                                            {result.explanation?.length > 0 && (
+                                                <>
+                                                    <p className="tg-section-label" style={{ marginTop: '20px' }}>
+                                                        Analysis
+                                                    </p>
+                                                    <div className="tg-analysis-box">
+                                                        {result.explanation.map((paragraph, i) => (
+                                                            <p
+                                                                key={i}
+                                                                className={
+                                                                    i === result.explanation.length - 1
+                                                                        ? 'tg-analysis-disclaimer'
+                                                                        : 'tg-analysis-text'
+                                                                }
+                                                            >
+                                                                {paragraph}
+                                                            </p>
+                                                        ))}
+                                                    </div>
+                                                </>
+                                            )}
                                         </>
                                     )}
                                 </div>

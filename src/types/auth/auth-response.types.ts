@@ -16,11 +16,19 @@ export interface LoginResponse {
     };
 }
 
-// POST /api/auth/verify-email → { success, message }
+// POST /api/auth/verify-email — returns user + tokens (auto sign-in)
 export interface VerifyEmailResponse {
-    message: string;
+    user: UserProfile;
+    tokens: {
+        accessToken: string;
+        refreshToken: string;
+    };
 }
 
+// POST /api/auth/resend-otp
+export interface ResendOTPResponse {
+    message: string;
+}
 // POST /api/auth/forgot-password → { success, message }
 export interface ForgotPasswordResponse {
     message: string;
