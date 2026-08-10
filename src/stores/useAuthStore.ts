@@ -26,11 +26,10 @@ export const useAuthStore = create<AuthState>((set) => ({
     isAuthenticated: false,
     isLoading: true,
 
-    initialize: async () => {
+initialize: async () => {
         try {
             const [{ data }] = await Promise.all([
-                userService.getProfile(),
-                // Artificial delay so skeleton renders for at least INIT_DELAY_MS
+                userService.getProfile(true),   // ← silent — just checking auth status, not a user action
                 new Promise((resolve) => setTimeout(resolve, INIT_DELAY_MS)),
             ]);
             set({
@@ -52,14 +51,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     // store reflects the DB instead of the stale snapshot from login/initialize.
     refreshUser: async () => {
         try {
-            const { data } = await userService.getProfile();
+            const { data } = await userService.getProfile(true);
             set({
                 user: data.data ?? null,
                 isAuthenticated: true,
             });
         } catch {
             // Silent — keep whatever we had rather than kicking the user out
-            // over a transient refresh failure.
         }
     },
 

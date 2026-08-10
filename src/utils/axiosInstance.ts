@@ -7,7 +7,8 @@ import { errorHandler } from '@/utils/errors/errorHandler';
 
 interface RetryAxiosRequestConfig extends InternalAxiosRequestConfig {
     _retry?: boolean;
-    silentOn404?: boolean;   // ← new: skip toast when 404 is expected
+    silentOn404?: boolean;
+    silentAuth?: boolean;
 }
 
 const PUBLIC_ENDPOINTS = [

@@ -12,9 +12,10 @@ import type {
 } from '@/types/user';
 
 export const userService = {
-    getProfile: () =>
+    getProfile: (silent = false) =>
         axiosInstance.get<ApiResponse<UserProfile>>(
-            API_CONFIG.ENDPOINTS.USERS.PROFILE
+            API_CONFIG.ENDPOINTS.USERS.PROFILE,
+            silent ? ({ silentAuth: true } as any) : undefined
         ),
 
     updateProfile: (data: UpdateProfileRequest) =>
@@ -26,7 +27,7 @@ export const userService = {
     getSubscription: () =>
         axiosInstance.get<ApiResponse<UserSubscription>>(
             API_CONFIG.ENDPOINTS.USERS.SUBSCRIPTION,
-            { silentOn404: true } as any   // no subscription = expected, don't toast
+            { silentOn404: true } as any
         ),
 
     getBilling: () =>

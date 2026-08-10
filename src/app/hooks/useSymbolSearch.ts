@@ -1,8 +1,7 @@
 // src/app/hooks/useSymbolSearch.ts
 
 import { useState, useCallback, useRef } from 'react';
-import axios from 'axios';
-import env from '@/config/env';
+import { marketService } from '@/services/market.service';
 import type { ChangeEvent } from 'react';
 
 export interface SymbolSuggestion {
@@ -21,7 +20,6 @@ export function useSymbolSearch() {
     const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const search = useCallback((keyword: string) => {
-        // Clear previous timer on every keystroke
         if (debounceTimer.current) clearTimeout(debounceTimer.current);
 
         if (keyword.length < MIN_QUERY_LENGTH) {
@@ -34,17 +32,18 @@ export function useSymbolSearch() {
 
         debounceTimer.current = setTimeout(async () => {
             try {
-                const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${encodeURIComponent(keyword)}&apikey=${env.ALPHA_VANTAGE_API_KEY}`;
-                const { data } = await axios.get(url, {
-                    headers: { 'User-Agent': 'axios' },
-                });
+                // indexes=false is fine here — we don't want raw index symbols
+                // showing up next to real stocks/ETFs in the dropdown
+                const { data } = await marketService.searchSymbols(keyword, false);
+                const securities = data.data ?? [];
 
-                const matches = data['bestMatches'] ?? [];
-                const symbols: SymbolSuggestion[] = matches.map((item: Record<string, string>) => ({
-                    symbol: item['1. symbol'],
-                    name:   item['2. name'],
-                    type:   item['3. type'],
-                    region: item['4. region'],
+                // Backend returns { symbol, exchange, type, description } —
+                // map to the shape this hook's consumers expect
+                const symbols: SymbolSuggestion[] = securities.map((s) => ({
+                    symbol: s.symbol,
+                    name: s.description,
+                    type: s.type,
+                    region: s.exchange,
                 }));
 
                 setSuggestions(symbols);

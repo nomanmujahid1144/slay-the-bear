@@ -63,7 +63,7 @@ class ErrorHandler {
         const backendMessage = data?.message;
         const errorType = resolveErrorType(status);
 
-        // ── 401: Don't toast during token refresh ───────────────────────
+        // ── 401: Don't toast during token refresh or silent auth checks ──
         if (status === HttpStatus.UNAUTHORIZED) {
             const appError = new AppError(
                 backendMessage || 'Authentication failed',
@@ -71,7 +71,9 @@ class ErrorHandler {
                 status
             );
             this.log(appError);
-            if (!error.config?.url?.includes('/refresh-token')) {
+            const cfg = error.config as { url?: string; silentAuth?: boolean } | undefined;
+            const isSilent = cfg?.silentAuth || cfg?.url?.includes('/refresh-token');
+            if (!isSilent) {
                 toast.error(backendMessage || USER_MESSAGES[ErrorType.AUTH]);
             }
             return appError;
